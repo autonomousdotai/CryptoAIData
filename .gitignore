@@ -1,0 +1,31 @@
+# Python django
+*.pyc
+__pycache__
+db.sqlite3
+
+venv
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+
+#IDE
+.DS_Store
+.idea
+*~
+
+
+# Logs
+*.log
+/logs/
+/uploads/
+
+# webpack
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+
+captcha.png
