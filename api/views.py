@@ -2,16 +2,15 @@ import base64
 import requests
 import json
 
-from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework import status
 from rest_framework.response import Response
+from rest_framework import generics
 
 from .models import Profile
-from rest_framework import generics
+from .serializers import ProfileSerializer, ProfileDetailSerializer
 from django.conf import settings
-from rest_framework.decorators import authentication_classes, permission_classes
-from django.http import Http404
-from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 
 
@@ -68,3 +67,14 @@ def user_signin(request):
     profile.save()
 
     return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
+
+
+class ProfileList(generics.ListCreateAPIView):
+    http_method_names = ['get', 'head']
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileDetailSerializer
