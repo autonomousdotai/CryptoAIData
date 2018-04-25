@@ -147,10 +147,9 @@ JWT_AUTH = {
     'JWT_SECRET_KEY': SECRET_KEY_JWT,
 }
 
-AUTONOMOUS_API_HOST = 'http://35.199.187.77:8080'
-AUTONOMOUS_API_SIGNUP = '%s/robot-api/user/sign-up' % AUTONOMOUS_API_HOST
-AUTONOMOUS_API_AUTH = '%s/robot-api/user/auth' % AUTONOMOUS_API_HOST
-
+AUTONOMOUS_API_HOST = 'https://dev.autonomous.ai'
+AUTONOMOUS_API_SIGNUP = '%s/api-v2/customer-api/sign-in' % AUTONOMOUS_API_HOST
+AUTONOMOUS_API_AUTH = '%s/api-v2/customer-api/sign-in' % AUTONOMOUS_API_HOST
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True

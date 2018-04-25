@@ -33,11 +33,13 @@ def user_signup(request):
         return Response({"message": response.json().get('message')}, status=status.HTTP_400_BAD_REQUEST)
 
     # Auto create investor
-    user = User.objects.filter(username=response.json()['data']['customer']['email'])
+    user = User.objects.filter(username=response.json()['customer']['email']).first()
     if not user:
-        user = User.objects.create_user(username=response.json()['data']['customer']['email'])
-    Profile.objects.get_or_create(user=user)
-    return Response(response.json()['data']['customer'], status=status.HTTP_201_CREATED)
+        user = User.objects.create_user(username=response.json()['customer']['email'])
+    profile, _ = Profile.objects.get_or_create(user=user)
+    profile.ether_address = response.json()['customer']['ether_address']
+    profile.save()
+    return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -58,9 +60,11 @@ def user_signin(request):
         return Response({"message": response.json().get('message')}, status=status.HTTP_400_BAD_REQUEST)
 
     # Auto create investor
-    user = User.objects.filter(username=response.json()['data']['customer']['email']).first()
+    user = User.objects.filter(username=response.json()['customer']['email']).first()
     if not user:
-        user = User.objects.create_user(username=response.json()['data']['customer']['email'])
-    Profile.objects.get_or_create(user=user)
+        user = User.objects.create_user(username=response.json()['customer']['email'])
+    profile, _ = Profile.objects.get_or_create(user=user)
+    profile.ether_address = response.json()['customer']['ether_address']
+    profile.save()
 
-    return Response(response.json()['data']['customer'], status=status.HTTP_201_CREATED)
+    return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
