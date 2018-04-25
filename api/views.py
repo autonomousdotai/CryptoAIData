@@ -36,7 +36,7 @@ def user_signup(request):
     user = User.objects.filter(username=response.json()['customer']['email']).first()
     if not user:
         user = User.objects.create_user(username=response.json()['customer']['email'])
-    profile, _ = Profile.objects.get_or_create(user=user)
+    profile, _ = Profile.objects.get_or_create(user=user, ref_id=response.json()['customer']['id'])
     profile.ether_address = response.json()['customer']['ether_address']
     profile.save()
     return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
@@ -63,7 +63,7 @@ def user_signin(request):
     user = User.objects.filter(username=response.json()['customer']['email']).first()
     if not user:
         user = User.objects.create_user(username=response.json()['customer']['email'])
-    profile, _ = Profile.objects.get_or_create(user=user)
+    profile, _ = Profile.objects.get_or_create(user=user, ref_id=response.json()['customer']['id'])
     profile.ether_address = response.json()['customer']['ether_address']
     profile.save()
 
