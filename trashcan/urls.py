@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'api/signup/', views.user_signup),
     path(r'api/signin/', views.user_signin),
+    path(r'api/transfer/', views.transfer),
     path(r'api/profile/', views.ProfileList.as_view()),
     path(r'api/profile/<int:pk>/', views.ProfileDetail.as_view()),
 

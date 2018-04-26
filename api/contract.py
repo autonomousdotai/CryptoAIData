@@ -6,8 +6,7 @@ from web3 import Account
 import requests
 import time
 import os
-
-# from api.models import Application
+import json
 
 # Solidity source code
 contract_source_code = '''
@@ -188,6 +187,9 @@ class TokenERC20Factory(object):
         # Instantiate and deploy contract
         contract = w3.eth.contract(abi=contract_interface['abi'], bytecode=contract_interface['bin'])
 
+        with open('earth_contract_abi.json', 'w') as outfile:
+            json.dump(contract_interface['abi'], outfile)
+
         data = contract._encode_constructor_data(args=(self.totalSupply, self.name, self.symbol))
         transaction = {'data': data,
                        'gas': randint(3000000, 4000000),
@@ -195,7 +197,7 @@ class TokenERC20Factory(object):
                        'chainId': 4,
                        'to': '',
                        'from': self.ADDRESS,
-                       'nonce': w3.eth.getTransactionCount(self.ADDRESS, "pending")}
+                       'nonce': w3.eth.getTransactionCount(self.ADDRESS)}
         acct = Account.privateKeyToAccount(self.PRIVATE_KEY)
         signed = acct.signTransaction(transaction)
         tx = w3.eth.sendRawTransaction(signed.rawTransaction)
@@ -203,5 +205,5 @@ class TokenERC20Factory(object):
         return tx_hash
 
 
-# print(TokenERC20Factory('Earth coin', 'EARTH', 1000000000).create_contract_tx_hash())
+print(TokenERC20Factory('Earth coin', 'EARTH', 100000000).create_contract_tx_hash())
 # Contract address: 0xe49e87f42f15482f40e6b4c4ebe2310278acf297
