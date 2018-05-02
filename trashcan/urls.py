@@ -24,5 +24,7 @@ urlpatterns = [
     path(r'api/transfer/', views.transfer),
     path(r'api/profile/', views.ProfileList.as_view()),
     path(r'api/profile/<int:pk>/', views.ProfileDetail.as_view()),
+    path(r'api/image/', views.ImageList.as_view()),
+    path(r'api/image/<int:pk>/', views.ImageDetail.as_view()),
 
 ]

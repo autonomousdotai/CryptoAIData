@@ -9,3 +9,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     ether_address = models.CharField(max_length=255, null=False)
     ref_id = models.IntegerField()
+
+
+class Image(models.Model):
+    link = models.ImageField(upload_to='trash')
+    trash_type = models.CharField(max_length=255, null=True)
