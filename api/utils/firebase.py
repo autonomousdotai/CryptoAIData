@@ -41,7 +41,3 @@ class FirebaseUtil(metaclass=Singleton):
 
     def send(self, channel, message):
         self.db.child(channel).push(message, self.user['idToken'])
-
-    # @classmethod
-    # def send(cls, channel, message):
-    #     cls.db.child(channel).set(message)

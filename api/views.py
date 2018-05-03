@@ -15,6 +15,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from web3 import Web3, TestRPCProvider, HTTPProvider
 from web3 import Account
+import django_filters.rest_framework
+
 
 
 @api_view(['POST'])
@@ -120,6 +122,8 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filter_fields = ('status',)
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
