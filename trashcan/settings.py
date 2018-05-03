@@ -174,3 +174,5 @@ GS_BUCKET_NAME='oskar-ai'
 GS_AUTO_CREATE_ACL='publicRead'
 GS_FILE_OVERWRITE=False
 GS_AUTO_CREATE_BUCKET=True
+
+ENV_NAME = os.environ.get('ENV_NAME', 'staging')
