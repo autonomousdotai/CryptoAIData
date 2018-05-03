@@ -12,12 +12,17 @@ class Profile(models.Model):
 
 
 class Product(models.Model):
+    TYPE_CHOICES = (
+        ('PAY_ONCE', 'Pay once'),
+        ('SUBSCRIPTION', 'Subscription')
+    )
+    profile = models.ForeignKey(Profile, related_name='products', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255, null=False, unique=True)
+    type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='PAY_ONCE')
 
 
 class Image(models.Model):
     link = models.ImageField(upload_to='img')
-    trash_type = models.CharField(max_length=255, null=True)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
 
 

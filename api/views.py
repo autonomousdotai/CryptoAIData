@@ -8,8 +8,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image
-from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer
+from .models import Profile, Image, Product, Firmware
+from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
+    ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer
 from django.conf import settings
 from django.contrib.auth.models import User
 from web3 import Web3, TestRPCProvider, HTTPProvider
@@ -124,3 +125,23 @@ class ImageList(generics.ListCreateAPIView):
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageDetailSerializer
+
+
+class ProductList(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ImageDetailSerializer
+
+
+class FirmwareList(generics.ListCreateAPIView):
+    queryset = Firmware.objects.all()
+    serializer_class = FirmwareSerializer
+
+
+class FirmwareDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Firmware.objects.all()
+    serializer_class = FirmwareDetailSerializer
