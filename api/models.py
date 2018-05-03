@@ -40,6 +40,9 @@ class ImageProfile(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
     type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
 
+    class Meta:
+        unique_together = ('image', 'profile')
+
 
 @receiver(post_save, sender=Image)
 def broadcast_on_created_image(sender, instance, created, **kwargs):
