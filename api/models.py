@@ -24,6 +24,9 @@ class Product(models.Model):
 class Image(models.Model):
     link = models.ImageField(upload_to='img')
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    status = models.CharField(max_length=30, choices=(('VERIFYING', 'Verifying'), ('DONE', 'Done')),
+                              default='VERIFYING')
+    type = models.CharField(max_length=30, choices=(('RECYCLE', 'Recycle'), ('NO-RECYCLE', 'Non-recycle')), null=True)
 
 
 class Firmware(models.Model):
