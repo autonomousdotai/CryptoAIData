@@ -26,5 +26,7 @@ urlpatterns = [
     path(r'api/profile/<int:pk>/', views.ProfileDetail.as_view()),
     path(r'api/image/', views.ImageList.as_view()),
     path(r'api/image/<int:pk>/', views.ImageDetail.as_view()),
+    path(r'api/image-profile/', views.ImageProfileList.as_view()),
+    path(r'api/image-profile/<int:pk>/', views.ImageProfileDetail.as_view()),
 
 ]

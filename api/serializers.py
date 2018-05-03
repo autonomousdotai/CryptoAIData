@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware
-from django.utils import timezone
+from .models import Profile, Image, Product, Firmware, ImageProfile
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,11 +45,23 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 class FirmwareSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = Firmware
         fields = '__all__'
 
 
 class FirmwareDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = Firmware
+        fields = '__all__'
+
+
+class ImageProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageProfile
+        fields = '__all__'
+
+
+class ImageProfileDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageProfile
         fields = '__all__'

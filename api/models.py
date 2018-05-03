@@ -31,8 +31,14 @@ class Image(models.Model):
         ('VERIFYING', 'VERIFYING'),
         ('DONE', 'Done')),
                               default='VERIFYING')
-    type = models.CharField(max_length=30, choices=(('RECYCLE', 'Recycle'), ('NO-RECYCLE', 'Non-recycle')), null=True)
+    type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
     created = models.DateTimeField(auto_now=True)
+
+
+class ImageProfile(models.Model):
+    image = models.ForeignKey(Image, on_delete=models.DO_NOTHING)
+    profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
 
 
 @receiver(post_save, sender=Image)

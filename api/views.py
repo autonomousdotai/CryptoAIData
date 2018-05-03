@@ -8,9 +8,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware
+from .models import Profile, Image, Product, Firmware, ImageProfile
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
-    ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer
+    ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
+    ImageProfileDetailSerializer
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from web3 import Web3, TestRPCProvider, HTTPProvider
@@ -150,3 +152,13 @@ class FirmwareList(generics.ListCreateAPIView):
 class FirmwareDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Firmware.objects.all()
     serializer_class = FirmwareDetailSerializer
+
+
+class ImageProfileList(generics.ListCreateAPIView):
+    queryset = ImageProfile.objects.all()
+    serializer_class = ImageProfileSerializer
+
+
+class ImageProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ImageProfile.objects.all()
+    serializer_class = ImageProfileDetailSerializer

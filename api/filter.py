@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 def filter_offline_verify(queryset, name, value):
-    return queryset.filter(**{'created__lt': timezone.now()})
+    return queryset.filter(**{'created__lt': timezone.now() - timezone.timedelta(seconds=10)})
 
 
 class ImageFilter(django_filters.FilterSet):
