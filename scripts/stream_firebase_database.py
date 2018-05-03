@@ -16,4 +16,5 @@ def stream_handler(message):
     print(message["path"]) # /-K7yGTTEp7O549EzTYtI
     print(message["data"]) # {'title': 'Pyrebase', "body": "etc..."}
 
-my_stream = db.child("posts").stream(stream_handler)
+product_id = '123'
+my_stream = db.child(product_id).stream(stream_handler)
