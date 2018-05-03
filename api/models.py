@@ -12,5 +12,5 @@ class Profile(models.Model):
 
 
 class Image(models.Model):
-    link = models.ImageField(upload_to='trash')
+    link = models.ImageField(upload_to='img')
     trash_type = models.CharField(max_length=255, null=True)

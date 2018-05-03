@@ -170,7 +170,7 @@ CONTRACT_ADDRESS = '0x960f43a05527cce9e9a6bdd10206b6fdb282ce87'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
-GS_BUCKET_NAME='hhhjjj'
+GS_BUCKET_NAME='oskar-ai'
 GS_AUTO_CREATE_ACL='publicRead'
 GS_FILE_OVERWRITE=False
 GS_AUTO_CREATE_BUCKET=True
