@@ -28,10 +28,9 @@ class Image(models.Model):
     link = models.ImageField(upload_to='img')
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=30, choices=(
-        ('REAL_TIME_VERIFY', 'Real time verify'),
-        ('OFFLINE_VERIFY', 'Offline verify'),
+        ('VERIFYING', 'VERIFYING'),
         ('DONE', 'Done')),
-                              default='REAL_TIME_VERIFY')
+                              default='VERIFYING')
     type = models.CharField(max_length=30, choices=(('RECYCLE', 'Recycle'), ('NO-RECYCLE', 'Non-recycle')), null=True)
     created = models.DateTimeField(auto_now=True)
 
