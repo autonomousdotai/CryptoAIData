@@ -12,31 +12,16 @@ class Singleton(type):
 
 
 class FirebaseUtil(metaclass=Singleton):
-    FIREBASE_CONFIG_staging = {
-        "apiKey": "AIzaSyDfviFngAts1xvYzkasrSrkLu_BIdmzghQ",
-        "authDomain": "",
-        "databaseURL": "https://trashcan-test.firebaseio.com/",
-        "serviceAccount": "",
-        "storageBucket": "",
-    }
-
-    FIREBASE_CONFIG_production = {
-        "apiKey": "AIzaSyBlkizgHz2N1HbOqmFPfxrEWIV51RPrGo8",
-        "authDomain": "",
-        "databaseURL": "https://aos-brain.firebaseio.com/",
-        "serviceAccount": "",
-        "storageBucket": "",
-    }
-
     FIREBASE_CONFIG = {
-        'production': FIREBASE_CONFIG_production,
-        'staging': FIREBASE_CONFIG_staging,
-        'localhost': FIREBASE_CONFIG_staging
+        "apiKey": settings.FIREBASE_API_KEY,
+        "authDomain": "",
+        "databaseURL": settings.FIREBASE_DATABASE_URL,
+        "serviceAccount": "",
+        "storageBucket": "",
     }
-
-    firebase = pyrebase.initialize_app(FIREBASE_CONFIG[settings.ENV_NAME])
+    firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
     auth = firebase.auth()
-    user = auth.sign_in_with_email_and_password('admin@autonomous.nyc', 'Ab123456')
+    user = auth.sign_in_with_email_and_password(settings.FIREBASE_ADMIN_ACCOUNT, settings.FIREBASE_ADMIN_PASSWORD)
     db = firebase.database()
 
     def send(self, channel, message):

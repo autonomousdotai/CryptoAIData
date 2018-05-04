@@ -154,7 +154,7 @@ JWT_AUTH = {
     'JWT_SECRET_KEY': SECRET_KEY_JWT,
 }
 
-AUTONOMOUS_API_HOST = 'https://dev.autonomous.ai'
+AUTONOMOUS_API_HOST = os.environ.get('AUTONOMOUS_API_HOST', 'https://dev.autonomous.ai')
 AUTONOMOUS_API_SIGNUP = '%s/api-v2/customer-api/sign-in' % AUTONOMOUS_API_HOST
 AUTONOMOUS_API_AUTH = '%s/api-v2/customer-api/sign-in' % AUTONOMOUS_API_HOST
 
@@ -171,14 +171,17 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '35.197.74.148',
 )
 
-CONTRACT_ADDRESS = '0x0c3d537e9acad54eb4a5ca297f81e93b9e780373'
+CONTRACT_ADDRESS = os.environ.get('CONTRACT_ADDRESS', '0x0c3d537e9acad54eb4a5ca297f81e93b9e780373')
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 GS_BUCKET_NAME='oskar-ai'
-GS_AUTO_CREATE_ACL='publicRead'
-GS_FILE_OVERWRITE=False
-GS_AUTO_CREATE_BUCKET=True
+GS_AUTO_CREATE_ACL = 'publicRead'
+GS_FILE_OVERWRITE = False
+GS_AUTO_CREATE_BUCKET = True
 
-ENV_NAME = os.environ.get('ENV_NAME', 'staging')
+FIREBASE_ADMIN_ACCOUNT = os.environ.get('FIREBASE_ADMIN_ACCOUNT', 'admin@autonomous.nyc')
+FIREBASE_ADMIN_PASSWORD = os.environ.get('FIREBASE_ADMIN_PASSWORD', 'Ab123456')
+FIREBASE_API_KEY = os.environ.get('FIREBASE_API_KEY', 'AIzaSyDfviFngAts1xvYzkasrSrkLu_BIdmzghQ')
+FIREBASE_DATABASE_URL = os.environ.get('FIREBASE_DATABASE_URL', 'https://trashcan-test.firebaseio.com/')
