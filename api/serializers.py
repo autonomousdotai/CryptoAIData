@@ -8,8 +8,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     token_balance = serializers.SerializerMethodField()
 
     def get_token_balance(self, obj):
-        r = session.get('https://rinkeby.etherscan.io/token/0x0c3d537e9acad54eb4a5ca297f81e93b9e780373?a=%s' % obj.ether_address)
-        balance = r.html.find('.table', first=True).find('td')[3].text.split()[0]
+        balance = 0
+        try:
+            r = session.get('https://rinkeby.etherscan.io/token/0x0c3d537e9acad54eb4a5ca297f81e93b9e780373?a=%s' % obj.ether_address)
+            balance = r.html.find('.table', first=True).find('td')[3].text.split()[0]
+        except Exception as err:
+            pass
         return int(balance)
 
     class Meta:
