@@ -124,8 +124,6 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    # filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    # filter_fields = ('status', 'created', 'product')
     filter_class = ImageFilter
 
 
@@ -137,6 +135,13 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Product.objects.filter(profile=user.profile)
+
+    def perform_create(self, serializer):
+        return serializer.save(profile=self.request.user.profile)
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -33,3 +33,8 @@ python3 manage.py runserver 0.0.0.0:8000
 ```
 
 Contract address EARTH Token: https://rinkeby.etherscan.io/address/0x0c3d537e9acad54eb4a5ca297f81e93b9e780373
+
+
+
+python3 manage.py createsuperuser
+Login to view docs: http://127.0.0.1:8000/docs/#profile-list

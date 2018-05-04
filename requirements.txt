@@ -125,3 +125,4 @@ django-storages
 pyrebase
 django-filter
 requests-html
+coreapi

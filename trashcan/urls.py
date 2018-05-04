@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +31,6 @@ urlpatterns = [
     path(r'api/image/<int:pk>/', views.ImageDetail.as_view()),
     path(r'api/image-profile/', views.ImageProfileList.as_view()),
     path(r'api/image-profile/<int:pk>/', views.ImageProfileDetail.as_view()),
+    path(r'docs/', include_docs_urls(title='Trashcan API docs', public=True))
 
 ]
