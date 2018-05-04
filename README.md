@@ -1,4 +1,4 @@
-ENV CONFIG FOR DEV
+ENV OS
 ```bash
 DB_NAME=trashcan_dev
 DB_USER=root
@@ -17,6 +17,8 @@ FIREBASE_DATABASE_URL='https://trashcan-test.firebaseio.com/'
 ```
 
 
+Install package
+
 ```bash
 brew install python3
 brew install pandoc
@@ -29,6 +31,6 @@ export GOOGLE_APPLICATION_CREDENTIALS='/path/to/keyfile.json'
 
 python3 manage.py migrate
 
-python3 manage.py runserver
+python3 manage.py runserver 0.0.0.0:8000
 
 ```
