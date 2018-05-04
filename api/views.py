@@ -141,7 +141,7 @@ class ProductList(generics.ListCreateAPIView):
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
-    serializer_class = ImageDetailSerializer
+    serializer_class = ProductDetailSerializer
 
 
 class FirmwareList(generics.ListCreateAPIView):
