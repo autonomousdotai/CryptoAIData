@@ -124,3 +124,4 @@ google-cloud-storage==1.8.0
 django-storages
 pyrebase
 django-filter
+requests-html
