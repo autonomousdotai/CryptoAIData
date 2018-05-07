@@ -5,6 +5,8 @@ DB_USER=root
 DB_PASSWORD=''
 DB_HOST='127.0.0.1'
 
+GOOGLE_APPLICATION_CREDENTIALS='/path/to/keyfile.json'
+
 AUTONOMOUS_API_HOST='https://dev.autonomous.ai'
 
 CONTRACT_ADDRESS='0x0c3d537e9acad54eb4a5ca297f81e93b9e780373'
@@ -20,7 +22,6 @@ FIREBASE_DATABASE_URL='https://trashcan-test.firebaseio.com/'
 Install package
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS='/path/to/keyfile.json'
 mysql -u root -p -e "create database trashcan_dev"
 
 brew install python3
