@@ -11,3 +11,4 @@ djangorestframework-jwt
 mysqlclient
 web3
 Pillow
+django-storages[google]
