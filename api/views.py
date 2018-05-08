@@ -97,7 +97,6 @@ def transfer(request):
         'value': 0,
         'gas': w3.toHex(1000000),
         'gasPrice': w3.toWei('10000', 'gwei'),
-        'gasLimit': w3.toWei('10000', 'gwei'),
         'nonce': w3.eth.getTransactionCount('0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'),
         'from': '0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'
     })
