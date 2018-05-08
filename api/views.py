@@ -1,7 +1,7 @@
 import base64
 import requests
 import json
-
+import os
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework import status
@@ -86,12 +86,12 @@ def transfer(request):
     to = request.data.get('to')
     amount = int(request.data.get('amount'))
 
-    with open('earth_contract_abi.json', 'r') as abi_definition:
+    with open(os.path.join(settings.BASE_DIR, 'earth_contract_abi.json'), 'r') as abi_definition:
         abi = json.load(abi_definition)
 
     w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
 
-    contract = w3.eth.contract(address="0x0c3D537e9aCAd54eB4a5Ca297F81e93B9E780373", abi=abi)
+    contract = w3.eth.contract(address=settings.CONTRACT_ADDRESS, abi=abi)
 
     unicorn_txn = contract.functions.transfer(to, amount*1000000000000000000).buildTransaction({
         'value': 0,
