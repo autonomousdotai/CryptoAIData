@@ -49,14 +49,14 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = ('profile',)
+        read_only_fields = ('profile', 'type', )
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = ('profile',)
+        read_only_fields = ('profile', 'type', )
 
 
 class FirmwareSerializer(serializers.ModelSerializer):

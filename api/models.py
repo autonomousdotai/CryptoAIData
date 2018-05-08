@@ -22,13 +22,14 @@ class Product(models.Model):
     profile = models.ForeignKey(Profile, related_name='products', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255, null=False, unique=True)
     type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='PAY_ONCE')
+    order_id = models.IntegerField(null=True, default=None)
 
 
 class Image(models.Model):
     link = models.ImageField(upload_to='img')
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=30, choices=(
-        ('VERIFYING', 'VERIFYING'),
+        ('VERIFYING', 'Verifying'),
         ('DONE', 'Done')),
                               default='VERIFYING')
     type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
