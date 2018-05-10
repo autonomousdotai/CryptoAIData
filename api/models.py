@@ -15,6 +15,9 @@ class Profile(models.Model):
 
 
 class Product(models.Model):
+    def __str__(self):
+        return '%s' % self.name
+
     TYPE_CHOICES = (
         ('PAY_ONCE', 'Pay once'),
         ('SUBSCRIPTION', 'Subscription')
