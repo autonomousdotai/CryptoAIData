@@ -19,6 +19,7 @@ from web3 import Web3, TestRPCProvider, HTTPProvider
 from web3 import Account
 import django_filters.rest_framework
 from api.filter import ImageFilter
+from api.utils.ai.ai_model_wapper import ModelWrapper
 
 
 @api_view(['POST'])
@@ -124,6 +125,28 @@ class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     filter_class = ImageFilter
+
+    def create(self, request, *args, **kwargs):
+        # Stream to server AI
+        file = request.FILES['link']
+        data = file.read()
+        adr = "35.198.234.42"
+        port = 9001
+        model_spec_name = 'recycle'
+        model_spec_sig = 'scores'
+        image_key = 'image'
+        model = ModelWrapper(adr, port, model_spec_name, model_spec_sig, image_key)
+        result_model = model.predict(data)
+        newdict = {'type_ai': float(result_model[0]), 'score': result_model[1]}
+        file.seek(0)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        newdict.update(serializer.data)
+        return Response(newdict, status=status.HTTP_201_CREATED, headers=headers)
+
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
