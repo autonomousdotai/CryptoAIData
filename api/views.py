@@ -148,7 +148,6 @@ class ImageList(generics.ListCreateAPIView):
         return Response(newdict, status=status.HTTP_201_CREATED, headers=headers)
 
 
-
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageDetailSerializer
