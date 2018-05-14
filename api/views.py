@@ -46,7 +46,9 @@ def user_signup(request):
     profile, _ = Profile.objects.get_or_create(user=user, ref_id=response.json()['customer']['id'])
     profile.ether_address = response.json()['customer']['ether_address']
     profile.save()
-    return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
+    res = response.json()['customer']
+    res['id'] = profile.id
+    return Response(res, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -73,8 +75,9 @@ def user_signin(request):
     profile, _ = Profile.objects.get_or_create(user=user, ref_id=response.json()['customer']['id'])
     profile.ether_address = response.json()['customer']['ether_address']
     profile.save()
-
-    return Response(response.json()['customer'], status=status.HTTP_201_CREATED)
+    res = response.json()['customer']
+    res['id'] = profile.id
+    return Response(res, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
