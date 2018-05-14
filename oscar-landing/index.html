@@ -9665,6 +9665,38 @@
             background-size: 1200px auto;
             background-repeat: no-repeat;
         }
+
+        .start-video {
+    position: absolute;
+    top: 12em;
+    padding: 12px;
+    left: 33em;
+
+    cursor: pointer;
+
+    transition: all 0.3s;
+}
+
+.start-video:hover
+{
+    opacity: 1;
+    -webkit-filter: brightness (1);
+}
+
+div.thumbnail_container
+{
+    width: 684px;
+    height: 358px;
+    overflow: hidden;
+    background-color: #000;
+    display: inline-block;
+}
+
+img.thumbnail
+{
+    margin-top: -50px;
+    opacity: 0.5;
+}
     </style>
 
 
@@ -10701,13 +10733,21 @@
         <div class="_1Np27" data-reactid="667">
             <div id="trashcan" class="container AFuns" data-reactid="668">
                 <div class="row" data-reactid="669" style="margin-bottom: 200px">
+
+
+
                     <div class="col-md-12">
                         <div class="text-center">
                             <h1 style="color: #38c121; margin-top: -1em">AI powered. Eco minded.</h1>
                             <h4 style="margin-bottom: 2em">AI Oscar is a very clever trashcan. Coming May 15.</h4>
-                            <iframe width="560" height="330"
-                                    src="https://www.youtube.com/embed/cmFtySpLRMo?rel=0&amp;controls=0&amp;showinfo=0"
-                                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                    <div id="player"></div>
+<div id="thumbnail_container" class="thumbnail_container">
+    <img class="thumbnail" id="thumbnail" />
+</div>
+<a class="start-video"><img width="64" src="http://image.flaticon.com/icons/png/512/0/375.png" style="filter: invert(100%); -webkit-filter: invert(100%);"></a>
+
+
                             <h4 style="margin-top: 2em">Are you ready for Oscar to do your recycling for you?</h4>
 
                             <form id="formtrash" class="form-inline" style="margin-top: 3.5em">
@@ -11781,6 +11821,51 @@
   crossorigin="anonymous"></script>
 
 
+    <script>
+        //youtube script
+var tag = document.createElement('script');
+tag.src = "//www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var player;
+
+onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('player', {
+        height: '385',
+        width: '684',
+        videoId: 'cmFtySpLRMo',  // youtube video id
+        playerVars: {
+            'autoplay': 0,
+            'rel': 0,
+            'showinfo': 0
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+var p = document.getElementById ("player");
+$(p).hide();
+
+var t = document.getElementById ("thumbnail");
+t.src = "http://sv1.upsieutoc.com/2018/05/15/a.png";
+
+onPlayerStateChange = function (event) {
+    if (event.data == YT.PlayerState.ENDED) {
+        $('.start-video').fadeIn('normal');
+    }
+}
+
+$(document).on('click', '.start-video', function () {
+    $(this).hide();
+    $("#player").show();
+    $("#thumbnail_container").hide();
+    player.playVideo();
+});
+    </script>
+
 
     <script>
         $(function() {
@@ -11819,7 +11904,6 @@
 }
 
 function handleAfterOnLoad() {
-  downloadJSAtOnload()
 }
 
 window.isSmallScreen = function () {
