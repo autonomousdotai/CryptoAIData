@@ -21,8 +21,8 @@ class FirebaseUtil(metaclass=Singleton):
     }
     firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
     auth = firebase.auth()
-    user = auth.sign_in_with_email_and_password(settings.FIREBASE_ADMIN_ACCOUNT, settings.FIREBASE_ADMIN_PASSWORD)
-    db = firebase.database()
 
     def send(self, channel, message):
-        self.db.child(channel).push(message, self.user['idToken'])
+        user = self.auth.sign_in_with_email_and_password(settings.FIREBASE_ADMIN_ACCOUNT, settings.FIREBASE_ADMIN_PASSWORD)
+        db = self.firebase.database()
+        db.child(channel).push(message, user['idToken'])
