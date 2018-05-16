@@ -72,16 +72,19 @@ class FirmwareDetailSerializer(serializers.ModelSerializer):
 
 
 class ImageProfileSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(read_only=True)
     point = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
 
     def get_point(self, obj):
         balance = 0
         return int(balance)
 
+    def get_image_url(self, obj):
+        return obj.image.link.url
+
     class Meta:
         model = ImageProfile
-        fields = ('image', 'point', )
+        fields = '__all__'
 
 
 class ImageProfileDetailSerializer(serializers.ModelSerializer):
