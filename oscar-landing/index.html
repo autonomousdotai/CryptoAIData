@@ -9716,9 +9716,9 @@
 
                 .start-video {
                     position: absolute;
-                    top: 16em;
+                    top: 29em;
                     padding: 12px;
-                    left: 33em;
+                    left: 36em;
 
                     cursor: pointer;
 
@@ -9743,7 +9743,7 @@
                 img.thumbnail
                 {
                     margin-top: -5px;
-                    margin-left: -7px;
+                    margin-left: -4px;
                 }
 
                 ._3RGHF{
@@ -9760,13 +9760,14 @@
                 background-size: 1856px auto;
                 background-repeat: no-repeat;
                 background-position: center;
+                    margin-top: 0em;
                 }
 
                 .start-video {
                     position: absolute;
-                    top: 16em;
+                    top: 29em;
                     padding: 12px;
-                    left: 33em;
+                    left: 36em;
 
                     cursor: pointer;
 
@@ -11922,6 +11923,17 @@
 
 
         <script>
+
+
+            function detectmob() {
+   if(window.innerWidth <= 800) {
+     return true;
+   } else {
+     return false;
+   }
+}
+
+
             //youtube script
     var tag = document.createElement('script');
     tag.src = "//www.youtube.com/iframe_api";
@@ -11931,19 +11943,38 @@
     var player;
 
     onYouTubeIframeAPIReady = function () {
+console.log('aaa')
+console.log(detectmob())
+      if(detectmob()){
         player = new YT.Player('player', {
-            height: '385',
-            width: '640',
-            videoId: 'cmFtySpLRMo',  // youtube video id
-            playerVars: {
-                'autoplay': 0,
-                'rel': 0,
-                'showinfo': 0
-            },
-            events: {
-                'onStateChange': onPlayerStateChange
-            }
+          height: '385',
+          width: (window.innerWidth - 30).toString(),
+          videoId: 'cmFtySpLRMo',  // youtube video id
+          playerVars: {
+            'autoplay': 0,
+            'rel': 0,
+            'showinfo': 0
+          },
+          events: {
+            'onStateChange': onPlayerStateChange
+          }
         });
+      }
+      else {
+        player = new YT.Player('player', {
+          height: '365',
+          width: '680',
+          videoId: 'cmFtySpLRMo',  // youtube video id
+          playerVars: {
+            'autoplay': 0,
+            'rel': 0,
+            'showinfo': 0
+          },
+          events: {
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
     }
 
     var p = document.getElementById ("player");
