@@ -85,6 +85,7 @@ class ImageProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProfile
         fields = '__all__'
+        read_only_fields = ('profile',)
 
 
 class ImageProfileDetailSerializer(serializers.ModelSerializer):

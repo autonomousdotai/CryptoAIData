@@ -22,7 +22,7 @@ class Product(models.Model):
         ('PAY_ONCE', 'Pay once'),
         ('SUBSCRIPTION', 'Subscription')
     )
-    profile = models.ForeignKey(Profile, related_name='products', on_delete=models.DO_NOTHING)
+    profile = models.ForeignKey(Profile, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=False, unique=True)
     type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='PAY_ONCE')
     order_id = models.IntegerField(null=True, default=None)
@@ -30,7 +30,7 @@ class Product(models.Model):
 
 class Image(models.Model):
     link = models.ImageField(upload_to='img')
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     status = models.CharField(max_length=30, choices=(
         ('VERIFYING', 'Verifying'),
         ('DONE', 'Done')),
@@ -40,8 +40,8 @@ class Image(models.Model):
 
 
 class ImageProfile(models.Model):
-    image = models.ForeignKey(Image, on_delete=models.DO_NOTHING)
-    profile = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
 
     class Meta:

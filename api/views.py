@@ -20,6 +20,8 @@ from web3 import Account
 import django_filters.rest_framework
 from api.filter import ImageFilter
 from api.utils.ai.ai_model_wapper import ModelWrapper
+from rest_framework import pagination
+from django.db.models import Q
 
 
 @api_view(['POST'])
@@ -124,10 +126,19 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
 
 
+class ImagePagination(pagination.PageNumberPagination):
+    page_size = 1
+
+
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     filter_class = ImageFilter
+    pagination_class = ImagePagination
+
+    def get_queryset(self):
+        user = self.request.user
+        return Image.objects.filter(~Q(image_profiles__profile=user.profile))
 
     def create(self, request, *args, **kwargs):
         # Stream to server AI
@@ -187,6 +198,9 @@ class ImageProfileList(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         return ImageProfile.objects.filter(profile=user.profile)
+
+    def perform_create(self, serializer):
+        return serializer.save(profile=self.request.user.profile)
 
     queryset = ImageProfile.objects.all()
     serializer_class = ImageProfileSerializer
