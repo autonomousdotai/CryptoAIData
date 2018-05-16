@@ -72,9 +72,16 @@ class FirmwareDetailSerializer(serializers.ModelSerializer):
 
 
 class ImageProfileSerializer(serializers.ModelSerializer):
+    image = ImageSerializer(read_only=True)
+    point = serializers.SerializerMethodField()
+
+    def get_point(self, obj):
+        balance = 0
+        return int(balance)
+
     class Meta:
         model = ImageProfile
-        fields = '__all__'
+        fields = ('image', 'point', )
 
 
 class ImageProfileDetailSerializer(serializers.ModelSerializer):

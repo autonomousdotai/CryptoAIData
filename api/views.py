@@ -184,6 +184,10 @@ class FirmwareDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ImageProfileList(generics.ListCreateAPIView):
+    def get_queryset(self):
+        user = self.request.user
+        return ImageProfile.objects.filter(profile=user.profile)
+
     queryset = ImageProfile.objects.all()
     serializer_class = ImageProfileSerializer
 
