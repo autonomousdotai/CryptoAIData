@@ -13,3 +13,4 @@ web3
 Pillow
 django-storages[google]
 grpcio==1.7.0
+numpy

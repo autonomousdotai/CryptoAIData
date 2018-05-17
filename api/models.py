@@ -38,6 +38,9 @@ class Image(models.Model):
     type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
     created = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ('-created', '-id',)
+
 
 class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
@@ -46,6 +49,7 @@ class ImageProfile(models.Model):
 
     class Meta:
         unique_together = ('image', 'profile')
+        ordering = ('-id',)
 
 
 @receiver(post_save, sender=Image)
