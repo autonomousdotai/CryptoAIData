@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -152,6 +153,7 @@ JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
     'api.custom_jwt.jwt_get_username_from_payload_handler',
     'JWT_SECRET_KEY': SECRET_KEY_JWT,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365*10),
 }
 
 AUTONOMOUS_API_HOST = os.environ.get('AUTONOMOUS_API_HOST', 'https://dev.autonomous.ai')
