@@ -23,9 +23,7 @@ class Product(models.Model):
         ('SUBSCRIPTION', 'Subscription')
     )
     profile = models.ForeignKey(Profile, related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, null=False, unique=True)
-    type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='PAY_ONCE')
-    order_id = models.IntegerField(null=True, default=None)
+    name = models.CharField(max_length=255, null=False)
 
 
 class Image(models.Model):
