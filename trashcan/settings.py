@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'api',
-    'storages',
     'django_filters',
 ]
 
@@ -176,7 +175,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 CONTRACT_ADDRESS = '0x0c3D537e9aCAd54eB4a5Ca297F81e93B9E780373'
 
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+DEFAULT_FILE_STORAGE = 'packages.storages.backends.gcloud.GoogleCloudStorage'
 
 GS_BUCKET_NAME='oskar-ai'
 GS_AUTO_CREATE_ACL = 'publicRead'
