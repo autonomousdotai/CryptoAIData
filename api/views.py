@@ -22,6 +22,8 @@ from api.filter import ImageFilter
 from api.utils.ai.ai_model_wapper import ModelWrapper
 from rest_framework import pagination
 from django.db.models import Q
+import threading
+from api.utils.image import stream_to_ai_server, perform_create
 
 
 @api_view(['POST'])
@@ -145,9 +147,6 @@ class ImageList(generics.ListCreateAPIView):
         file = request.FILES['link']
         data = file.read()
         file.seek(0)
-
-        import threading
-        from api.utils.image import stream_to_ai_server, perform_create
 
         result_model = {'type_ai': '', 'score': ''}
         t1 = threading.Thread(name='stream_to_ai_server', target=stream_to_ai_server, args=[result_model, data])
