@@ -36,6 +36,8 @@ class Image(models.Model):
         ('DONE', 'Done')),
                               default='VERIFYING')
     type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
+    type_ai = models.IntegerField(null=True, default=2)
+    score = models.FloatField(default=0, null=True)
     created = models.DateTimeField(auto_now=True)
 
     class Meta:
