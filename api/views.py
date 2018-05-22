@@ -144,22 +144,25 @@ class ImageList(generics.ListCreateAPIView):
         # Stream to server AI
         file = request.FILES['link']
         data = file.read()
-        adr = "35.198.234.42"
-        port = 9001
-        model_spec_name = 'recycle'
-        model_spec_sig = 'scores'
-        image_key = 'image'
-        model = ModelWrapper(adr, port, model_spec_name, model_spec_sig, image_key)
-        result_model = model.predict(data)
-        newdict = {'type_ai': float(result_model[0]), 'score': result_model[1]}
         file.seek(0)
 
+        import threading
+        from api.utils.image import stream_to_ai_server, perform_create
+
+        result_model = {'type_ai': '', 'score': ''}
+        t1 = threading.Thread(name='stream_to_ai_server', target=stream_to_ai_server, args=[result_model, data])
+        t1.start()
+
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        t2 = threading.Thread(name='perform_create', target=perform_create, args=[self, serializer])
+        t2.start()
+
+        t1.join()
+        t2.join()
+
         headers = self.get_success_headers(serializer.data)
-        newdict.update(serializer.data)
-        return Response(newdict, status=status.HTTP_201_CREATED, headers=headers)
+        result_model.update(serializer.data)
+        return Response(result_model, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
