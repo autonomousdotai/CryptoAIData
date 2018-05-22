@@ -30,7 +30,7 @@ class Product(models.Model):
 
 class Image(models.Model):
     link = models.FileField(upload_to='img')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, default=None)
     status = models.CharField(max_length=30, choices=(
         ('VERIFYING', 'Verifying'),
         ('DONE', 'Done')),
