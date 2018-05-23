@@ -47,7 +47,7 @@ class Image(models.Model):
 class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    type = models.IntegerField(choices=((1, 'Recycle'), (0, 'Non-recycle')), null=True)
+    type = models.IntegerField(null=True, default=None)
 
     class Meta:
         unique_together = ('image', 'profile')
