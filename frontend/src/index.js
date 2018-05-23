@@ -6,6 +6,7 @@ import Landing from './Landing'
 import Dashboard from './Dashboard'
 import Header from './Header'
 import ProtectedRoute from './ProtectedRoute'
+import './index.css';
 
 const App = () => (
   <div>
