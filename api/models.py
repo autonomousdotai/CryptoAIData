@@ -47,7 +47,28 @@ class Image(models.Model):
 class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    type = models.IntegerField(null=True, default=None)
+    type = models.IntegerField(choices=(
+        (0, 'Bottle'),
+        (1, 'Cans of metal'),
+        (2, 'Newspapers, writing paper'),
+        (3, 'Stories, magazines'),
+        (4, 'Carton water box'),
+        (5, 'Paper cup'),
+        (6, 'Carton box, paper box'),
+        (7, 'Metal tools'),
+        (8, 'Bottle of water'),
+        (9, 'Plastic bottle, glass'),
+        (10, 'Plate, plastic'),
+        (11, 'Spoons, forks, plastic knives'),
+        (12, 'Plastic box'),
+        (13, 'Silver foil'),
+        (14, 'Paper bags'),
+        (15, 'Plastic bags + plastic bags'),
+        (16, 'Styrofoam'),
+        (17, 'Ice cream'),
+        (18, 'Battery'),
+        (19, 'Others'),
+    ), null=True, default=None)
 
     class Meta:
         unique_together = ('image', 'profile')
