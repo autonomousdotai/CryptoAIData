@@ -8,6 +8,9 @@ import time
 import os
 import json
 from solc import compile_source
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def compile_source_file(file_path):
@@ -17,18 +20,17 @@ def compile_source_file(file_path):
     return compile_source(source)
 
 
-class TokenERC20Factory(object):
+class OwnerTokenFactory(object):
     PRIVATE_KEY = os.environ['PRIVATE_KEY']
     ADDRESS = os.environ['ADDRESS']
 
-    def __init__(self, name, symbol, totalSupply):
+    def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
-        self.totalSupply = totalSupply
 
     def create_contract_tx_hash(self):
-        compiled_sol = compile_source_file('TokenERC20.sol')
-        contract_interface = compiled_sol['<stdin>:TokenERC20']
+        compiled_sol = compile_source_file('%s/contract/OwnerToken.sol' % BASE_DIR)
+        contract_interface = compiled_sol['<stdin>:OwnerToken']
 
         # web3.py instance
         w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
@@ -36,10 +38,10 @@ class TokenERC20Factory(object):
         # Instantiate and deploy contract
         contract = w3.eth.contract(abi=contract_interface['abi'], bytecode=contract_interface['bin'])
 
-        with open('earth_contract_abi.json', 'w') as outfile:
+        with open('%s/contract/owner_contract_abi.json' % BASE_DIR, 'w') as outfile:
             json.dump(contract_interface['abi'], outfile)
 
-        data = contract._encode_constructor_data(args=(self.totalSupply, self.name, self.symbol))
+        data = contract._encode_constructor_data(args=(self.name, self.symbol))
         transaction = {'data': data,
                        'gas': randint(3000000, 4000000),
                        'gasPrice': randint(8000000, 10000000),
@@ -54,5 +56,4 @@ class TokenERC20Factory(object):
         return tx_hash
 
 
-print(TokenERC20Factory('Earth coin', 'EARTH', 100000000).create_contract_tx_hash())
-# Contract address: 0xe49e87f42f15482f40e6b4c4ebe2310278acf297
+print(OwnerTokenFactory('Owner coin', 'OWN').create_contract_tx_hash())

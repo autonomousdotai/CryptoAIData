@@ -94,14 +94,14 @@ def transfer(request):
     to = request.data.get('to')
     amount = int(request.data.get('amount'))
 
-    with open(os.path.join(settings.BASE_DIR, 'earth_contract_abi.json'), 'r') as abi_definition:
+    with open('%s/contract/owner_contract_abi.json' % settings.BASE_DIR, 'r') as abi_definition:
         abi = json.load(abi_definition)
 
     w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
 
-    contract = w3.eth.contract(address=settings.CONTRACT_ADDRESS, abi=abi)
+    contract = w3.eth.contract(address='0x34CaBdc88a185f68459Cf88E4183E590f28a61B5', abi=abi)
 
-    unicorn_txn = contract.functions.transfer(to, amount*1000000000000000000).buildTransaction({
+    unicorn_txn = contract.functions.add_amount(to, amount*1000000000000000000).buildTransaction({
         'value': 0,
         'gas': w3.toHex(1000000),
         'gasPrice': w3.toWei('10000', 'gwei'),
