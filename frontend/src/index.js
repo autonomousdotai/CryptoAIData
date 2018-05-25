@@ -5,6 +5,7 @@ import { AuthProvider } from './AuthContext'
 import Landing from './Landing'
 import Dashboard from './Dashboard'
 import Header from './Header'
+import Login from './Login'
 import ProtectedRoute from './ProtectedRoute'
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
@@ -16,6 +17,7 @@ const App = () => (
         <Header />
         <Switch>
           <ProtectedRoute path="/dashboard" component={Dashboard} />
+          <Route path="/login" component={Login} />
           <Route path="/" component={Landing} />
         </Switch>
       </AuthProvider>

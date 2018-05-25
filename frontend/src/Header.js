@@ -1,42 +1,25 @@
 import React from 'react'
-import { AuthConsumer } from './AuthContext'
-import { Link } from 'react-router-dom'
+import {AuthConsumer} from './AuthContext'
+import {Link} from 'react-router-dom'
 
-const headerStyle = {
-  display: 'flex',
-  backgroundColor: '#26c6da',
-  justifyContent: 'space-between',
-  padding: 10
-}
-
-const linkStyle = {
-  color: 'white',
-  textDecoration: 'underline'
-}
-
-export default () => (
-  <header>
-    <AuthConsumer>
-      {({ isAuth, login, logout }) => (
-        <div style={headerStyle}>
-          <h3>
-            <Link style={linkStyle} to="/">
-              HOME
-            </Link>
-          </h3>
-
-          {isAuth ? (
-            <ul>
-              <Link style={linkStyle} to="/dashboard">
-                Dashboard
-              </Link>
-              <button onClick={logout}>logout</button>
-            </ul>
-          ) : (
-            <button onClick={login}>login</button>
+class Hello extends React.Component {
+  render() {
+    return (
+      <div>
+        <AuthConsumer>
+          {({isAuth, login, logout}) => (
+            <div>
+              {isAuth ? (
+                <h1>auth</h1>
+              ) : (
+                <h1>un auth</h1>
+              )}
+            </div>
           )}
-        </div>
-      )}
-    </AuthConsumer>
-  </header>
-)
+        </AuthConsumer>
+      </div>
+    )
+  }
+}
+
+export default Hello
