@@ -1,22 +1,12 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify
 from requests_html import HTMLSession
 from django.conf import settings
 session = HTMLSession()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    token_balance = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
-
-    def get_token_balance(self, obj):
-        balance = 0
-        try:
-            r = session.get('https://rinkeby.etherscan.io/token/%s?a=%s' % (settings.CONTRACT_ADDRESS, obj.ether_address))
-            balance = r.html.find('.table', first=True).find('td')[3].text.split()[0]
-        except Exception as err:
-            pass
-        return int(balance)
 
     def get_email(self, obj):
         return obj.user.username
@@ -95,4 +85,28 @@ class ImageProfileSerializer(serializers.ModelSerializer):
 class ImageProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProfile
+        fields = '__all__'
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class ClassifySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classify
+        fields = '__all__'
+
+
+class ClassifyDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classify
         fields = '__all__'

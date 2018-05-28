@@ -8,10 +8,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
-    ImageProfileDetailSerializer
+    ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
+    ClassifyDetailSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -101,7 +102,7 @@ def transfer(request):
 
     contract = w3.eth.contract(address=settings.CONTRACT_ADDRESS, abi=abi)
 
-    unicorn_txn = contract.functions.add_amount(to, amount*1000000000000000000).buildTransaction({
+    unicorn_txn = contract.functions.add_amount(to, amount * 1000000000000000000).buildTransaction({
         'value': 0,
         'gas': w3.toHex(1000000),
         'gasPrice': w3.toWei('10000', 'gwei'),
@@ -213,3 +214,23 @@ class ImageProfileList(generics.ListCreateAPIView):
 class ImageProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ImageProfile.objects.all()
     serializer_class = ImageProfileDetailSerializer
+
+
+class CategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+
+
+class ClassifyList(generics.ListCreateAPIView):
+    queryset = Classify.objects.all()
+    serializer_class = ClassifySerializer
+
+
+class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Classify.objects.all()
+    serializer_class = ClassifyDetailSerializer
