@@ -19,10 +19,6 @@ class Product(models.Model):
     def __str__(self):
         return '%s' % self.name
 
-    TYPE_CHOICES = (
-        ('PAY_ONCE', 'Pay once'),
-        ('SUBSCRIPTION', 'Subscription')
-    )
     profile = models.ForeignKey(Profile, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=False)
 
