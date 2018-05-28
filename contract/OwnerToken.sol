@@ -7,13 +7,11 @@ contract OwnerToken {
     // Public variables of the token
     string public name;
     string public symbol;
-    address public owner_contract_address;
+    address public owner_address;
     uint8 public decimals = 18;
-    // 18 decimals is the strongly suggested default, avoid changing it
 
     // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
-    mapping (address => mapping (address => uint256)) public allowance;
 
     // This generates a public event on the blockchain that will notify clients
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -29,20 +27,19 @@ contract OwnerToken {
     ) public {
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                               // Set the symbol for display purposes
-        owner_contract_address = msg.sender;
+        owner_address = msg.sender;
     }
 
     /**
-     * Internal add amount, only can be called by this contract
+     * Add amount, only can be called by this contract
      */
     function add_amount(address _address, uint _value) public {
         require(_address != 0x0);
-        require(msg.sender == owner_contract_address);
+        require(msg.sender == owner_address);
         // Save this for an assertion in the future
         // Add the same to the recipient
         balanceOf[_address] += _value;
         emit Transfer(msg.sender, _address, _value);
-        // Asserts are used to use static analysis to find bugs in your code. They should never fail
     }
 
     /**
@@ -76,54 +73,5 @@ contract OwnerToken {
      */
     function transfer(address _to, uint256 _value) public {
         _transfer(msg.sender, _to, _value);
-    }
-
-    /**
-     * Transfer tokens from other address
-     *
-     * Send `_value` tokens to `_to` on behalf of `_from`
-     *
-     * @param _from The address of the sender
-     * @param _to The address of the recipient
-     * @param _value the amount to send
-     */
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require(_value <= allowance[_from][msg.sender]);     // Check allowance
-        allowance[_from][msg.sender] -= _value;
-        _transfer(_from, _to, _value);
-        return true;
-    }
-
-    /**
-     * Set allowance for other address
-     *
-     * Allows `_spender` to spend no more than `_value` tokens on your behalf
-     *
-     * @param _spender The address authorized to spend
-     * @param _value the max amount they can spend
-     */
-    function approve(address _spender, uint256 _value) public
-        returns (bool success) {
-        allowance[msg.sender][_spender] = _value;
-        return true;
-    }
-
-    /**
-     * Set allowance for other address and notify
-     *
-     * Allows `_spender` to spend no more than `_value` tokens on your behalf, and then ping the contract about it
-     *
-     * @param _spender The address authorized to spend
-     * @param _value the max amount they can spend
-     * @param _extraData some extra information to send to the approved contract
-     */
-    function approveAndCall(address _spender, uint256 _value, bytes _extraData)
-        public
-        returns (bool success) {
-        tokenRecipient spender = tokenRecipient(_spender);
-        if (approve(_spender, _value)) {
-            spender.receiveApproval(msg.sender, _value, this, _extraData);
-            return true;
-        }
     }
 }
