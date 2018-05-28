@@ -46,3 +46,14 @@ class ImageProfile(models.Model):
 class Firmware(models.Model):
     link = models.FileField(upload_to='firmware')
     version = models.CharField(max_length=30)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, null=False)
+    contract_address = models.CharField(max_length=255, null=False)
+    tx = models.CharField(max_length=255, null=False)
+
+
+class Classify(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='classifies')
+    name = models.CharField(max_length=255, null=False)
