@@ -158,7 +158,9 @@ class ImageList(generics.ListCreateAPIView):
 
         t1.join()
         t2.join()
-
+        serializer.instance.type_ai = result_model['type_ai']
+        serializer.instance.score = result_model['score']
+        serializer.instance.save()
         headers = self.get_success_headers(serializer.data)
         result_model.update(serializer.data)
         return Response(result_model, status=status.HTTP_201_CREATED, headers=headers)

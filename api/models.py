@@ -77,12 +77,6 @@ class ImageProfile(models.Model):
         ordering = ('-id',)
 
 
-# @receiver(post_save, sender=Image)
-# def broadcast_on_created_image(sender, instance, created, **kwargs):
-#     if created:
-#         FirebaseUtil().send('NEW_IMAGE', {"id": instance.id, "url": instance.link.url})
-
-
 class Firmware(models.Model):
     link = models.FileField(upload_to='firmware')
     version = models.CharField(max_length=30)
