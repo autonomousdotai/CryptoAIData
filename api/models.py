@@ -26,10 +26,6 @@ class Product(models.Model):
 class Image(models.Model):
     link = models.FileField(upload_to='img')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, default=None)
-    status = models.CharField(max_length=30, choices=(
-        ('VERIFYING', 'Verifying'),
-        ('DONE', 'Done')),
-                              default='VERIFYING')
     type_ai = models.IntegerField(null=True, default=2)
     score = models.FloatField(default=0, null=True)
     created = models.DateTimeField(auto_now=True)

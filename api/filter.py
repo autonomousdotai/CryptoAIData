@@ -15,4 +15,4 @@ class ImageFilter(django_filters.FilterSet):
 
     class Meta:
         model = Image
-        fields = ['offline_verify', 'status']
+        fields = ['offline_verify']
