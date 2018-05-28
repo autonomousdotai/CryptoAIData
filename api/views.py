@@ -99,7 +99,7 @@ def transfer(request):
 
     w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
 
-    contract = w3.eth.contract(address='0xF2Ce91Cb3c02FcCcf554e25B0E50B57b3Fa9C7Ed', abi=abi)
+    contract = w3.eth.contract(address=settings.CONTRACT_ADDRESS, abi=abi)
 
     unicorn_txn = contract.functions.add_amount(to, amount*1000000000000000000).buildTransaction({
         'value': 0,
