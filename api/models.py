@@ -69,3 +69,4 @@ class Classify(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='classifies')
     name = models.CharField(max_length=255, null=False)
+    title = models.CharField(max_length=255, null=True, default=None)

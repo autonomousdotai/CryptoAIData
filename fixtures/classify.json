@@ -1,0 +1,182 @@
+[
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Bottle",
+      "title": "Bottle"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Cans of metal",
+      "title": "Cans of metal"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Newspapers, writing paper",
+      "title": "Newspapers, writing paper"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Stories, magazines",
+      "title": "Stories, magazines"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Carton water box",
+      "title": "Carton water box"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Paper cup",
+      "title": "Paper cup"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Carton box, paper box",
+      "title": "Carton box, paper box"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Metal tools",
+      "title": "Metal tools"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Bottle of water",
+      "title": "Bottle of water"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Plastic bottle, glass",
+      "title": "Plastic bottle, glass"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Plate, plastic",
+      "title": "Plate, plastic"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Spoons, forks, plastic knives",
+      "title": "Spoons, forks, plastic knives"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Plastic box",
+      "title": "Plastic box"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Silver foil",
+      "title": "Silver foil"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Paper bags",
+      "title": "Paper bags"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Plastic bags + plastic bags",
+      "title": "Plastic bags + plastic bags"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Styrofoam",
+      "title": "Styrofoam"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Ice cream",
+      "title": "Ice cream"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Battery",
+      "title": "Battery"
+    }
+  },
+  {
+    "model": "api.Classify",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Others",
+      "title": "Others"
+    }
+  }
+]

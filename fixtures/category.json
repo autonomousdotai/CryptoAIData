@@ -1,0 +1,9 @@
+[
+  {
+    "model": "api.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Trash"
+    }
+  }
+]
