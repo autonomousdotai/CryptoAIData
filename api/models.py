@@ -45,7 +45,6 @@ class ImageProfile(models.Model):
     ), default=1)
 
     class Meta:
-        unique_together = ('image', 'profile')
         ordering = ('-id',)
 
 
