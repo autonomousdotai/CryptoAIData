@@ -29,6 +29,8 @@ class Image(models.Model):
     type_ai = models.IntegerField(null=True, default=2)
     score = models.FloatField(default=0, null=True)
     created = models.DateTimeField(auto_now=True)
+    category = models.ForeignKey('Category', related_name='images', on_delete=models.CASCADE, null=True, default=None)
+    classify = models.ForeignKey('Classify', related_name='images', on_delete=models.CASCADE, null=True, default=None)
 
     class Meta:
         ordering = ('-created', '-id',)
@@ -37,6 +39,10 @@ class Image(models.Model):
 class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    type = models.IntegerField(choices=(
+        (1, 'Owner'),
+        (2, 'Classify'),
+    ), default=1)
 
     class Meta:
         unique_together = ('image', 'profile')
@@ -49,11 +55,17 @@ class Firmware(models.Model):
 
 
 class Category(models.Model):
+    def __str__(self):
+        return '%s' % self.name
+
     name = models.CharField(max_length=255, null=False)
     contract_address = models.CharField(max_length=255, null=False)
     tx = models.CharField(max_length=255, null=False)
 
 
 class Classify(models.Model):
+    def __str__(self):
+        return '%s' % self.name
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='classifies')
     name = models.CharField(max_length=255, null=False)
