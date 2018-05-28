@@ -10,7 +10,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 2,
     "fields": {
       "category": 1,
       "name": "Cans of metal",
@@ -19,7 +19,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 3,
     "fields": {
       "category": 1,
       "name": "Newspapers, writing paper",
@@ -28,7 +28,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 4,
     "fields": {
       "category": 1,
       "name": "Stories, magazines",
@@ -37,7 +37,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 5,
     "fields": {
       "category": 1,
       "name": "Carton water box",
@@ -46,7 +46,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 6,
     "fields": {
       "category": 1,
       "name": "Paper cup",
@@ -55,7 +55,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 7,
     "fields": {
       "category": 1,
       "name": "Carton box, paper box",
@@ -64,7 +64,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 8,
     "fields": {
       "category": 1,
       "name": "Metal tools",
@@ -73,7 +73,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 9,
     "fields": {
       "category": 1,
       "name": "Bottle of water",
@@ -82,7 +82,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 10,
     "fields": {
       "category": 1,
       "name": "Plastic bottle, glass",
@@ -91,7 +91,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 11,
     "fields": {
       "category": 1,
       "name": "Plate, plastic",
@@ -100,7 +100,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 12,
     "fields": {
       "category": 1,
       "name": "Spoons, forks, plastic knives",
@@ -109,7 +109,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 13,
     "fields": {
       "category": 1,
       "name": "Plastic box",
@@ -118,7 +118,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 14,
     "fields": {
       "category": 1,
       "name": "Silver foil",
@@ -127,7 +127,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 15,
     "fields": {
       "category": 1,
       "name": "Paper bags",
@@ -136,7 +136,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 16,
     "fields": {
       "category": 1,
       "name": "Plastic bags + plastic bags",
@@ -145,7 +145,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 17,
     "fields": {
       "category": 1,
       "name": "Styrofoam",
@@ -154,7 +154,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 18,
     "fields": {
       "category": 1,
       "name": "Ice cream",
@@ -163,7 +163,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 19,
     "fields": {
       "category": 1,
       "name": "Battery",
@@ -172,7 +172,7 @@
   },
   {
     "model": "api.Classify",
-    "pk": 1,
+    "pk": 20,
     "fields": {
       "category": 1,
       "name": "Others",
