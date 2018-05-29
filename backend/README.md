@@ -37,4 +37,4 @@ API docs (admin auth): http://127.0.0.1:8000/docs/
 
 EER:
 
-![Alt text](/doc/eer.png?raw=true "")
+![Alt text](/backend/doc/eer.png?raw=true "")
