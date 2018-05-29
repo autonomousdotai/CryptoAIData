@@ -9,7 +9,7 @@ django-cors-headers
 djangorestframework
 djangorestframework-jwt
 mysqlclient
-web3
+web3==4.2.1
 Pillow
 django-storages[google]
 grpcio==1.7.0
