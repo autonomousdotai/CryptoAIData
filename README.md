@@ -42,3 +42,8 @@ Contract address EARTH Token: https://rinkeby.etherscan.io/address/0x0c3d537e9ac
 python3 manage.py createsuperuser
 
 Login to view API docs: http://127.0.0.1:8000/docs/
+
+
+EER
+
+![Alt text](/doc/eer.jpg?raw=true "")
