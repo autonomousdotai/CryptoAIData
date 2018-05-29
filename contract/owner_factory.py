@@ -56,4 +56,4 @@ class OwnerTokenFactory(object):
         return tx_hash
 
 
-print(OwnerTokenFactory('Owner coin', 'OWN').create_contract_tx_hash())
+# print(OwnerTokenFactory('Owner coin', 'OWN').create_contract_tx_hash())

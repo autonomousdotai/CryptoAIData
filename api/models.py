@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from contract.owner_factory import OwnerTokenFactory
 
 
 class Profile(models.Model):
@@ -69,3 +70,11 @@ class Classify(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='classifies')
     name = models.CharField(max_length=255, null=False)
     title = models.CharField(max_length=255, null=True, default=None)
+
+
+@receiver(post_save, sender=Category)
+def create_contract_category(sender, instance, created, **kwargs):
+    if created:
+        tx = OwnerTokenFactory(instance.name, instance.name.upper()[:6]).create_contract_tx_hash()
+        instance.tx = tx
+        instance.save()
