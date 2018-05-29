@@ -46,4 +46,4 @@ Login to view API docs: http://127.0.0.1:8000/docs/
 
 EER
 
-![Alt text](/doc/eer.jpg?raw=true "")
+![Alt text](/doc/eer.png?raw=true "")
