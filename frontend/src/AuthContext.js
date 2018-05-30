@@ -13,13 +13,11 @@ class AuthProvider extends React.Component {
   }
 
   login(email, password) {
-    console.log(email, password)
+    let self = this;
     agent.Auth.login(email, password).then((response) => {
-      console.log(response);
       this.setState({isAuth: true})
     }).catch((e) => {
       this.setState({isAuth: false})
-      console.log(e);
     })
   }
 
