@@ -90,9 +90,17 @@ class ImageProfileDetailSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     total_images = serializers.SerializerMethodField()
+    img_present = serializers.SerializerMethodField()
 
     def get_total_images(self, obj):
         return obj.images.count()
+
+    def get_img_present(self, obj):
+        img = obj.images.first()
+        url = 'https://react.semantic-ui.com/assets/images/avatar/large/jenny.jpg'
+        if img:
+            url = img.link.url
+        return url
 
     class Meta:
         model = Category

@@ -28,7 +28,7 @@ class Login extends React.Component {
                   <Item.Group>
                     <Item>
                       <Item.Image size='medium'
-                                  src='https://react.semantic-ui.com/assets/images/avatar/large/jenny.jpg'/>
+                                  src={item.img_present}/>
                       <Item.Content verticalAlign='middle'>
                         <Item.Header>
                           {item.name}
