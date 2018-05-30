@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Icon, Segment, Item} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
@@ -21,29 +21,31 @@ class Login extends React.Component {
     return (
       <Segment vertical loading={this.props.isLoading}>
         <Container>
-          <Grid stackable columns={4}>
+          <Grid stackable columns={2}>
             {this.state.categories.map(function (item, i) {
               return (
                 <Grid.Column key={i}>
-                  <Card>
-                    <Image src='https://react.semantic-ui.com/assets/images/wireframe/image.png'/>
-                    <Card.Content>
-                      <Card.Header>
-                        {item.name}
-                      </Card.Header>
-                      <Card.Meta>
-                        <span className='date'>
+                  <Item.Group>
+                    <Item>
+                      <Item.Image size='medium'
+                                  src='https://react.semantic-ui.com/assets/images/avatar/large/jenny.jpg'/>
+                      <Item.Content verticalAlign='middle'>
+                        <Item.Header>
+                          {item.name}
+                        </Item.Header>
+                        <Item.Description>
+                          {item.desc}
+                        </Item.Description>
+                        <Item.Description>
+                          <Icon name='file image outline'/>
+                          {item.total_images}
+                        </Item.Description>
+                        <Item.Meta>
                           {item.created}
-                        </span>
-                      </Card.Meta>
-                      <Card.Description>
-                        {item.desc}
-                      </Card.Description>
-                      <Card.Description>
-                        {item.total_images}
-                      </Card.Description>
-                    </Card.Content>
-                  </Card>
+                        </Item.Meta>
+                      </Item.Content>
+                    </Item>
+                  </Item.Group>
                 </Grid.Column>
               )
             })}
