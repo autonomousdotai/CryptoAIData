@@ -59,8 +59,10 @@ class Category(models.Model):
         return '%s' % self.name
 
     name = models.CharField(max_length=255, null=False)
+    desc = models.CharField(max_length=255, null=True, default=None)
     contract_address = models.CharField(max_length=255, null=False)
     tx = models.CharField(max_length=255, null=False)
+    created = models.DateTimeField(auto_now=True)
 
 
 class Classify(models.Model):

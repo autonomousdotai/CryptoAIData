@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { AuthProvider } from './AuthContext'
-import Landing from './Landing'
+import Home from './Home'
 import Dashboard from './Dashboard'
 import Login from './Login'
 import ProtectedRoute from './ProtectedRoute'
@@ -18,7 +18,7 @@ const App = () => (
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/" component={Landing} />
+          <Route exact path="/" component={Home} />
         </Switch>
       </AuthProvider>
     </Router>

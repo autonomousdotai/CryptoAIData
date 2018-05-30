@@ -219,6 +219,7 @@ class ImageProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = []
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):

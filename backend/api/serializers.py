@@ -89,6 +89,11 @@ class ImageProfileDetailSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    total_images = serializers.SerializerMethodField()
+
+    def get_total_images(self, obj):
+        return obj.images.count()
+
     class Meta:
         model = Category
         fields = '__all__'

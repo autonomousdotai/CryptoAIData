@@ -35,9 +35,15 @@ const Auth = {
     requests.put('/user', {user})
 };
 
+const Category = {
+  list: () =>
+    requests.get('/api/category/'),
+};
+
 
 export default {
   Auth,
+  Category,
   setToken: _token => {
     token = _token;
   }

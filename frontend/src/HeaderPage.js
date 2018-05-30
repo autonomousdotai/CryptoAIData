@@ -41,8 +41,12 @@ class DesktopContainer extends Component {
               size='large'
             >
               <Container>
-                <Menu.Item as='a' active>Home</Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
+                <Link to="/">
+                  <Menu.Item active>Home</Menu.Item>
+                </Link>
+                <Link to="/history">
+                  <Menu.Item>History</Menu.Item>
+                </Link>
                 <Menu.Item position='right'>
                   {this.props.isAuth ?
                     <Link to="/profile">
@@ -85,9 +89,12 @@ class MobileContainer extends Component {
       <Responsive {...Responsive.onlyMobile}>
         <Sidebar.Pushable>
           <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
-            <Menu.Item as='a' active>Home</Menu.Item>
-            <Menu.Item as='a'>Work</Menu.Item>
-            <Menu.Item as='a'>Company</Menu.Item>
+            <Link to="/">
+              <Menu.Item active>Home</Menu.Item>
+            </Link>
+            <Link to="/history">
+              <Menu.Item active>History</Menu.Item>
+            </Link>
           </Sidebar>
 
           <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} style={{minHeight: '100vh'}}>
@@ -100,11 +107,11 @@ class MobileContainer extends Component {
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
                     <Link to="/profile">
-                      <Button as='a' inverted style={{marginLeft: '0.5em'}}>Hello</Button>
+                      <Button inverted style={{marginLeft: '0.5em'}}>Hello</Button>
                     </Link>
                     :
                     <Link to="/login">
-                      <Button as='a' inverted style={{marginLeft: '0.5em'}}>Login</Button>
+                      <Button inverted style={{marginLeft: '0.5em'}}>Login</Button>
                     </Link>}
                   </Menu.Item>
                 </Menu>
