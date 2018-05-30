@@ -7,8 +7,8 @@ import Dashboard from './Dashboard'
 import Header from './Header'
 import Login from './Login'
 import ProtectedRoute from './ProtectedRoute'
-import 'semantic-ui-css/semantic.min.css';
-import './index.css';
+import './css/semantic/dist/semantic.min.css'
+import './css/index.css';
 
 const App = () => (
   <div>
