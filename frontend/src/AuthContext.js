@@ -4,7 +4,7 @@ import agent from './agent'
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
-  state = {isAuth: false}
+  state = {isAuth: false, isLoading: false}
 
   constructor() {
     super()
@@ -13,11 +13,13 @@ class AuthProvider extends React.Component {
   }
 
   login(email, password) {
-    let self = this;
+    this.setState({isLoading: true})
     agent.Auth.login(email, password).then((response) => {
       this.setState({isAuth: true})
+      this.setState({isLoading: false})
     }).catch((e) => {
       this.setState({isAuth: false})
+      this.setState({isLoading: false})
     })
   }
 
@@ -30,6 +32,7 @@ class AuthProvider extends React.Component {
       <AuthContext.Provider
         value={{
           isAuth: this.state.isAuth,
+          isLoading: this.state.isLoading,
           login: this.login,
           logout: this.logout
         }}
