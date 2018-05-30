@@ -1,9 +1,10 @@
 import React from 'react'
+import agent from './agent'
 
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
-  state = { isAuth: false }
+  state = {isAuth: false}
 
   constructor() {
     super()
@@ -13,11 +14,17 @@ class AuthProvider extends React.Component {
 
   login(email, password) {
     console.log(email, password)
-    this.setState({ isAuth: true })
+    agent.Auth.login(email, password).then((response) => {
+      console.log(response);
+      this.setState({isAuth: true})
+    }).catch((e) => {
+      this.setState({isAuth: false})
+      console.log(e);
+    })
   }
 
   logout() {
-    this.setState({ isAuth: false })
+    this.setState({isAuth: false})
   }
 
   render() {
@@ -37,4 +44,4 @@ class AuthProvider extends React.Component {
 
 const AuthConsumer = AuthContext.Consumer
 
-export { AuthProvider, AuthConsumer }
+export {AuthProvider, AuthConsumer}
