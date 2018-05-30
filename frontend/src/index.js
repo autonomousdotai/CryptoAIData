@@ -4,17 +4,17 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { AuthProvider } from './AuthContext'
 import Landing from './Landing'
 import Dashboard from './Dashboard'
-import Header from './Header'
 import Login from './Login'
 import ProtectedRoute from './ProtectedRoute'
 import './css/semantic/dist/semantic.min.css'
 import './css/index.css';
+import  HeaderPage from './HeaderPage'
 
 const App = () => (
   <div>
     <Router>
       <AuthProvider>
-        <Header />
+        <HeaderPage />
         <Switch>
           <ProtectedRoute path="/dashboard" component={Dashboard} />
           <Route path="/login" component={Login} />
