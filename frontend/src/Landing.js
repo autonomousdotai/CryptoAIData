@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Image} from 'semantic-ui-react'
 
-const Landing = () => (
+const Home = () => (
   <div className="container">
     <Grid columns={3} divided>
       <Grid.Row>
@@ -89,4 +89,4 @@ const Landing = () => (
   </div>
 );
 
-export default Landing;
+export default Home;

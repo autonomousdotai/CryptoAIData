@@ -4,7 +4,7 @@ import agent from './agent'
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
-  state = {isAuth: false, isLoading: false}
+  state = {isAuth: false || !!localStorage.token, isLoading: false, token: ''}
 
   constructor() {
     super()
@@ -16,6 +16,8 @@ class AuthProvider extends React.Component {
     this.setState({isLoading: true})
     agent.Auth.login(email, password).then((response) => {
       this.setState({isAuth: true})
+      this.setState({token: response.token})
+      localStorage.setItem('token', response.token)
       this.setState({isLoading: false})
     }).catch((e) => {
       this.setState({isAuth: false})
@@ -34,7 +36,8 @@ class AuthProvider extends React.Component {
           isAuth: this.state.isAuth,
           isLoading: this.state.isLoading,
           login: this.login,
-          logout: this.logout
+          logout: this.logout,
+          token: this.state.token
         }}
       >
         {this.props.children}

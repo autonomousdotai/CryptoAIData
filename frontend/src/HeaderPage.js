@@ -20,7 +20,6 @@ class DesktopContainer extends Component {
   state = {}
 
   componentDidMount() {
-    console.log(this.props)
   }
 
   hideFixedMenu = () => this.setState({fixed: false})

@@ -27,14 +27,15 @@ class Login extends React.Component {
           <Redirect to="/"/>
           :
           <div className="ui center aligned grid container">
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Group>
-                <Form.Input placeholder='Name' name='email' value={email} onChange={this.handleChange}/>
-                <Form.Input placeholder='Password' name='password' type='password' value={password}
-                            onChange={this.handleChange}/>
-                <Form.Button content='Submit'/>
-              </Form.Group>
-            </Form>
+            <Container text style={{marginTop: "1em"}}>
+              <h1 style={{fontSize: '3rem'}}>Sign in to your account</h1>
+              <Form onSubmit={this.handleSubmit}>
+                  <Form.Input placeholder='Name' name='email' value={email} onChange={this.handleChange}/>
+                  <Form.Input placeholder='Password' name='password' type='password' value={password}
+                              onChange={this.handleChange}/>
+                  <Form.Button primary content='Login' size='large'/>
+              </Form>
+            </Container>
           </div>
         }
       </Segment>

@@ -16,9 +16,9 @@ const App = () => (
       <AuthProvider>
         <HeaderPage />
         <Switch>
-          <ProtectedRoute path="/dashboard" component={Dashboard} />
-          <Route path="/login" component={Login} />
-          <Route path="/" component={Landing} />
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={Landing} />
         </Switch>
       </AuthProvider>
     </Router>
