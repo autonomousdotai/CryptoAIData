@@ -3,7 +3,9 @@
     "model": "api.Category",
     "pk": 1,
     "fields": {
-      "name": "Trash"
+      "name": "Trash",
+      "slug": "trash",
+      "created": "2017-06-01T13:20:30+03:00"
     }
   }
 ]
