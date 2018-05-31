@@ -10,11 +10,10 @@ class Login extends React.Component {
   state = {categories: []}
 
   componentDidMount() {
-    agent.Category.get().then((response) => {
-      console.log(response.results)
-      this.setState({categories: response.results})
+    agent.req.get(agent.API_ROOT + '/api/category/').then((response) => {
+      let resBody = response.body;
+      this.setState({categories: resBody.results})
     }).catch((e) => {
-      console.log(e)
     })
   }
 

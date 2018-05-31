@@ -4,7 +4,7 @@ import agent from './agent'
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
-  state = {isAuth: false || !!localStorage.token, isLoading: false, token: ''}
+  state = {isAuth: false || !!localStorage.token, isLoading: false, token: localStorage.token}
 
   constructor() {
     super()
@@ -14,10 +14,11 @@ class AuthProvider extends React.Component {
 
   login(email, password) {
     this.setState({isLoading: true})
-    agent.Auth.login(email, password).then((response) => {
+    agent.req.post(agent.API_ROOT + '/api/signin/', {email, password}).type('form').then((response) => {
+      let resBody = response.body;
       this.setState({isAuth: true})
-      this.setState({token: response.token})
-      localStorage.setItem('token', response.token)
+      this.setState({token: resBody.token})
+      localStorage.setItem('token', resBody.token)
       this.setState({isLoading: false})
     }).catch((e) => {
       this.setState({isAuth: false})

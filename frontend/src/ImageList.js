@@ -22,9 +22,10 @@ class ImageList extends React.Component {
     this.setState({calculations})
     if (calculations.bottomVisible) {
       if (!!this.state.nextURL) {
-        agent.Image.getFullURL(this.state.nextURL).then((response) => {
-          let newData = this.state.images.concat(response.results)
-          this.setState({images: newData, nextURL: response.next})
+        agent.req.get(this.state.nextURL).set('authorization', `JWT ${this.props.token}`).then((response) => {
+          let resBody = response.body;
+          let newData = this.state.images.concat(resBody.results)
+          this.setState({images: newData, nextURL: resBody.next})
         }).catch((e) => {
         })
       }
@@ -33,8 +34,9 @@ class ImageList extends React.Component {
   }
 
   componentDidMount() {
-    agent.Image.get(this.props.match.params.categoryId).then((response) => {
-      this.setState({images: response.results, nextURL: response.next})
+    agent.req.get(agent.API_ROOT + '/api/image?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      let resBody = response.body;
+      this.setState({images: resBody.results, nextURL: resBody.next})
     }).catch((e) => {
     })
   }
@@ -66,8 +68,8 @@ class ImageList extends React.Component {
 }
 
 export default props => (<AuthConsumer>
-    {({login, isLoading, isAuth}) => {
-      return <ImageList {...props} isAuth={isAuth} isLoading={isLoading}/>
+    {({token, isLoading, isAuth}) => {
+      return <ImageList {...props} token={token} isLoading={isLoading} isAuth={isAuth}/>
     }}
   </AuthConsumer>
 )
