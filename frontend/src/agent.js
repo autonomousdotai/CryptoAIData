@@ -3,7 +3,7 @@ import _superagent from 'superagent';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = 'http://127.0.0.1:8000';
+const API_ROOT = 'http://35.198.228.87';
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
