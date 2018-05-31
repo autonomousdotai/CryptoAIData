@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from contract.owner_factory import OwnerTokenFactory
+from django.template.defaultfilters import slugify
 
 
 class Profile(models.Model):
@@ -58,7 +59,12 @@ class Category(models.Model):
     def __str__(self):
         return '%s' % self.name
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
+
     name = models.CharField(max_length=255, null=False)
+    slug = models.SlugField(max_length=255, default=None, null=True, db_index=True, blank=True)
     desc = models.CharField(max_length=255, null=True, default=None)
     contract_address = models.CharField(max_length=255, null=False)
     tx = models.CharField(max_length=255, null=False)
