@@ -129,15 +129,10 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
 
 
-class ImagePagination(pagination.PageNumberPagination):
-    page_size = 1
-
-
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     filter_class = ImageFilter
-    pagination_class = ImagePagination
 
     def get_queryset(self):
         user = self.request.user
