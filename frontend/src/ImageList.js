@@ -22,7 +22,6 @@ class ImageList extends React.Component {
     this.setState({calculations})
     if (calculations.bottomVisible) {
       if (!!this.state.nextURL) {
-        console.log('get next')
         agent.Image.getFullURL(this.state.nextURL).then((response) => {
           let newData = this.state.images.concat(response.results)
           this.setState({images: newData, nextURL: response.next})

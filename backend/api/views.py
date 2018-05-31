@@ -25,6 +25,8 @@ from rest_framework import pagination
 from django.db.models import Q
 import threading
 from api.utils.image import stream_to_ai_server, perform_create
+from django_filters import rest_framework as filters
+
 
 
 @api_view(['POST'])
@@ -132,7 +134,8 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    filter_class = ImageFilter
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('category', )
 
     def get_queryset(self):
         user = self.request.user
