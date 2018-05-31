@@ -3,6 +3,7 @@ import {Grid, Image, Container, Card, Icon, Segment, Item} from 'semantic-ui-rea
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
+import {Link} from 'react-router-dom'
 
 
 class Login extends React.Component {
@@ -24,29 +25,31 @@ class Login extends React.Component {
           <Grid stackable columns={2}>
             {this.state.categories.map(function (item, i) {
               return (
-                <Grid.Column key={i}>
-                  <Item.Group>
-                    <Item>
-                      <Item.Image size='medium'
-                                  src={item.img_present}/>
-                      <Item.Content verticalAlign='middle'>
-                        <Item.Header>
-                          {item.name}
-                        </Item.Header>
-                        <Item.Description>
-                          {item.desc}
-                        </Item.Description>
-                        <Item.Description>
-                          <Icon name='file image outline'/>
-                          {item.total_images}
-                        </Item.Description>
-                        <Item.Meta>
-                          {item.created}
-                        </Item.Meta>
-                      </Item.Content>
-                    </Item>
-                  </Item.Group>
-                </Grid.Column>
+                <Link to={'/' + item.id} key={i}>
+                  <Grid.Column>
+                    <Item.Group>
+                      <Item>
+                        <Item.Image size='medium'
+                                    src={item.img_present}/>
+                        <Item.Content verticalAlign='middle'>
+                          <Item.Header>
+                            {item.name}
+                          </Item.Header>
+                          <Item.Description>
+                            {item.desc}
+                          </Item.Description>
+                          <Item.Description>
+                            <Icon name='file image outline'/>
+                            {item.total_images}
+                          </Item.Description>
+                          <Item.Meta>
+                            {item.created}
+                          </Item.Meta>
+                        </Item.Content>
+                      </Item>
+                    </Item.Group>
+                  </Grid.Column>
+                </Link>
               )
             })}
           </Grid>
