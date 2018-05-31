@@ -8,7 +8,7 @@ const API_ROOT = 'http://127.0.0.1:8000';
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
 
-let token = null;
+let token = localStorage.token;
 const tokenPlugin = req => {
   if (token) {
     req.set('authorization', `JWT ${token}`);
@@ -21,6 +21,8 @@ const requests = {
     superagent.del(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
   get: url =>
     superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+  getFullURL: fullURL =>
+    superagent.get(fullURL).use(tokenPlugin).then(responseBody),
   put: (url, body) =>
     superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
   post: (url, body) =>
@@ -36,15 +38,30 @@ const Auth = {
 };
 
 const Category = {
-  list: () =>
+  get: () =>
     requests.get('/api/category/'),
+};
+
+
+const limit = (count, p) => `limit=${count}&offset=${p ? p * count : 0}`;
+const Image = {
+  all: page =>
+    requests.get(`/api/image/?${limit(20, page)}`),
+  get: categoryId =>
+    requests.get(`/api/image/?category=${categoryId}`),
+  getFullURL: getFullURL =>
+    requests.getFullURL(getFullURL),
+};
+
+
+const Classify = {
+  list: () =>
+    requests.get('/api/image/'),
 };
 
 
 export default {
   Auth,
   Category,
-  setToken: _token => {
-    token = _token;
-  }
+  Image,
 };
