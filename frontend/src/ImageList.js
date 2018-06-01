@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Dropdown, Card, Icon, Segment, Item, Visibility} from 'semantic-ui-react'
+import {Grid, Image, Container, Dropdown, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
@@ -8,7 +8,9 @@ import agent from './agent'
 class ImageList extends React.Component {
   constructor(props) {
     super(props);
+    this.handleFile = this.handleFile.bind(this);
     this.state = {
+      img: '',
       images: [],
       classifies: [],
       nextURL: '',
@@ -18,10 +20,31 @@ class ImageList extends React.Component {
     };
   }
 
+  handleFile(e) {
+    const link = e.target.files[0];
+    let form = new FormData()
+    form.append('link', link)
+    form.append('category', this.props.match.params.categoryId)
+    console.log('submit image')
+    agent.req.post(agent.API_ROOT + '/api/image/', form).set('authorization', `JWT ${this.props.token}`).then((response) => {
+
+      agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      let resBody = response.body;
+      this.setState({images: resBody.results, nextURL: resBody.next})
+    }).catch((e) => {
+    })
+
+    }).catch((e) => {
+    })
+  }
+
   handleChange = (image, {value}) => {
     this.setState({value});
     let classify = value;
-    agent.req.post(agent.API_ROOT + '/api/image-profile/', {classify, image}).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+    agent.req.post(agent.API_ROOT + '/api/image-profile/', {
+      classify,
+      image
+    }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
       let resBody = response.body;
     }).catch((e) => {
     })
@@ -64,6 +87,11 @@ class ImageList extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={self.handleUpdate}>
+        <Form>
+          <Form.Field>
+            <input type='file' onChange={this.handleFile} placeholder='First Name'/>
+          </Form.Field>
+        </Form>
         <Segment vertical>
           <Container>
             <Grid stackable columns={3}>
