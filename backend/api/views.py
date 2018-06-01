@@ -228,6 +228,8 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 class ClassifyList(generics.ListCreateAPIView):
     queryset = Classify.objects.all()
     serializer_class = ClassifySerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('category', )
 
 
 class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):
