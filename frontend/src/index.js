@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute'
 import './css/semantic/dist/semantic.min.css'
 import './css/index.css';
 import  HeaderPage from './HeaderPage'
+import  History from './History'
 
 const App = () => (
   <div>
@@ -19,6 +20,7 @@ const App = () => (
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/history" component={History} />
           <Route exact path="/" component={Home} />
           <ProtectedRoute exact path="/:categoryId" component={ImageList} />
         </Switch>

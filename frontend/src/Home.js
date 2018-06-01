@@ -41,6 +41,12 @@ class Login extends React.Component {
                             <Icon name='file image outline'/>
                             {item.total_images}
                           </Item.Description>
+                          <Item.Description>
+                            {item.tx}
+                          </Item.Description>
+                          <Item.Description>
+                            {item.contract_address}
+                          </Item.Description>
                           <Item.Meta>
                             {item.created}
                           </Item.Meta>
