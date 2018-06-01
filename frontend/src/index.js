@@ -11,6 +11,7 @@ import './css/semantic/dist/semantic.min.css'
 import './css/index.css';
 import  HeaderPage from './HeaderPage'
 import  History from './History'
+import  CategoryClassify from './CategoryClassify'
 
 const App = () => (
   <div>
@@ -21,6 +22,7 @@ const App = () => (
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/history" component={History} />
+          <Route exact path="/category" component={CategoryClassify} />
           <Route exact path="/" component={Home} />
           <ProtectedRoute exact path="/:categoryId" component={ImageList} />
         </Switch>

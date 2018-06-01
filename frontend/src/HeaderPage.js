@@ -47,6 +47,9 @@ class DesktopContainer extends Component {
                 <Link to="/history">
                   <Menu.Item>History</Menu.Item>
                 </Link>
+                <Link to="/category">
+                  <Menu.Item>Category</Menu.Item>
+                </Link>
                 <Menu.Item position='right'>
                   {this.props.isAuth ?
                     <Link to="/profile">
@@ -94,6 +97,9 @@ class MobileContainer extends Component {
             </Link>
             <Link to="/history">
               <Menu.Item active>History</Menu.Item>
+            </Link>
+            <Link to="/category">
+              <Menu.Item>Category</Menu.Item>
             </Link>
           </Sidebar>
 

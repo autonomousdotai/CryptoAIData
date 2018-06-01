@@ -42,19 +42,7 @@ class History extends React.Component {
   }
 
   componentDidMount() {
-
-    console.log('history');
-    agent.req.get(agent.API_ROOT + '/api/classify/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
-      let resBody = response.body;
-      let temp = [];
-      for (let i = 0; i < resBody.results.length; i++) {
-        temp.push({"text": resBody.results[i].name, "value": resBody.results[i].id})
-      }
-      this.setState({classifies: temp})
-    }).catch((e) => {
-    })
-
-    agent.req.get(agent.API_ROOT + '/api/image-profile/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
+    agent.req.get(agent.API_ROOT + '/api/image-profile/').set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
       console.log(resBody);
       this.setState({images: resBody.results, nextURL: resBody.next})
@@ -75,8 +63,7 @@ class History extends React.Component {
                   <Grid.Column key={i}>
                     <Segment vertical>
                       <Image src={item.image_url}/>
-                      <Dropdown onChange={self.handleChange.bind(self, item.id)}
-                                placeholder='Select classify' fluid selection search options={self.state.classifies}/>
+                      <h3>{item.category} - {item.classify}</h3>
                     </Segment>
                   </Grid.Column>
                 )
