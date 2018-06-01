@@ -38,13 +38,11 @@ class ImageList extends React.Component {
     })
   }
 
-  handleChange = (image, {value}) => {
-    this.setState({value});
+  handleChange = (image, e, value) => {
     let classify = value;
-    agent.req.post(agent.API_ROOT + '/api/image-profile/', {
-      classify,
-      image
-    }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+    console.log(image, classify);
+    agent.req.post(agent.API_ROOT + '/api/image-profile/', {image, classify})
+      .set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
       let resBody = response.body;
     }).catch((e) => {
     })
@@ -100,7 +98,7 @@ class ImageList extends React.Component {
                   <Grid.Column key={i}>
                     <Segment vertical>
                       <Image src={item.link}/>
-                      <Dropdown onChange={self.handleChange.bind(self, item.id)}
+                      <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
                                 placeholder='Select classify' fluid selection search options={self.state.classifies}/>
                     </Segment>
                   </Grid.Column>

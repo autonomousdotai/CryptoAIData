@@ -63,8 +63,8 @@ class FirmwareDetailSerializer(serializers.ModelSerializer):
 class ImageProfileSerializer(serializers.ModelSerializer):
     point = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
-    category = serializers.SerializerMethodField()
-    classify = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
+    classify_name = serializers.SerializerMethodField()
 
     def get_point(self, obj):
         balance = 0
@@ -73,14 +73,14 @@ class ImageProfileSerializer(serializers.ModelSerializer):
     def get_image_url(self, obj):
         return obj.image.link.url
 
-    def get_category(self, obj):
+    def get_category_name(self, obj):
         if obj.image.category:
             return obj.image.category.name
         return ''
 
-    def get_classify(self, obj):
-        if obj.image.classify:
-            return obj.image.classify.name
+    def get_classify_name(self, obj):
+        if obj.classify:
+            return obj.classify.name
         return ''
 
     class Meta:

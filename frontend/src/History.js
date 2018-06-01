@@ -63,7 +63,7 @@ class History extends React.Component {
                   <Grid.Column key={i}>
                     <Segment vertical>
                       <Image src={item.image_url}/>
-                      <h3>{item.category} - {item.classify}</h3>
+                      <h3>{item.category_name} - {item.classify_name}</h3>
                     </Segment>
                   </Grid.Column>
                 )
