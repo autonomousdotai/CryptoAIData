@@ -21,8 +21,8 @@ const App = () => (
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/history" component={History} />
-          <Route exact path="/category" component={CategoryClassify} />
+          <ProtectedRoute exact path="/history" component={History} />
+          <ProtectedRoute exact path="/category" component={CategoryClassify} />
           <Route exact path="/" component={Home} />
           <ProtectedRoute exact path="/:categoryId" component={ImageList} />
         </Switch>
