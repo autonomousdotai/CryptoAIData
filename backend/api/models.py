@@ -63,7 +63,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255, null=False)
     slug = models.SlugField(max_length=255, default=None, null=True, db_index=True, blank=True)
     desc = models.CharField(max_length=255, null=True, default=None)
-    contract_address = models.CharField(max_length=255, null=False)
+    contract_address = models.CharField(max_length=255, null=True, blank=True)
     tx = models.CharField(max_length=255, null=False)
     created = models.DateTimeField(auto_now=True)
 
