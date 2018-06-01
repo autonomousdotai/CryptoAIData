@@ -11,8 +11,8 @@ class CategoryClassify extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       images: [],
-      classifies: [],
-      values: ['']
+      values: [''],
+      categoryName: '',
     };
   }
 
@@ -22,9 +22,10 @@ class CategoryClassify extends React.Component {
 
   createUI() {
     return this.state.values.map((el, i) =>
-      <div className="two fields">
+      <div className="two fields" key={i}>
         <div className="field">
-          <input className='ui input' placeholder='Classify' type="text" value={el || ''} onChange={this.handleChange.bind(this, i)}/>
+          <input className='ui input' placeholder='Classify' type="text" value={el || ''}
+                 onChange={this.handleChange.bind(this, i)}/>
         </div>
         <div className="field">
           <input className='ui button' type='button' value='Remove' onClick={this.removeClick.bind(this, i)}/>
@@ -39,6 +40,8 @@ class CategoryClassify extends React.Component {
     this.setState({values});
   }
 
+  handleChangeInput = (e, {name, value}) => this.setState({[name]: value})
+
   handleChange(i, event) {
     let values = [...this.state.values];
     values[i] = event.target.value;
@@ -50,8 +53,33 @@ class CategoryClassify extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.values.join(', '));
+    let self = this;
+    // alert('A name was submitted: ' + this.state.values.join(', '));
+    console.log(this.state);
     event.preventDefault();
+
+    let name = this.state.categoryName;
+    agent.req.post(agent.API_ROOT + '/api/category/', {name}).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+      let resBody = response.body;
+      console.log(resBody);
+      let category = resBody.id;
+
+      for (let i = 0; i < self.state.values.length; i++) {
+        let name = self.state.values[i];
+        if (!!name) {
+          agent.req.post(agent.API_ROOT + '/api/classify/', {
+            category,
+            name
+          }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+            let resBody = response.body;
+          }).catch((e) => {
+          })
+        }
+      }
+
+
+    }).catch((e) => {
+    })
   }
 
   render() {
@@ -61,7 +89,8 @@ class CategoryClassify extends React.Component {
         <Container>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group widths='equal'>
-              <Form.Input fluid label='Category' placeholder='Category'/>
+              <Form.Input placeholder='Category' name='categoryName' value={this.state.categoryName}
+                          onChange={this.handleChangeInput}/>
             </Form.Group>
             {
               this.createUI()
