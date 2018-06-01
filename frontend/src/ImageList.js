@@ -18,6 +18,14 @@ class ImageList extends React.Component {
     };
   }
 
+  handleChange = (image, {value}) => {
+    this.setState({value});
+    let classify = value;
+    agent.req.post(agent.API_ROOT + '/api/image-profile/', {classify, image}).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+      let resBody = response.body;
+    }).catch((e) => {
+    })
+  }
 
   handleUpdate = (e, {calculations}) => {
     this.setState({calculations})
@@ -31,15 +39,13 @@ class ImageList extends React.Component {
         })
       }
     }
-
   }
 
   componentDidMount() {
     agent.req.get(agent.API_ROOT + '/api/classify/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
-      console.log(resBody)
       let temp = [];
-      for(let i = 0; i < resBody.results.length; i++){
+      for (let i = 0; i < resBody.results.length; i++) {
         temp.push({"text": resBody.results[i].name, "value": resBody.results[i].id})
       }
       this.setState({classifies: temp})
@@ -66,7 +72,8 @@ class ImageList extends React.Component {
                   <Grid.Column key={i}>
                     <Segment vertical>
                       <Image src={item.link}/>
-                      <Dropdown placeholder='Select Friend' fluid selection options={self.state.classifies} />
+                      <Dropdown onChange={self.handleChange.bind(self, item.id)}
+                                placeholder='Select classify' fluid selection search options={self.state.classifies}/>
                     </Segment>
                   </Grid.Column>
                 )

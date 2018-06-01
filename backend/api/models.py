@@ -41,10 +41,7 @@ class Image(models.Model):
 class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    type = models.IntegerField(choices=(
-        (1, 'Owner'),
-        (2, 'Classify'),
-    ), default=1)
+    classify = models.ForeignKey('Classify', on_delete=models.CASCADE, null=True, default=None)
 
     class Meta:
         ordering = ('-id',)
