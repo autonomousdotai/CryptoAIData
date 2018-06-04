@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile
 import requests
 
 
@@ -25,12 +25,14 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             total_image = c.images.count()
             total_classify = c.images.filter(image_profiles__profile=obj).count()
             if c.images.count() > 0 and total_classify > 0:
+                balance = CategoryProfile.objects.get(profile=obj, category=c).balance
                 res.append(
                     {"total_image": total_image,
                      "total_classify": total_classify,
                      "contract": c.contract_address,
                      "name": c.name,
-                     "category_id": c.id
+                     "category_id": c.id,
+                     "balance": balance
                      })
         return res
 

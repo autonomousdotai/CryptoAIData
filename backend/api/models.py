@@ -78,7 +78,7 @@ class Classify(models.Model):
 
 
 class CategoryProfile(models.Model):
-    amount = models.FloatField(null=False, default=0)
+    balance = models.FloatField(null=False, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
@@ -87,7 +87,7 @@ class CategoryProfile(models.Model):
 def add_amount_classify_profile(sender, instance, created, **kwargs):
     if created:
         cp, _ = CategoryProfile.objects.get_or_create(category=instance.image.category, profile=instance.profile)
-        cp.amount += 1
+        cp.balance += 1
         cp.save()
 
 

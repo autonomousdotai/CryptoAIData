@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
@@ -92,7 +92,9 @@ class WithdrawList(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         to = request.data.get('address')
         c = Category.objects.get(pk=int(request.data.get('category')))
-        amount = c.images.filter(image_profiles__profile=request.user.profile).count()
+        cp = CategoryProfile.objects.get(profile=request.user.profile, category=c)
+        amount = cp.balance
+
         with open('%s/contract/owner_contract_abi.json' % settings.BASE_DIR, 'r') as abi_definition:
             abi = json.load(abi_definition)
 
@@ -101,7 +103,7 @@ class WithdrawList(generics.CreateAPIView):
         contract_checksum = w3.toChecksumAddress(c.contract_address)
         contract = w3.eth.contract(address=contract_checksum, abi=abi)
 
-        unicorn_txn = contract.functions.add_amount(to, amount * 1000000000000000000).buildTransaction({
+        unicorn_txn = contract.functions.add_amount(to, int(amount * 1000000000000000000)).buildTransaction({
             'value': 0,
             'gas': w3.toHex(1000000),
             'gasPrice': w3.toWei('10000', 'gwei'),
@@ -114,6 +116,9 @@ class WithdrawList(generics.CreateAPIView):
         signed = acct.signTransaction(unicorn_txn)
         tx = w3.eth.sendRawTransaction(signed.rawTransaction)
         tx_hash = w3.toHex(tx)
+
+        cp.balance = 0
+        cp.save()
         return Response({"tx_hash": tx_hash}, status=status.HTTP_200_OK)
 
 

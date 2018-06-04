@@ -63,6 +63,7 @@ class Profile extends React.Component {
                     <Item.Description>{item.contract}</Item.Description>
                     <Item.Description>Total images classified: {item.total_classify}</Item.Description>
                     <Item.Description>Total images: {item.total_image}</Item.Description>
+                    <Item.Description>Balance: {item.balance}</Item.Description>
                     <Item.Description>
                       <input className='ui input' placeholder='Classify' type="text" value={self.state.values[i] || ''}
                              onChange={self.handleChange.bind(self, i)}/>
