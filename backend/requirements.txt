@@ -1,7 +1,9 @@
+pyrebase
+requests==2.18.4
+pycryptodome==3.4.7
 pyopenssl
 django
 django-storages
-pyrebase
 django-filter
 requests-html
 coreapi
@@ -14,3 +16,4 @@ Pillow
 django-storages[google]
 grpcio==1.7.0
 numpy
+py-solc
