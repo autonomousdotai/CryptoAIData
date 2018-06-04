@@ -15,49 +15,36 @@ class Login extends React.Component {
       this.setState({categories: resBody.results})
     }).catch((e) => {
     })
-  }
-
+  } 
   render() {
     return (
       <Segment vertical loading={this.props.isLoading}>
-        <Container>
-          <Grid stackable columns={2}>
+        <Container> 
+        <Card.Group centered >
             {this.state.categories.map(function (item, i) {
               return (
-                <Link to={'/' + item.id} key={i}>
-                  <Grid.Column>
-                    <Item.Group>
-                      <Item>
-                        <Item.Image size='medium'
-                                    src={item.img_present}/>
-                        <Item.Content verticalAlign='middle'>
-                          <Item.Header>
-                            {item.name}
-                          </Item.Header>
-                          <Item.Description>
-                            {item.desc}
-                          </Item.Description>
-                          <Item.Description>
+
+                     <Card href={"/" + item.id}> 
+                        <Image src={item.img_present} />
+                        <Card.Content>
+                          <Card.Header>{item.name}</Card.Header>
+                          <Card.Meta>
+                            <p className='date' style={{overflow:'hidden'}}>{item.contract_address}</p>
+                            <p className='date'>{item.created}</p>
+                          </Card.Meta>
+                          <Card.Description>{item.desc}</Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                          <a>
                             <Icon name='file image outline'/>
-                            {item.total_images}
-                          </Item.Description>
-                          <Item.Description>
-                            {item.tx}
-                          </Item.Description>
-                          <Item.Description>
-                            {item.contract_address}
-                          </Item.Description>
-                          <Item.Meta>
-                            {item.created}
-                          </Item.Meta>
-                        </Item.Content>
-                      </Item>
-                    </Item.Group>
-                  </Grid.Column>
-                </Link>
+                               {item.total_images}
+                            </a>
+                        </Card.Content> 
+                      </Card>
+                 
               )
             })}
-          </Grid>
+        </Card.Group> 
         </Container>
       </Segment>
     )
@@ -70,3 +57,30 @@ export default props => (<AuthConsumer>
     }}
   </AuthConsumer>
 )
+
+
+// <Item>
+//                         <Item.Image size='medium'
+//                                     src={item.img_present}/>
+//                         <Item.Content verticalAlign='middle'>
+//                           <Item.Header>
+//                             {item.name}
+//                           </Item.Header>
+//                           <Item.Description>
+//                             {item.desc}
+//                           </Item.Description>
+//                           <Item.Description>
+//                             <Icon name='file image outline'/>
+//                             {item.total_images}
+//                           </Item.Description>
+//                           <Item.Description>
+//                             {item.tx}
+//                           </Item.Description>
+//                           <Item.Description>
+//                             {item.contract_address}
+//                           </Item.Description>
+//                           <Item.Meta>
+//                             {item.created}
+//                           </Item.Meta>
+//                         </Item.Content>
+//                       </Item>

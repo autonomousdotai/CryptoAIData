@@ -1,3 +1,6 @@
 .container{
     margin-top: 1em;
 }
+.ui.card, .ui.cards>.card{
+     
+}

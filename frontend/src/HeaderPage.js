@@ -17,18 +17,19 @@ import {
 
 
 class DesktopContainer extends Component {
-  state = {}
+  state = { activeItem: 'home' }
 
   componentDidMount() {
   }
 
   hideFixedMenu = () => this.setState({fixed: false})
   showFixedMenu = () => this.setState({fixed: true})
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
     const {children} = this.props
     const {fixed} = this.state
-
+    const { activeItem } = this.state
     return (
       <Responsive {...Responsive.onlyComputer}>
         <Visibility once={false} onBottomPassed={this.showFixedMenu} onBottomPassedReverse={this.hideFixedMenu}>
@@ -42,18 +43,18 @@ class DesktopContainer extends Component {
             >
               <Container>
                 <Link to="/">
-                  <Menu.Item active>Home</Menu.Item>
+                  <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick}  >Home</Menu.Item>
                 </Link>
                 <Link to="/history">
-                  <Menu.Item>History</Menu.Item>
+                  <Menu.Item name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >History</Menu.Item>
                 </Link>
                 <Link to="/category">
-                  <Menu.Item>Category</Menu.Item>
-                </Link>
+                  <Menu.Item name='category' active={activeItem === 'category'} onClick={this.handleItemClick} >Category</Menu.Item>
+                </Link>  
                 <Menu.Item position='right'>
                   {this.props.isAuth ?
                     <Link to="/profile">
-                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Hello</Button>
+                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Upload</Button>
                     </Link>
                     :
                     <Link to="/login">
@@ -75,7 +76,7 @@ DesktopContainer.propTypes = {
 }
 
 class MobileContainer extends Component {
-  state = {}
+  state = { activeItem: 'home' }
 
   handlePusherClick = () => {
     const {sidebarOpened} = this.state
@@ -87,24 +88,25 @@ class MobileContainer extends Component {
   render() {
     const {children} = this.props
     const {sidebarOpened} = this.state
+    const { activeItem } = this.state
 
     return (
       <Responsive {...Responsive.onlyMobile}>
         <Sidebar.Pushable>
           <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
-            <Link to="/">
-              <Menu.Item active>Home</Menu.Item>
-            </Link>
-            <Link to="/history">
-              <Menu.Item active>History</Menu.Item>
-            </Link>
-            <Link to="/category">
-              <Menu.Item>Category</Menu.Item>
-            </Link>
+              <Link to="/">
+                <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick}  >Home</Menu.Item>
+              </Link>
+              <Link to="/history">
+                <Menu.Item name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >History</Menu.Item>
+              </Link>
+              <Link to="/category">
+                <Menu.Item name='category' active={activeItem === 'category'} onClick={this.handleItemClick} >Category</Menu.Item>
+              </Link>  
           </Sidebar>
 
-          <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} style={{minHeight: '100vh'}}>
-            <Segment inverted textAlign='center' style={{minHeight: 350, padding: '1em 0em'}} vertical>
+          <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} >
+            <Segment inverted textAlign='center' style={{padding: '1em 0em'}} vertical>
               <Container>
                 <Menu inverted pointing secondary size='large'>
                   <Menu.Item onClick={this.handleToggle}>
@@ -113,7 +115,7 @@ class MobileContainer extends Component {
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
                     <Link to="/profile">
-                      <Button inverted style={{marginLeft: '0.5em'}}>Hello</Button>
+                      <Button inverted style={{marginLeft: '0.5em'}}>Upload</Button>
                     </Link>
                     :
                     <Link to="/login">

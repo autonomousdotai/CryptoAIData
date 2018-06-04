@@ -1,10 +1,9 @@
 import React from 'react';
-import {Grid, Image, Container, Dropdown, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
+import {Grid, Image, Container, Dropdown, Button, Form, Card, Icon, Segment, Item, Visibility} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
-
-
+ 
 class ImageList extends React.Component {
   constructor(props) {
     super(props);
@@ -83,7 +82,7 @@ class ImageList extends React.Component {
 
   render() {
     let self = this;
-    return (
+    return ( 
       <Visibility once={true} onUpdate={self.handleUpdate}>
         <Form>
           <Form.Field>
@@ -92,22 +91,27 @@ class ImageList extends React.Component {
         </Form>
         <Segment vertical>
           <Container>
-            <Grid stackable columns={3}>
-              {this.state.images.map(function (item, i) {
-                return (
-                  <Grid.Column key={i}>
-                    <Segment vertical>
-                      <Image src={item.link}/>
-                      <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
+          <Card.Group centered>
+                  {this.state.images.map(function (item, i) {
+                  return ( 
+                          <Card > 
+                            <Image src={item.link} />
+                            <Card.Content>
+                              <Card.Header>{item.name}</Card.Header>
+                              <Card.Meta>
+                                <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
                                 placeholder='Select classify' fluid selection search options={self.state.classifies}/>
-                    </Segment>
-                  </Grid.Column>
-                )
-              })}
-            </Grid>
+
+                              </Card.Meta> 
+                            </Card.Content> 
+                          </Card>
+                      
+                  )
+                })}
+            </Card.Group> 
           </Container>
         </Segment>
-      </Visibility>
+      </Visibility> 
     )
   }
 }
@@ -118,3 +122,7 @@ export default props => (<AuthConsumer>
     }}
   </AuthConsumer>
 )
+
+
+
+ 
