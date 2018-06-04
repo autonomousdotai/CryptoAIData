@@ -76,8 +76,6 @@ class CategoryClassify extends React.Component {
           })
         }
       }
-
-
     }).catch((e) => {
     })
   }

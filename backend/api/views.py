@@ -12,7 +12,7 @@ from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, C
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -26,7 +26,6 @@ from django.db.models import Q
 import threading
 from api.utils.image import stream_to_ai_server, perform_create
 from django_filters import rest_framework as filters
-
 
 
 @api_view(['POST'])
@@ -87,37 +86,35 @@ def user_signin(request):
     return Response(res, status=status.HTTP_201_CREATED)
 
 
-@api_view(['POST'])
-@authentication_classes([])
-@permission_classes([])
-def transfer(request):
-    if 'to' not in request.data or 'amount' not in request.data:
-        return Response({"to": ["This field may not be blank."], "amount": ["This field may not be blank."]},
-                        status=status.HTTP_400_BAD_REQUEST)
-    to = request.data.get('to')
-    amount = int(request.data.get('amount'))
+class WithdrawList(generics.CreateAPIView):
+    serializer_class = WithdrawCreateSerializer
 
-    with open('%s/contract/owner_contract_abi.json' % settings.BASE_DIR, 'r') as abi_definition:
-        abi = json.load(abi_definition)
+    def create(self, request, *args, **kwargs):
+        to = request.data.get('address')
+        c = Category.objects.get(pk=int(request.data.get('category')))
+        amount = c.images.filter(image_profiles__profile=request.user.profile).count()
+        with open('%s/contract/owner_contract_abi.json' % settings.BASE_DIR, 'r') as abi_definition:
+            abi = json.load(abi_definition)
 
-    w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
+        w3 = Web3(HTTPProvider('https://rinkeby.infura.io/SKMV9xjeMbG3u7MnJHVH'))
 
-    contract = w3.eth.contract(address=settings.CONTRACT_ADDRESS, abi=abi)
+        contract_checksum = w3.toChecksumAddress(c.contract_address)
+        contract = w3.eth.contract(address=contract_checksum, abi=abi)
 
-    unicorn_txn = contract.functions.add_amount(to, amount * 1000000000000000000).buildTransaction({
-        'value': 0,
-        'gas': w3.toHex(1000000),
-        'gasPrice': w3.toWei('10000', 'gwei'),
-        'nonce': w3.eth.getTransactionCount('0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'),
-        'from': '0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'
-    })
+        unicorn_txn = contract.functions.add_amount(to, amount * 1000000000000000000).buildTransaction({
+            'value': 0,
+            'gas': w3.toHex(1000000),
+            'gasPrice': w3.toWei('10000', 'gwei'),
+            'nonce': w3.eth.getTransactionCount('0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'),
+            'from': '0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'
+        })
 
-    private_key = r"955ca0f797c309aadd06d6bd9272ed71e57210ea145edff4b238c3db0b63f219"
-    acct = Account.privateKeyToAccount(private_key)
-    signed = acct.signTransaction(unicorn_txn)
-    tx = w3.eth.sendRawTransaction(signed.rawTransaction)
-    tx_hash = w3.toHex(tx)
-    return Response({"tx_hash": tx_hash}, status=status.HTTP_200_OK)
+        private_key = r"955ca0f797c309aadd06d6bd9272ed71e57210ea145edff4b238c3db0b63f219"
+        acct = Account.privateKeyToAccount(private_key)
+        signed = acct.signTransaction(unicorn_txn)
+        tx = w3.eth.sendRawTransaction(signed.rawTransaction)
+        tx_hash = w3.toHex(tx)
+        return Response({"tx_hash": tx_hash}, status=status.HTTP_200_OK)
 
 
 class ProfileList(generics.ListCreateAPIView):
@@ -128,14 +125,14 @@ class ProfileList(generics.ListCreateAPIView):
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileDetailSerializer
 
 
 class ImageList(generics.ListCreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('category', )
+    filter_fields = ('category',)
 
     def get_queryset(self):
         user = self.request.user
@@ -229,7 +226,7 @@ class ClassifyList(generics.ListCreateAPIView):
     queryset = Classify.objects.all()
     serializer_class = ClassifySerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('category', )
+    filter_fields = ('category',)
 
 
 class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):

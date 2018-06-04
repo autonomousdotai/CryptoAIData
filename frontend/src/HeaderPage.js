@@ -52,7 +52,7 @@ class DesktopContainer extends Component {
                 </Link>
                 <Menu.Item position='right'>
                   {this.props.isAuth ?
-                    <Link to="/profile">
+                    <Link to={'/p/' + this.props.userId}>
                       <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Hello</Button>
                     </Link>
                     :
@@ -136,10 +136,10 @@ MobileContainer.propTypes = {
 }
 
 export default props => (<AuthConsumer>
-    {({isAuth}) => {
+    {({isAuth, userId}) => {
       return <div>
-        <DesktopContainer {...props} isAuth={isAuth}/>
-        <MobileContainer {...props} isAuth={isAuth}/>
+        <DesktopContainer {...props} userId={userId} isAuth={isAuth}/>
+        <MobileContainer {...props} userId={userId} isAuth={isAuth}/>
       </div>
     }}
   </AuthConsumer>
