@@ -77,6 +77,20 @@ class Classify(models.Model):
     title = models.CharField(max_length=255, null=True, default=None)
 
 
+class CategoryProfile(models.Model):
+    balance = models.FloatField(null=False, default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+
+@receiver(post_save, sender=ImageProfile)
+def add_amount_classify_profile(sender, instance, created, **kwargs):
+    if created:
+        cp, _ = CategoryProfile.objects.get_or_create(category=instance.image.category, profile=instance.profile)
+        cp.balance += 1
+        cp.save()
+
+
 @receiver(post_save, sender=Category)
 def create_contract_category(sender, instance, created, **kwargs):
     if created:

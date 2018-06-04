@@ -53,8 +53,8 @@ class DesktopContainer extends Component {
                 </Link>  
                 <Menu.Item position='right'>
                   {this.props.isAuth ?
-                    <Link to="/profile">
-                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Upload</Button>
+                    <Link to={'/p/' + this.props.userId}>
+                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
                     </Link>
                     :
                     <Link to="/login">
@@ -115,7 +115,7 @@ class MobileContainer extends Component {
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
                     <Link to="/profile">
-                      <Button inverted style={{marginLeft: '0.5em'}}>Upload</Button>
+                      <Button inverted style={{marginLeft: '0.5em'}}>Profile</Button>
                     </Link>
                     :
                     <Link to="/login">
@@ -138,10 +138,10 @@ MobileContainer.propTypes = {
 }
 
 export default props => (<AuthConsumer>
-    {({isAuth}) => {
+    {({isAuth, userId}) => {
       return <div>
-        <DesktopContainer {...props} isAuth={isAuth}/>
-        <MobileContainer {...props} isAuth={isAuth}/>
+        <DesktopContainer {...props} userId={userId} isAuth={isAuth}/>
+        <MobileContainer {...props} userId={userId} isAuth={isAuth}/>
       </div>
     }}
   </AuthConsumer>

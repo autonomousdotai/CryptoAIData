@@ -4,7 +4,7 @@ import agent from './agent'
 const AuthContext = React.createContext()
 
 class AuthProvider extends React.Component {
-  state = {isAuth: false || !!localStorage.token, isLoading: false, token: localStorage.token}
+  state = {isAuth: false || !!localStorage.token, isLoading: false, token: localStorage.token, userId: localStorage.userId}
 
   constructor() {
     super()
@@ -18,7 +18,9 @@ class AuthProvider extends React.Component {
       let resBody = response.body;
       this.setState({isAuth: true})
       this.setState({token: resBody.token})
+      this.setState({userId: resBody.id})
       localStorage.setItem('token', resBody.token)
+      localStorage.setItem('userId', resBody.id)
       this.setState({isLoading: false})
     }).catch((e) => {
       this.setState({isAuth: false})
@@ -38,7 +40,8 @@ class AuthProvider extends React.Component {
           isLoading: this.state.isLoading,
           login: this.login,
           logout: this.logout,
-          token: this.state.token
+          token: this.state.token,
+          userId: this.state.userId
         }}
       >
         {this.props.children}

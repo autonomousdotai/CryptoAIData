@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile
 import requests
 
 
@@ -16,6 +16,26 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
+    categories = serializers.SerializerMethodField()
+
+    def get_categories(self, obj):
+        categories = Category.objects.all()
+        res = []
+        for c in categories:
+            total_image = c.images.count()
+            total_classify = c.images.filter(image_profiles__profile=obj).count()
+            if c.images.count() > 0 and total_classify > 0:
+                balance = CategoryProfile.objects.get(profile=obj, category=c).balance
+                res.append(
+                    {"total_image": total_image,
+                     "total_classify": total_classify,
+                     "contract": c.contract_address,
+                     "name": c.name,
+                     "category_id": c.id,
+                     "balance": balance
+                     })
+        return res
+
     class Meta:
         model = Profile
         fields = '__all__'
@@ -61,14 +81,9 @@ class FirmwareDetailSerializer(serializers.ModelSerializer):
 
 
 class ImageProfileSerializer(serializers.ModelSerializer):
-    point = serializers.SerializerMethodField()
-    image_url = serializers.SerializerMethodField()
-    category_name = serializers.SerializerMethodField()
-    classify_name = serializers.SerializerMethodField()
-
-    def get_point(self, obj):
-        balance = 0
-        return int(balance)
+    image_url = serializers.SerializerMethodField(read_only=True)
+    category_name = serializers.SerializerMethodField(read_only=True)
+    classify_name = serializers.SerializerMethodField(read_only=True)
 
     def get_image_url(self, obj):
         return obj.image.link.url
@@ -86,13 +101,14 @@ class ImageProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProfile
         fields = '__all__'
-        read_only_fields = ('profile',)
+        read_only_fields = ('profile', 'image_url', 'category_name', 'classify_name', )
 
 
 class ImageProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProfile
         fields = '__all__'
+        read_only_fields = ('profile',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -142,3 +158,8 @@ class ClassifyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classify
         fields = '__all__'
+
+
+class WithdrawCreateSerializer(serializers.Serializer):
+    address = serializers.CharField()
+    category = serializers.IntegerField()

@@ -12,6 +12,7 @@ import './css/index.css';
 import  HeaderPage from './HeaderPage'
 import  History from './History'
 import  CategoryClassify from './CategoryClassify'
+import  Profile from './Profile'
 
 const App = () => (
   <div>
@@ -23,8 +24,9 @@ const App = () => (
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/history" component={History} />
           <ProtectedRoute exact path="/category" component={CategoryClassify} />
-          <Route exact path="/" component={Home} />
+          <ProtectedRoute exact path="/p/:profileId" component={Profile} />
           <ProtectedRoute exact path="/:categoryId" component={ImageList} />
+          <Route exact path="/" component={Home} />
         </Switch>
       </AuthProvider>
     </Router>
