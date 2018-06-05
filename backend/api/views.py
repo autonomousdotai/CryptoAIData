@@ -111,7 +111,7 @@ class WithdrawList(generics.CreateAPIView):
             'from': '0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'
         })
 
-        private_key = r"955ca0f797c309aadd06d6bd9272ed71e57210ea145edff4b238c3db0b63f219"
+        private_key = os.environ['PRIVATE_KEY']
         acct = Account.privateKeyToAccount(private_key)
         signed = acct.signTransaction(unicorn_txn)
         tx = w3.eth.sendRawTransaction(signed.rawTransaction)

@@ -1,17 +1,23 @@
 pragma solidity ^0.4.8;
 
 
-interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) external; }
+interface tokenRecipient {function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) external;}
 
 contract OwnerToken {
     // Public variables of the token
     string public name;
     string public symbol;
-    address public owner_address;
+    address public ownerAddress;
     uint8 public decimals = 18;
+    uint256 public currentSupply = 0;
+    uint256 public ethBalance = 0;
 
     // This creates an array with all balances
-    mapping (address => uint256) public balanceOf;
+    mapping(address => uint256) public balanceOf;
+
+    // Look up table address user in contract
+    address[] public balanceOfLUT;
+
 
     // This generates a public event on the blockchain that will notify clients
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -25,9 +31,11 @@ contract OwnerToken {
         string tokenName,
         string tokenSymbol
     ) public {
-        name = tokenName;                                   // Set the name for display purposes
-        symbol = tokenSymbol;                               // Set the symbol for display purposes
-        owner_address = msg.sender;
+        name = tokenName;
+        // Set the name for display purposes
+        symbol = tokenSymbol;
+        // Set the symbol for display purposes
+        ownerAddress = msg.sender;
     }
 
     /**
@@ -35,11 +43,29 @@ contract OwnerToken {
      */
     function add_amount(address _address, uint _value) public {
         require(_address != 0x0);
-        require(msg.sender == owner_address);
+        require(msg.sender == ownerAddress);
         // Save this for an assertion in the future
         // Add the same to the recipient
         balanceOf[_address] += _value;
+        currentSupply += _value;
+        balanceOfLUT.push(_address);
         emit Transfer(msg.sender, _address, _value);
+    }
+
+    function() payable public {
+        ethBalance = msg.value;
+    }
+
+    function ethBalance() view public returns (uint256) {
+        return ethBalance;
+    }
+
+    function currentSupply() view public returns (uint256) {
+        return currentSupply;
+    }
+
+    function size() public returns (uint) {
+        return balanceOfLUT.length;
     }
 
     /**
