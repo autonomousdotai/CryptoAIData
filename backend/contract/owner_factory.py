@@ -43,12 +43,12 @@ class OwnerTokenFactory(object):
 
         data = contract._encode_constructor_data(args=(self.name, self.symbol))
         transaction = {'data': data,
-                       'gas': 3000000,
-                       'gasPrice': randint(8000000, 10000000),
+                       'gas': w3.toHex(1000000),
+                       'gasPrice': w3.toWei('1000', 'gwei'),
                        'chainId': 4,
                        'to': '',
                        'from': self.ADDRESS,
-                       'nonce': w3.eth.getTransactionCount(self.ADDRESS) + randint(1, 1000)
+                       'nonce': w3.eth.getTransactionCount(self.ADDRESS, "pending")
                        }
         acct = Account.privateKeyToAccount(self.PRIVATE_KEY)
         signed = acct.signTransaction(transaction)

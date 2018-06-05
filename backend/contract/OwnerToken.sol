@@ -48,6 +48,7 @@ contract OwnerToken {
         // Add the same to the recipient
         balanceOf[_address] += _value;
         currentSupply += _value;
+
         balanceOfLUT.push(_address);
         emit Transfer(msg.sender, _address, _value);
     }

@@ -20,6 +20,7 @@ class DesktopContainer extends Component {
   state = {}
 
   componentDidMount() {
+    console.log(this.context)
   }
 
   hideFixedMenu = () => this.setState({fixed: false})
@@ -106,7 +107,7 @@ class MobileContainer extends Component {
           <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} style={{minHeight: '100vh'}}>
             <Segment inverted textAlign='center' style={{minHeight: 350, padding: '1em 0em'}} vertical>
               <Container>
-                <Menu inverted pointing secondary size='large'>
+                <Menu inverted pointing secondary>
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar'/>
                   </Menu.Item>

@@ -103,12 +103,13 @@ class WithdrawList(generics.CreateAPIView):
         contract_checksum = w3.toChecksumAddress(c.contract_address)
         contract = w3.eth.contract(address=contract_checksum, abi=abi)
 
-        unicorn_txn = contract.functions.add_amount(to, int(amount * 1000000000000000000)).buildTransaction({
+        unicorn_txn = contract.functions.add_amount(to, 1).buildTransaction({
             'value': 0,
             'gas': w3.toHex(1000000),
-            'gasPrice': w3.toWei('10000', 'gwei'),
+            'chainId': 4,
+            'gasPrice': w3.toWei('1000', 'gwei'),
             'nonce': w3.eth.getTransactionCount('0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'),
-            'from': '0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'
+            'from': os.environ['ADDRESS']
         })
 
         private_key = os.environ['PRIVATE_KEY']

@@ -1,3 +1,8 @@
 .container{
     margin-top: 1em;
 }
+
+.ui.large.pointing.secondary.menu{
+    margin-top: -21px;
+    margin-bottom: -21px;
+}

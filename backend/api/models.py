@@ -56,6 +56,9 @@ class Category(models.Model):
     def __str__(self):
         return '%s' % self.name
 
+    class Meta:
+        ordering = ('-id', )
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
