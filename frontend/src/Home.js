@@ -28,6 +28,8 @@ class Login extends React.Component {
   }
 
   handleUpdate = (e, {calculations}) => {
+    console.log(calculations)
+    console.log(calculations.bottomVisible)
     this.setState({calculations})
     if (calculations.bottomVisible) {
       if (!!this.state.nextURL) {
@@ -46,32 +48,30 @@ class Login extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical loading={this.props.isLoading}>
           <Container>
-        <Card.Group centered >
-            {this.state.categories.map(function (item, i) {
-              return (
-
-                     <Card href={"/" + item.id}>
-                        <Image src={item.img_present} />
-                        <Card.Content>
-                          <Card.Header>{item.name}</Card.Header>
-                          <Card.Meta>
-                            <p className='date' style={{overflow:'hidden'}}>{item.contract_address}</p>
-                            <p className='date'>{item.created}</p>
-                          </Card.Meta>
-                          <Card.Description>{item.desc}</Card.Description>
-                        </Card.Content>
-                        <Card.Content extra>
-                          <a>
-                            <Icon name='file image outline'/>
-                               {item.total_images}
-                            </a>
-                        </Card.Content>
-                      </Card>
-
-              )
-            })}
-        </Card.Group>
-        </Container>
+            <Card.Group centered>
+              {this.state.categories.map(function (item, i) {
+                return (
+                  <Card href={"/" + item.id}>
+                    <Image src={item.img_present}/>
+                    <Card.Content>
+                      <Card.Header>{item.name}</Card.Header>
+                      <Card.Meta>
+                        <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
+                        <p className='date'>{item.created}</p>
+                      </Card.Meta>
+                      <Card.Description>{item.desc}</Card.Description>
+                    </Card.Content>
+                    <Card.Content extra>
+                      <a>
+                        <Icon name='file image outline'/>
+                        {item.total_images}
+                      </a>
+                    </Card.Content>
+                  </Card>
+                )
+              })}
+            </Card.Group>
+          </Container>
         </Segment>
       </Visibility>
 

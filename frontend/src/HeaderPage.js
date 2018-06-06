@@ -34,7 +34,7 @@ class DesktopContainer extends Component {
     return (
       <Responsive {...Responsive.onlyComputer}>
         <Visibility once={false} onBottomPassed={this.showFixedMenu} onBottomPassedReverse={this.hideFixedMenu}>
-          <Segment inverted textAlign='center' vertical>
+          <Segment inverted textAlign='center' vertical style={{"marginBottom": "1em"}}>
             <Menu
               fixed={fixed ? 'top' : null}
               inverted={!fixed}
