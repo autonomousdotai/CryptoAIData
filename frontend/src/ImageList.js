@@ -3,7 +3,7 @@ import {Grid, Image, Container, Dropdown, Button, Form, Card, Icon, Segment, Ite
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
- 
+
 class ImageList extends React.Component {
   constructor(props) {
     super(props);
@@ -28,10 +28,10 @@ class ImageList extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/image/', form).set('authorization', `JWT ${this.props.token}`).then((response) => {
 
       agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
-      let resBody = response.body;
-      this.setState({images: resBody.results, nextURL: resBody.next})
-    }).catch((e) => {
-    })
+        let resBody = response.body;
+        this.setState({images: resBody.results, nextURL: resBody.next})
+      }).catch((e) => {
+      })
 
     }).catch((e) => {
     })
@@ -82,7 +82,7 @@ class ImageList extends React.Component {
 
   render() {
     let self = this;
-    return ( 
+    return (
       <Visibility once={true} onUpdate={self.handleUpdate}>
         <Form>
           <Form.Field>
@@ -91,27 +91,26 @@ class ImageList extends React.Component {
         </Form>
         <Segment vertical>
           <Container>
-          <Card.Group centered>
-                  {this.state.images.map(function (item, i) {
-                  return ( 
-                          <Card > 
-                            <Image src={item.link} />
-                            <Card.Content>
-                              <Card.Header>{item.name}</Card.Header>
-                              <Card.Meta>
-                                <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
-                                placeholder='Select classify' fluid selection search options={self.state.classifies}/>
+            <Card.Group centered>
+              {this.state.images.map(function (item, i) {
+                return (
+                  <Card>
+                    <Image src={item.link}/>
+                    <Card.Content>
+                      <Card.Header>{item.name}</Card.Header>
+                      <Card.Meta>
+                        <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
+                                  placeholder='Select classify' fluid selection search options={self.state.classifies}/>
 
-                              </Card.Meta> 
-                            </Card.Content> 
-                          </Card>
-                      
-                  )
-                })}
-            </Card.Group> 
+                      </Card.Meta>
+                    </Card.Content>
+                  </Card>
+                )
+              })}
+            </Card.Group>
           </Container>
         </Segment>
-      </Visibility> 
+      </Visibility>
     )
   }
 }

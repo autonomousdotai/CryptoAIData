@@ -11,6 +11,7 @@ class Login extends React.Component {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.state = {
+      isLoading: false,
       categories: [],
       nextURL: '',
       calculations: {
@@ -20,23 +21,30 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({isLoading: true})
     agent.req.get(agent.API_ROOT + '/api/category/').then((response) => {
       let resBody = response.body;
+      this.setState({isLoading: false})
       this.setState({categories: resBody.results, nextURL: resBody.next})
     }).catch((e) => {
     })
   }
 
   handleUpdate = (e, {calculations}) => {
+    let self = this;
     console.log(calculations)
-    console.log(calculations.bottomVisible)
+    console.log(calculations.percentagePassed)
     this.setState({calculations})
-    if (calculations.bottomVisible) {
-      if (!!this.state.nextURL) {
+    if (calculations.direction === "down" & calculations.percentagePassed  > 0.3) {
+      if (!!this.state.nextURL && this.state.isLoading == false) {
+        this.setState({isLoading: true})
         agent.req.get(this.state.nextURL).then((response) => {
           let resBody = response.body;
-          let newData = this.state.categories.concat(resBody.results)
-          this.setState({categories: newData, nextURL: resBody.next})
+          this.setState({isLoading: false})
+          if(resBody.next != self.state.nextURL){
+            let newData = this.state.categories.concat(resBody.results)
+            this.setState({categories: newData, nextURL: resBody.next})
+          }
         }).catch((e) => {
         })
       }
@@ -46,17 +54,21 @@ class Login extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical loading={this.props.isLoading}>
+        <Segment vertical loading={this.state.isLoading}>
           <Container>
             <Card.Group centered>
               {this.state.categories.map(function (item, i) {
                 return (
                   <Card href={"/" + item.id}>
-                    <Image src={item.img_present}/>
+                    <img src={item.img_present} height="200px"/>
                     <Card.Content>
                       <Card.Header>{item.name}</Card.Header>
                       <Card.Meta>
+                        {!!item.contract_address ?
                         <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
+                          :
+                          <p className='date' style={{overflow: 'hidden'}}>Creating</p>
+                        }
                         <p className='date'>{item.created}</p>
                       </Card.Meta>
                       <Card.Description>{item.desc}</Card.Description>
@@ -85,30 +97,3 @@ export default props => (<AuthConsumer>
     }}
   </AuthConsumer>
 )
-
-
-// <Item>
-//                         <Item.Image size='medium'
-//                                     src={item.img_present}/>
-//                         <Item.Content verticalAlign='middle'>
-//                           <Item.Header>
-//                             {item.name}
-//                           </Item.Header>
-//                           <Item.Description>
-//                             {item.desc}
-//                           </Item.Description>
-//                           <Item.Description>
-//                             <Icon name='file image outline'/>
-//                             {item.total_images}
-//                           </Item.Description>
-//                           <Item.Description>
-//                             {item.tx}
-//                           </Item.Description>
-//                           <Item.Description>
-//                             {item.contract_address}
-//                           </Item.Description>
-//                           <Item.Meta>
-//                             {item.created}
-//                           </Item.Meta>
-//                         </Item.Content>
-//                       </Item>
