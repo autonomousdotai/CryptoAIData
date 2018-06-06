@@ -8,6 +8,8 @@ DB_HOST='127.0.0.1'
 GOOGLE_APPLICATION_CREDENTIALS='/path/to/keyfile.json'
 
 AUTONOMOUS_API_HOST='https://dev.autonomous.ai'
+ADDRESS=0x6f212bF41DF64De9782dbfb26112BD3B0e39514B
+PRIVATE_KEY=xxx
 
 ```
 
@@ -17,10 +19,16 @@ Install package
 ```bash
 mysql -u root -p -e "create database trashcan_dev"
 
+brew tap ethereum/ethereum
+brew install ethereum
+brew install solidity
 brew install python3
 brew install pandoc
 
+
 pip3 install -r requirements.txt
+pip3 install --upgrade google-cloud
+
 python3 manage.py migrate
 python3 manage.py loaddata fixtures/category.json
 python3 manage.py loaddata fixtures/classify.json
