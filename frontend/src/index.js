@@ -18,7 +18,7 @@ const App = () => (
   <div>
     <Router>
       <AuthProvider>
-        <HeaderPage />
+        <HeaderPage>
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
@@ -28,6 +28,7 @@ const App = () => (
           <ProtectedRoute exact path="/:categoryId" component={ImageList} />
           <Route exact path="/" component={Home} />
         </Switch>
+        </HeaderPage>
       </AuthProvider>
     </Router>
   </div>

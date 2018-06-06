@@ -33,14 +33,12 @@ class DesktopContainer extends Component {
     const { activeItem } = this.state
     return (
       <Responsive {...Responsive.onlyComputer}>
-        <Visibility once={false} onBottomPassed={this.showFixedMenu} onBottomPassedReverse={this.hideFixedMenu}>
-          <Segment inverted textAlign='center' vertical style={{"marginBottom": "1em"}}>
+          <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>
             <Menu
               fixed={fixed ? 'top' : null}
-              inverted={!fixed}
-              pointing={!fixed}
-              secondary={!fixed}
+              inverted={true}
               size='large'
+              style={{marginTop: "-1em", borderRadius: "0"}}
             >
               <Container>
                 <Link to="/">
@@ -64,9 +62,8 @@ class DesktopContainer extends Component {
                 </Menu.Item>
               </Container>
             </Menu>
-            {children}
+            {this.props.children}
           </Segment>
-        </Visibility>
       </Responsive>
     )
   }
@@ -107,9 +104,9 @@ class MobileContainer extends Component {
           </Sidebar>
 
           <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} >
-            <Segment inverted textAlign='center' style={{padding: '1em 0em'}} vertical>
+            <Segment textAlign='center' style={{padding: '1em 0em'}} vertical>
               <Container>
-                <Menu inverted pointing secondary>
+                <Menu inverted pointing>
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar'/>
                   </Menu.Item>
@@ -125,7 +122,7 @@ class MobileContainer extends Component {
                   </Menu.Item>
                 </Menu>
               </Container>
-              {children}
+              {this.props.children}
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
