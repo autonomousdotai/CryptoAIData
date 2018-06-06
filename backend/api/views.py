@@ -2,6 +2,7 @@ import base64
 import requests
 import json
 import os
+import copy
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework import status
@@ -12,7 +13,7 @@ from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, C
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -123,6 +124,70 @@ class WithdrawList(generics.CreateAPIView):
         return Response({"tx_hash": tx_hash}, status=status.HTTP_200_OK)
 
 
+class OscarUpload(generics.CreateAPIView):
+    serializer_class = OscarUploadSerializer
+
+    def create(self, request, *args, **kwargs):
+        file = request.FILES['link']
+        data = file.read()
+        file.seek(0)
+        result_model = {'type_ai': 2, 'score': 0}
+        t1 = threading.Thread(target=stream_to_ai_server, args=[result_model, data, 'type_ai', 'score'])
+        t1.start()
+        serializer = ImageDetailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        t2 = threading.Thread(target=lambda x: x.save(), args=[serializer])
+        t2.start()
+
+        file2 = request.FILES['link2']
+        data2 = file2.read()
+        file2.seek(0)
+        result_model_2 = {'type_ai_2': 2, 'score_2': 0}
+        t11 = threading.Thread(target=stream_to_ai_server, args=[result_model_2, data2, 'type_ai_2', 'score_2'])
+        t11.start()
+        request.data['link'] = request.data['link2']
+        serializer_2 = ImageDetailSerializer(data=request.data)
+        serializer_2.is_valid(raise_exception=True)
+        t22 = threading.Thread(target=lambda x: x.save(), args=[serializer_2])
+        t22.start()
+
+        file3 = request.FILES['link3']
+        data3 = file3.read()
+        file3.seek(0)
+        result_model_3 = {'type_ai_3': 2, 'score_3': 0}
+        t111 = threading.Thread(target=stream_to_ai_server, args=[result_model_3, data3, 'type_ai_3', 'score_3'])
+        t111.start()
+        request.data['link'] = request.data['link3']
+        serializer_3 = ImageDetailSerializer(data=request.data)
+        serializer_3.is_valid(raise_exception=True)
+        t222 = threading.Thread(target=lambda x: x.save(), args=[serializer_3])
+        t222.start()
+
+        t1.join()
+        t2.join()
+        t11.join()
+        t22.join()
+        t111.join()
+        t222.join()
+
+        serializer.instance.type_ai = result_model['type_ai']
+        serializer.instance.score = result_model['score']
+        serializer_2.instance.save()
+
+        serializer_2.instance.type_ai = result_model_2['type_ai_2']
+        serializer_2.instance.score = result_model_2['score_2']
+        serializer_2.instance.save()
+
+        serializer_3.instance.type_ai = result_model_3['type_ai_3']
+        serializer_3.instance.score = result_model_3['score_3']
+        serializer_3.instance.save()
+
+        result_model.update(serializer.data)
+        result_model.update(result_model_2)
+        result_model.update(result_model_3)
+        return Response(result_model, status=status.HTTP_200_OK)
+
+
 class ProfileList(generics.ListCreateAPIView):
     http_method_names = ['get', 'head']
     queryset = Profile.objects.all()
@@ -145,27 +210,11 @@ class ImageList(generics.ListCreateAPIView):
         return Image.objects.filter(~Q(image_profiles__profile=user.profile))
 
     def create(self, request, *args, **kwargs):
-        # Stream to server AI
-        file = request.FILES['link']
-        data = file.read()
-        file.seek(0)
-
-        result_model = {'type_ai': '', 'score': ''}
-        t1 = threading.Thread(name='stream_to_ai_server', target=stream_to_ai_server, args=[result_model, data])
-        t1.start()
-
         serializer = self.get_serializer(data=request.data)
-        t2 = threading.Thread(name='perform_create', target=perform_create, args=[self, serializer])
-        t2.start()
-
-        t1.join()
-        t2.join()
-        serializer.instance.type_ai = result_model['type_ai']
-        serializer.instance.score = result_model['score']
-        serializer.instance.save()
+        serializer.is_valid()
+        serializer.save()
         headers = self.get_success_headers(serializer.data)
-        result_model.update(serializer.data)
-        return Response(result_model, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):

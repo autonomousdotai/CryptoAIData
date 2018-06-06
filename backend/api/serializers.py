@@ -101,7 +101,7 @@ class ImageProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProfile
         fields = '__all__'
-        read_only_fields = ('profile', 'image_url', 'category_name', 'classify_name', )
+        read_only_fields = ('profile', 'image_url', 'category_name', 'classify_name',)
 
 
 class ImageProfileDetailSerializer(serializers.ModelSerializer):
@@ -162,4 +162,11 @@ class ClassifyDetailSerializer(serializers.ModelSerializer):
 
 class WithdrawCreateSerializer(serializers.Serializer):
     address = serializers.CharField()
+    category = serializers.IntegerField()
+
+
+class OscarUploadSerializer(serializers.Serializer):
+    link = serializers.FileField()
+    link2 = serializers.FileField()
+    link3 = serializers.FileField()
     category = serializers.IntegerField()

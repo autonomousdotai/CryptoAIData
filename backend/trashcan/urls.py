@@ -24,6 +24,7 @@ urlpatterns = [
     path(r'api/signin/', views.user_signin),
     path(r'api/profile/', views.ProfileList.as_view()),
     path(r'api/withdraw/', views.WithdrawList.as_view()),
+    path(r'api/oscar/image/', views.OscarUpload.as_view()),
     path(r'api/profile/<int:pk>/', views.ProfileDetail.as_view()),
     path(r'api/product/', views.ProductList.as_view()),
     path(r'api/product/<int:pk>/', views.ProductDetail.as_view()),
