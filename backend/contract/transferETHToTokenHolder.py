@@ -14,10 +14,5 @@ contract = w3.eth.contract(address=contract_checksum, abi=abi)
 print(contract.functions.ethBalance().call())
 print(contract.functions.size().call())
 
-current_supply = contract.functions.currentSupply().call()
+current_supply = contract.functions.reward().call()
 
-for i in range(0, contract.functions.size().call()):
-    account_address = contract.functions.balanceOfLUT(i).call()
-    account_balance = contract.functions.balanceOf(account_address).call()
-    print(account_address, account_balance)
-    contract.functions.transfer
