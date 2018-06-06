@@ -15,6 +15,7 @@ class Profile(models.Model):
     ref_id = models.IntegerField()
     fullname = models.CharField(max_length=255, null=True, default=None)
     phone = models.CharField(max_length=255, null=True, default=None)
+    followed_categories = models.ManyToManyField('Category', through='FollowedCategory')
 
 
 class Product(models.Model):
@@ -104,3 +105,8 @@ def create_contract_category(sender, instance, created, **kwargs):
         tx = OwnerTokenFactory(instance.name, instance.name.upper()[:6]).create_contract_tx_hash()
         instance.tx = tx
         instance.save()
+
+class FollowedCategory(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now=True)
