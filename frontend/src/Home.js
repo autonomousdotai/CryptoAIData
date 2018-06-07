@@ -65,24 +65,18 @@ class Login extends React.Component {
                   {this.state.categories.map(function (item, i) {
                     return (
                       <Card href={"/" + item.id}>
-                        <img src={item.img_present} height="200px"/>
+                        <Image src={item.img_present}/>
                         <Card.Content>
-                          <Card.Header>{item.name}</Card.Header>
-                          <Card.Meta>
-                            {!!item.contract_address ?
-                              <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
-                              :
-                              <p className='date' style={{overflow: 'hidden'}}>Creating</p>
-                            }
-                            <p className='date'>{item.created}</p>
-                          </Card.Meta>
-                          <Card.Description>{item.desc}</Card.Description>
                         </Card.Content>
                         <Card.Content extra>
-                          <a>
-                            <Icon name='file image outline'/>
-                            {item.total_images}
-                          </a>
+                          <p className='date' style={{overflow: 'hidden'}}>Name: {item.name}, Total <Icon
+                            name='file image outline'/>: {item.total_images}</p>
+                          {!!item.contract_address ?
+                            <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
+                            :
+                            <p className='date' style={{overflow: 'hidden'}}>Creating</p>
+                          }
+                          <p className='date'>{item.created}</p>
                         </Card.Content>
                       </Card>
                     )
