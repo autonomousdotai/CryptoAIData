@@ -171,7 +171,7 @@ class OscarUploadSerializer(serializers.Serializer):
     link3 = serializers.FileField()
     category = serializers.IntegerField()
 
-class FollowedCategoryListSerializer(serializers.ModelSerializer):
+class FollowCategorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         obj, _ = FollowedCategory.objects.get_or_create(
             profile=validated_data['profile'],

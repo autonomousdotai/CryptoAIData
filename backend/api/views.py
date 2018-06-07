@@ -13,7 +13,7 @@ from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, C
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowedCategoryListSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -289,14 +289,20 @@ class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ClassifyDetailSerializer
 
 
-class FollowedCategoryList(generics.ListCreateAPIView):
-    queryset = FollowedCategory.objects.all()
-    serializer_class = FollowedCategoryListSerializer
-
-    def get_queryset(self):
-        return FollowedCategory.objects.filter(profile=self.request.user.profile)
+class FollowCategory(generics.CreateAPIView):
+    serializer_class = FollowCategorySerializer
 
     def perform_create(self, serializer):
         profile = self.request.user.profile
         c = Category.objects.get(id=self.request.data['category'])
         return serializer.save(profile=self.request.user.profile, category=c)
+
+class UnfollowCategory(generics.DestroyAPIView):
+    serializer_class = FollowCategorySerializer
+
+    def get_object(self):
+        c = Category.objects.get(id=self.request.data['category'])
+        return FollowedCategory.objects.filter(profile=self.request.user.profile, category=c)
+
+    def perform_destroy(self, instance):
+        return instance.delete()
