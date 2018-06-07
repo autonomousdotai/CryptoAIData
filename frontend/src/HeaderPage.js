@@ -90,7 +90,7 @@ class MobileContainer extends Component {
 
     return (
       <Responsive {...Responsive.onlyMobile}>
-        <Sidebar.Pushable>
+        <Sidebar.Pushable style={{minHeight: "100vh"}}>
           <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
               <Link to="/">
                 <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick}  >Home</Menu.Item>
