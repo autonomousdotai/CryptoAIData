@@ -54,7 +54,7 @@ class Login extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical loading={this.state.isLoading}>
+        <Segment vertical>
           <div className="ui center aligned grid container">
             <div className="row">
               <div className="one wide column"></div>
@@ -93,6 +93,7 @@ class Login extends React.Component {
             </div>
           </div>
         </Segment>
+        <Segment vertical loading={this.state.isLoading}/>
       </Visibility>
 
     )
