@@ -105,8 +105,7 @@ class MobileContainer extends Component {
 
           <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick} >
             <Segment textAlign='center' style={{padding: '1em 0em'}} vertical>
-              <Container>
-                <Menu inverted pointing>
+                <Menu inverted pointing style={{marginTop: "-1em", borderRadius: "inherit"}}>
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar'/>
                   </Menu.Item>
@@ -121,7 +120,6 @@ class MobileContainer extends Component {
                     </Link>}
                   </Menu.Item>
                 </Menu>
-              </Container>
               {this.props.children}
             </Segment>
           </Sidebar.Pusher>

@@ -35,13 +35,13 @@ class Login extends React.Component {
     console.log(calculations)
     console.log(calculations.percentagePassed)
     this.setState({calculations})
-    if (calculations.direction === "down" & calculations.percentagePassed  > 0.3) {
+    if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
         this.setState({isLoading: true})
         agent.req.get(this.state.nextURL).then((response) => {
           let resBody = response.body;
           this.setState({isLoading: false})
-          if(resBody.next != self.state.nextURL){
+          if (resBody.next != self.state.nextURL) {
             let newData = this.state.categories.concat(resBody.results)
             this.setState({categories: newData, nextURL: resBody.next})
           }
@@ -55,35 +55,43 @@ class Login extends React.Component {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical loading={this.state.isLoading}>
-          <Container>
-            <Card.Group centered>
-              {this.state.categories.map(function (item, i) {
-                return (
-                  <Card href={"/" + item.id}>
-                    <img src={item.img_present} height="200px"/>
-                    <Card.Content>
-                      <Card.Header>{item.name}</Card.Header>
-                      <Card.Meta>
-                        {!!item.contract_address ?
-                        <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
-                          :
-                          <p className='date' style={{overflow: 'hidden'}}>Creating</p>
-                        }
-                        <p className='date'>{item.created}</p>
-                      </Card.Meta>
-                      <Card.Description>{item.desc}</Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <a>
-                        <Icon name='file image outline'/>
-                        {item.total_images}
-                      </a>
-                    </Card.Content>
-                  </Card>
-                )
-              })}
-            </Card.Group>
-          </Container>
+          <div className="ui center aligned grid container">
+            <div className="row">
+              <div className="one wide column"></div>
+              <div className="fourteen wide column">
+                <h1 style={{fontSize: '3rem'}}>Category list</h1>
+                <h1 style={{fontSize: '1.8rem'}}>List of data set.</h1>
+                <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
+                  {this.state.categories.map(function (item, i) {
+                    return (
+                      <Card href={"/" + item.id}>
+                        <img src={item.img_present} height="200px"/>
+                        <Card.Content>
+                          <Card.Header>{item.name}</Card.Header>
+                          <Card.Meta>
+                            {!!item.contract_address ?
+                              <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
+                              :
+                              <p className='date' style={{overflow: 'hidden'}}>Creating</p>
+                            }
+                            <p className='date'>{item.created}</p>
+                          </Card.Meta>
+                          <Card.Description>{item.desc}</Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                          <a>
+                            <Icon name='file image outline'/>
+                            {item.total_images}
+                          </a>
+                        </Card.Content>
+                      </Card>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className="one wide column"></div>
+            </div>
+          </div>
         </Segment>
       </Visibility>
 

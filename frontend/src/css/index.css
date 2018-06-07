@@ -1,12 +1,7 @@
-.container{
-    /*margin-top: 1em;*/
-    /*margin-bottom: 1em;*/
+.ui.container .item{
+    margin-top: 11px;
 }
 
-.ui.large.pointing.secondary.menu{
-    /*margin-top: -21px;*/
-    /*margin-bottom: -21px;*/
-}
-.ui.card, .ui.cards>.card{
-     
+.ui.container .button{
+    margin-top: -9px;
 }
