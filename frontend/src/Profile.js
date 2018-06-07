@@ -59,14 +59,15 @@ class Profile extends React.Component {
               return (
                 <Item key={i}>
                   <Item.Content>
-                    <Item.Header as='a'>{item.name}</Item.Header>
-                    <Item.Description>{item.contract}</Item.Description>
-                    <Item.Description>Total images classified: {item.total_classify}</Item.Description>
-                    <Item.Description>Total images: {item.total_image}</Item.Description>
+                    <Item.Header as='a'>Category: {item.name}</Item.Header>
+                    <Item.Description>Contract: {item.contract}</Item.Description>
+                    <Item.Description>Image classified / Total images: {item.total_classify} / {item.total_image}</Item.Description>
                     <Item.Description>Balance: {item.balance}</Item.Description>
                     <Item.Description>
-                      <input className='ui input' placeholder='Classify' type="text" value={self.state.values[i] || ''}
+                      <div className='ui input'>
+                      <input placeholder='Your wallet address' type="text" value={self.state.values[i] || ''}
                              onChange={self.handleChange.bind(self, i)}/>
+                      </div>
                       <Button type='submit' onClick={self.handleClick.bind(self, i)}>Withdraw</Button>
                     </Item.Description>
                   </Item.Content>
