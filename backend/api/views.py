@@ -9,11 +9,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowedCategory
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowedCategoryListSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -287,3 +287,16 @@ class ClassifyList(generics.ListCreateAPIView):
 class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classify.objects.all()
     serializer_class = ClassifyDetailSerializer
+
+
+class FollowedCategoryList(generics.ListCreateAPIView):
+    queryset = FollowedCategory.objects.all()
+    serializer_class = FollowedCategoryListSerializer
+
+    def get_queryset(self):
+        return FollowedCategory.objects.filter(profile=self.request.user.profile)
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        c = Category.objects.get(id=self.request.data['category'])
+        return serializer.save(profile=self.request.user.profile, category=c)

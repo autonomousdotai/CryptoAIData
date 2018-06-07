@@ -110,3 +110,7 @@ class FollowedCategory(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("profile", "category"),)
+        ordering = ('-created',)

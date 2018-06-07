@@ -28,6 +28,7 @@ urlpatterns = [
     path(r'api/profile/<int:pk>/', views.ProfileDetail.as_view()),
     path(r'api/product/', views.ProductList.as_view()),
     path(r'api/product/<int:pk>/', views.ProductDetail.as_view()),
+    path(r'api/profile-category/', views.FollowedCategoryList.as_view()),
     path(r'api/image/', views.ImageList.as_view()),
     path(r'api/image/<int:pk>/', views.ImageDetail.as_view()),
     path(r'api/image-profile/', views.ImageProfileList.as_view()),
