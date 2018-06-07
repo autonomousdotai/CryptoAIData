@@ -111,7 +111,7 @@ class MobileContainer extends Component {
                   </Menu.Item>
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
-                    <Link to="/profile">
+                    <Link to={'/p/' + this.props.userId}>
                       <Button inverted style={{marginLeft: '0.5em'}}>Profile</Button>
                     </Link>
                     :
