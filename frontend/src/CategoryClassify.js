@@ -85,6 +85,7 @@ class CategoryClassify extends React.Component {
     return (
       <Segment vertical>
         <Container>
+          <h1 style={{fontSize: '3rem'}}>Create new category and classifies</h1>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group widths='equal'>
               <Form.Input placeholder='Category' name='categoryName' value={this.state.categoryName}
