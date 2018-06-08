@@ -37,6 +37,7 @@ class Image(models.Model):
     type_ai = models.IntegerField(null=True, default=2)
     score = models.FloatField(default=0, null=True)
     created = models.DateTimeField(auto_now=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, default=None)
     category = models.ForeignKey('Category', related_name='images', on_delete=models.CASCADE, null=True, default=None)
     classify = models.ForeignKey('Classify', related_name='images', on_delete=models.CASCADE, null=True, default=None)
 
