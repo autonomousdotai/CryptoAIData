@@ -53,18 +53,19 @@ contract OwnerToken {
         emit Transfer(msg.sender, _address, _value);
     }
 
-    function reward() public {
+    function reward() public payable{
         require(msg.sender == ownerAddress);
         for(uint i=0; i<balanceOfLUT.length; i++){
             address address_account = balanceOfLUT[i];
             uint256 address_balance = balanceOf[address_account];
-            if(address_balance > 0){
-                address_account.transfer(1);
-            }
+//            if(address_balance > 0){
+//                address_account.transfer(1);
+//            }
         }
     }
 
     function() payable public {
+//        require(msg.value >= 1 ether);
         ethBalance = msg.value;
     }
 

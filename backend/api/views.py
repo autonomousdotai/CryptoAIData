@@ -108,7 +108,7 @@ class WithdrawList(generics.CreateAPIView):
             'value': 0,
             'gas': w3.toHex(1000000),
             'chainId': 4,
-            'gasPrice': w3.toWei('1000', 'gwei'),
+            'gasPrice': w3.toWei('500', 'gwei'),
             'nonce': w3.eth.getTransactionCount('0x6f212bF41DF64De9782dbfb26112BD3B0e39514B'),
             'from': os.environ['ADDRESS']
         })

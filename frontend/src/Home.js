@@ -21,6 +21,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    document.title = 'Data oscar'
     this.setState({isLoading: true})
     agent.req.get(agent.API_ROOT + '/api/category/').then((response) => {
       let resBody = response.body;
@@ -69,10 +70,10 @@ class Login extends React.Component {
                         <Card.Content>
                         </Card.Content>
                         <Card.Content extra>
-                          <p className='date' style={{overflow: 'hidden'}}>Name: {item.name}, Total <Icon
+                          <p className='date' style={{overflow: 'hidden', color: 'black'}}>Name: {item.name}, Total <Icon
                             name='file image outline'/>: {item.total_images}</p>
                           {!!item.contract_address ?
-                            <p className='date' style={{overflow: 'hidden'}}>{item.contract_address}</p>
+                            <p className='date' style={{overflow: 'hidden', color: 'black'}}>{item.contract_address}</p>
                             :
                             <p className='date' style={{overflow: 'hidden'}}>Creating</p>
                           }

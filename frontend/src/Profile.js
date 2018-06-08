@@ -58,17 +58,17 @@ class Profile extends React.Component {
             {this.state.categories.map(function (item, i) {
               return (
                 <Item key={i}>
-                  <Item.Content>
+                  <Item.Content style={{textAlign: "left"}}>
                     <Item.Header as='a'>Category: {item.name}</Item.Header>
                     <Item.Description>Contract: {item.contract}</Item.Description>
                     <Item.Description>Image classified / Total images: {item.total_classify} / {item.total_image}</Item.Description>
                     <Item.Description>Balance: {item.balance}</Item.Description>
                     <Item.Description>
-                      <div className='ui input'>
-                      <input placeholder='Your wallet address' type="text" value={self.state.values[i] || ''}
+                      <div className='ui input' >
+                      <input style={{minWidth: "27em"}} placeholder='Your wallet address' type="text" value={self.state.values[i] || ''}
                              onChange={self.handleChange.bind(self, i)}/>
                       </div>
-                      <Button type='submit' onClick={self.handleClick.bind(self, i)}>Withdraw</Button>
+                      <Button type='submit' onClick={self.handleClick.bind(self, i)}>Withdrawn</Button>
                     </Item.Description>
                   </Item.Content>
                 </Item>
