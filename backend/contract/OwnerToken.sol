@@ -30,7 +30,7 @@ contract OwnerToken {
     function OwnerToken(
         string tokenName,
         string tokenSymbol
-    ) public {
+    ) payable public {
         name = tokenName;
         // Set the name for display purposes
         symbol = tokenSymbol;
@@ -58,14 +58,13 @@ contract OwnerToken {
         for(uint i=0; i<balanceOfLUT.length; i++){
             address address_account = balanceOfLUT[i];
             uint256 address_balance = balanceOf[address_account];
-//            if(address_balance > 0){
-//                address_account.transfer(1);
-//            }
+            if(address_balance > 0){
+                address_account.transfer((address_balance / currentSupply) * ethBalance);
+            }
         }
     }
 
     function() payable public {
-//        require(msg.value >= 1 ether);
         ethBalance = msg.value;
     }
 
