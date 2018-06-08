@@ -15,7 +15,8 @@ class Profile(models.Model):
     ref_id = models.IntegerField()
     fullname = models.CharField(max_length=255, null=True, default=None)
     phone = models.CharField(max_length=255, null=True, default=None)
-    followed_categories = models.ManyToManyField('Category', through='FollowedCategory')
+    following_categories = models.ManyToManyField('Category', through='FollowingCategory')
+    following_profiles = models.ManyToManyField('Profile', through='FollowingProfile')
 
 
 class Product(models.Model):
@@ -106,11 +107,20 @@ def create_contract_category(sender, instance, created, **kwargs):
         instance.tx = tx
         instance.save()
 
-class FollowedCategory(models.Model):
+class FollowingCategory(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = (("profile", "category"),)
+        ordering = ('-created',)
+
+class FollowingProfile(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    following_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following_profile')
+    created = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("profile", "following_profile"),)
         ordering = ('-created',)

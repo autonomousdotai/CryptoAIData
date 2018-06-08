@@ -30,6 +30,8 @@ urlpatterns = [
     path(r'api/product/<int:pk>/', views.ProductDetail.as_view()),
     path(r'api/profile-category/follow/', views.FollowCategory.as_view()),
     path(r'api/profile-category/unfollow/', views.UnfollowCategory.as_view()),
+    path(r'api/profile-following/follow/', views.FollowProfile.as_view()),
+    path(r'api/profile-following/unfollow/', views.UnfollowProfile.as_view()),
     path(r'api/image/', views.ImageList.as_view()),
     path(r'api/image/<int:pk>/', views.ImageDetail.as_view()),
     path(r'api/image-profile/', views.ImageProfileList.as_view()),
