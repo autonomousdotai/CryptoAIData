@@ -25,8 +25,12 @@ class Product(models.Model):
     name = models.CharField(max_length=255, null=False)
 
 
+def category_path(instance, filename):
+    return '{0}/{1}'.format(instance.category.id, filename)
+
+
 class Image(models.Model):
-    link = models.FileField(upload_to='img')
+    link = models.FileField(upload_to=category_path)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, default=None)
     type_ai = models.IntegerField(null=True, default=2)
     score = models.FloatField(default=0, null=True)
