@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile
 import requests
 
 
@@ -170,3 +170,29 @@ class OscarUploadSerializer(serializers.Serializer):
     link2 = serializers.FileField()
     link3 = serializers.FileField()
     category = serializers.IntegerField()
+
+class FollowCategorySerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        obj, _ = FollowingCategory.objects.get_or_create(
+            profile=validated_data['profile'],
+            category=validated_data['category']
+        )
+        return obj
+
+    class Meta:
+        model = FollowingCategory
+        fields = '__all__'
+        read_only_fields = ('profile',)
+
+class FollowProfileSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        obj, _ = FollowingProfile.objects.get_or_create(
+            profile=validated_data['profile'],
+            following_profile=validated_data['following_profile']
+        )
+        return obj
+
+    class Meta:
+        model = FollowingProfile
+        fields = '__all__'
+        read_only_fields = ('profile', 'following_profile')
