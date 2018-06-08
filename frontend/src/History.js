@@ -62,27 +62,24 @@ class Login extends React.Component {
               <div className="one wide column"></div>
               <div className="fourteen wide column">
                 <h1 style={{fontSize: '3rem'}}>Your image classified</h1>
-                <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
-
-                  {this.state.images.length == 0 ?
-                    <h1>No image classified</h1>
-                    :
-                    <div>
-                      {this.state.images.map(function (item, i) {
-                        return (
-                          <Card key={i}>
-                            <Image src={item.image_url}/>
-                            <Card.Content>
-                            </Card.Content>
-                            <Card.Content extra>
-                              {item.category_name} - {item.classify}
-                            </Card.Content>
-                          </Card>
-                        )
-                      })}
-                    </div>
-                  }
-                </div>
+                {this.state.images.length == 0 ?
+                  <h1>No image classified</h1>
+                  :
+                  <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
+                    {this.state.images.map(function (item, i) {
+                      return (
+                        <Card key={i}>
+                          <Image src={item.image_url}/>
+                          <Card.Content>
+                          </Card.Content>
+                          <Card.Content extra>
+                            {item.category_name} - {item.classify_name}
+                          </Card.Content>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                }
               </div>
               <div className="one wide column"></div>
             </div>
