@@ -9,11 +9,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -287,3 +287,40 @@ class ClassifyList(generics.ListCreateAPIView):
 class ClassifyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classify.objects.all()
     serializer_class = ClassifyDetailSerializer
+
+
+class FollowCategory(generics.CreateAPIView):
+    serializer_class = FollowCategorySerializer
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        c = Category.objects.get(id=self.request.data['category'])
+        return serializer.save(profile=self.request.user.profile, category=c)
+
+class UnfollowCategory(generics.DestroyAPIView):
+    serializer_class = FollowCategorySerializer
+
+    def get_object(self):
+        c = Category.objects.get(id=self.request.data['category'])
+        return FollowingCategory.objects.filter(profile=self.request.user.profile, category=c)
+
+    def perform_destroy(self, instance):
+        return instance.delete()
+
+class FollowProfile(generics.CreateAPIView):
+    serializer_class = FollowProfileSerializer
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        fp = Profile.objects.get(id=self.request.data['profile_id'])
+        return serializer.save(profile=self.request.user.profile, following_profile=fp)
+
+class UnfollowProfile(generics.DestroyAPIView):
+    serializer_class = FollowProfileSerializer
+
+    def get_object(self):
+        fp = Profile.objects.get(id=self.request.data['profile_id'])
+        return FollowingProfile.objects.filter(profile=self.request.user.profile, following_profile=fp)
+
+    def perform_destroy(self, instance):
+        return instance.delete()

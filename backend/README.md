@@ -29,6 +29,7 @@ brew install pandoc
 pip3 install -r requirements.txt
 pip3 install --upgrade google-cloud
 
+python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py loaddata fixtures/category.json
 python3 manage.py loaddata fixtures/classify.json
