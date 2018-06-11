@@ -73,6 +73,64 @@ DesktopContainer.propTypes = {
   children: PropTypes.node,
 }
 
+class TabletContainer extends Component {
+  state = { activeItem: 'home' }
+
+  componentDidMount() {
+    console.log(this.context)
+  }
+
+  hideFixedMenu = () => this.setState({fixed: false})
+  showFixedMenu = () => this.setState({fixed: true})
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
+  render() {
+    const {children} = this.props
+    const {fixed} = this.state
+    const { activeItem } = this.state
+    return (
+      <Responsive {...Responsive.onlyTablet}>
+          <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>
+            <Menu
+              fixed={fixed ? 'top' : null}
+              inverted={true}
+              size='large'
+              style={{marginTop: "-1em", borderRadius: "0"}}
+            >
+              <Container>
+                <Link to="/">
+                  <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick}  >Home</Menu.Item>
+                </Link>
+                <Link to="/history">
+                  <Menu.Item name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >History</Menu.Item>
+                </Link>
+                <Link to="/category">
+                  <Menu.Item name='category' active={activeItem === 'category'} onClick={this.handleItemClick} >Category</Menu.Item>
+                </Link>
+                <Menu.Item position='right'>
+                  {this.props.isAuth ?
+                    <Link to={'/p/' + this.props.userId}>
+                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
+                    </Link>
+                    :
+                    <Link to="/login">
+                      <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Login</Button>
+                    </Link>}
+                </Menu.Item>
+              </Container>
+            </Menu>
+            {this.props.children}
+          </Segment>
+      </Responsive>
+    )
+  }
+}
+
+TabletContainer.propTypes = {
+  children: PropTypes.node,
+}
+
+
 class MobileContainer extends Component {
   state = { activeItem: 'home' }
 
@@ -137,6 +195,7 @@ export default props => (<AuthConsumer>
     {({isAuth, userId}) => {
       return <div>
         <DesktopContainer {...props} userId={userId} isAuth={isAuth}/>
+        <TabletContainer {...props} userId={userId} isAuth={isAuth}/>
         <MobileContainer {...props} userId={userId} isAuth={isAuth}/>
       </div>
     }}
