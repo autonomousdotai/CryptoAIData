@@ -324,3 +324,13 @@ class UnfollowProfile(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         return instance.delete()
+
+class Feed(generics.ListAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        fc = profile.following_categories.all()
+        fp = profile.following_profiles.all()
+        return Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
