@@ -333,4 +333,6 @@ class Feed(generics.ListAPIView):
         profile = self.request.user.profile
         fc = profile.following_categories.all()
         fp = profile.following_profiles.all()
-        return Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
+        if len(fc) > 0 or len(fp) > 0:
+            return Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
+        return Image.objects.filter(~Q(image_profiles__profile=user.profile))
