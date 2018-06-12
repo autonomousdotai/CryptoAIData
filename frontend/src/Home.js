@@ -33,8 +33,6 @@ class Login extends React.Component {
 
   handleUpdate = (e, {calculations}) => {
     let self = this;
-    console.log(calculations)
-    console.log(calculations.percentagePassed)
     this.setState({calculations})
     if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
@@ -65,7 +63,7 @@ class Login extends React.Component {
                 <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
                   {this.state.categories.map(function (item, i) {
                     return (
-                      <Card href={"/" + item.id}>
+                      <Card href={"/" + item.id} key={i}>
                         <Image src={item.img_present}/>
                         <Card.Content>
                         </Card.Content>
