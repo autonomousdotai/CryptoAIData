@@ -41,6 +41,7 @@ urlpatterns = [
     path(r'api/classify/', views.ClassifyList.as_view()),
     path(r'api/classify/<int:pk>/', views.ClassifyDetail.as_view()),
     path(r'api/feed/', views.Feed.as_view()),
+    path(r'api/search/', views.Search.as_view()),
     path(r'docs/', include_docs_urls(title='Trashcan API docs', public=True))
 
 ]

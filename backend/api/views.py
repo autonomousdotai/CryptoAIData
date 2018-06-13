@@ -336,3 +336,19 @@ class Feed(generics.ListAPIView):
         if len(fc) > 0 or len(fp) > 0:
             return Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
         return Image.objects.filter(~Q(image_profiles__profile=user.profile))
+
+
+class Search(generics.ListAPIView):
+    serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        queryset = Image.objects.all()
+        classify_ids = self.request.query_params.get('classify_ids', None)
+        if classify_ids is not None:
+            queryset = queryset.filter(classify__id__in=classify_ids.split(','))
+
+        category_ids = self.request.query_params.get('category_ids', None)
+        if category_ids is not None:
+            queryset = queryset.filter(category__id__in=category_ids.split(','))
+
+        return queryset.order_by('-created')
