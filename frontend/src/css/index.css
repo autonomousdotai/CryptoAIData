@@ -10,6 +10,35 @@ body{
     background-color: #f7f7f7;
 }
 
+.ui.inverted.menu { 
+    background: #325a84!important;
+}
+.ui.vertical.segment{
+    border-bottom: 0;
+}
+.ui.loading.segment:before{
+    background: rgba(255, 255, 255, 0);
+}
+
+/*
+.ui.menu .item{
+    line-height:3;
+    padding: 0.4em 1.14285714em;
+}
+.ui.container .item{
+    margin-top: 0px;
+} */
+.ui.search {
+    font-size: 1em;
+    margin: 1em 1em 0 1em;
+}
+
+.ui.menu.five.item a {
+    width: 20%;
+    text-align: center;
+    justify-content: center;
+    display: table-cell;
+}
 
 .footer {
 height: 40px;

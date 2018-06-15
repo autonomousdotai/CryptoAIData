@@ -6,7 +6,7 @@ import agent from './agent'
 import {Link} from 'react-router-dom'
 
 
-class Login extends React.Component {
+class Explore extends React.Component {
   constructor(props) {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
@@ -27,12 +27,14 @@ class Login extends React.Component {
     document.title = 'Data oscar'
     this.setState({isLoading: true})
 
-    const req = agent.req.get(agent.API_ROOT + '/api/feed/');
+    const req = agent.req.get(agent.API_ROOT + '/api/category/');
     if (this.props.isAuth) {
       req.set('authorization', `JWT ${this.props.token}`);
     }
     req.then((response) => {
       const body = response.body;
+      console.log(body);
+
       this.setState({isLoading: false});
       this.setState({images: body.results, nextURL: body.next});
     }).catch((e) => {
@@ -103,17 +105,17 @@ class Login extends React.Component {
                     }
                     return (
                       <Card href={"/image/" + item.id} key={i}>
-                        <Image src={item.link}/>
+                        <Image src={item.img_present}/>
                         <Card.Content>
                           <div style={{float: 'left'}}>
-                            <a href={'/category/' + item.category.id}>{item.category.name}</a>
+                            <a href={'/category/' + item.id}>{item.name}</a>
                           </div>
                           <div style={{float: 'right'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
                               {icon}
                             </div>
                             <div style={{display: 'inline'}}>
-                              <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.category.id)}>
+                              <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.id)}>
                                 <Icon name='plus' size='large' />
                               </a>
                             </div>
@@ -137,7 +139,7 @@ class Login extends React.Component {
 
 export default props => (<AuthConsumer>
     {({login, token, isLoading, isAuth}) => {
-      return <Login {...props} login={login} isAuth={isAuth} isLoading={isLoading} token={token} />
+      return <Explore {...props} login={login} isAuth={isAuth} isLoading={isLoading} token={token} />
     }}
   </AuthConsumer>
 )

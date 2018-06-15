@@ -21,6 +21,7 @@ class Profile extends React.Component {
     let profileId = this.props.match.params.profileId
     agent.req.get(agent.API_ROOT + '/api/profile/' + profileId).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
+      console.log(resBody);
       self.setState({categories: resBody.categories})
       self.setState({values: Array(resBody.categories.length).fill('')})
     }).catch((e) => {
@@ -54,6 +55,8 @@ class Profile extends React.Component {
     return (
       <Segment vertical>
         <Container>
+          {/*Segments for Avata Profile */ }
+          
           <Item.Group>
             {this.state.categories.map(function (item, i) {
               return (

@@ -60,10 +60,9 @@ class Login extends React.Component {
           <div className="ui center aligned grid container">
             <div className="row">
               <div className="one wide column"></div>
-              <div className="fourteen wide column">
-                <h1 style={{fontSize: '3rem'}}>Your image classified</h1>
+              <div className="fourteen wide column"> 
                 {this.state.images.length == 0 ?
-                  <h1>No image classified</h1>
+                  <h1>No image classified, Go Home or Explore to classified and earn reward.</h1>
                   :
                   <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
                     {this.state.images.map(function (item, i) {

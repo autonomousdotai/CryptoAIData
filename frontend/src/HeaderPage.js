@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Route, Link,Redirect} from 'react-router-dom'
 import {AuthConsumer} from './AuthContext'
-
+ 
 
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   Segment,
   Sidebar,
   Visibility,
+  Search,
 } from 'semantic-ui-react'
 
 
@@ -43,13 +44,22 @@ class DesktopContainer extends Component {
               <Link to="/">
                 <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
               </Link>
-              <Link to="/history">
-                <Menu.Item name='history' active={activeItem === 'history'}
-                           onClick={this.handleItemClick}>History</Menu.Item>
+             
+                <Search
+                    //loading={isLoading}
+                    //onResultSelect={this.handleResultSelect}
+                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
+                    //results={results}
+                    //value={value}
+                    {...this.props}
+                  />  
+              <Link to="/upload">
+                <Menu.Item name='upload' active={activeItem === 'upload'}
+                           onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
-              <Link to="/category">
-                <Menu.Item name='category' active={activeItem === 'category'}
-                           onClick={this.handleItemClick}>Category</Menu.Item>
+              <Link to="/explore">
+                <Menu.Item name='explore' active={activeItem === 'explore'}
+                           onClick={this.handleItemClick}>Explore</Menu.Item>
               </Link>
               <Menu.Item position='right'>
                 {this.props.isAuth ?
@@ -98,18 +108,30 @@ class TabletContainer extends Component {
             style={{marginTop: "-1em", borderRadius: "0"}}
           >
             <Container>
-              <Link to="/">
+             
+            <Link to="/">
                 <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
               </Link>
-              <Link to="/history">
-                <Menu.Item name='history' active={activeItem === 'history'}
-                           onClick={this.handleItemClick}>History</Menu.Item>
+             
+                <Search
+                    //loading={isLoading}
+                    //onResultSelect={this.handleResultSelect}
+                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
+                    //results={results}
+                    //value={value}
+                    {...this.props}
+                  />  
+              <Link to="/upload">
+                <Menu.Item name='upload' active={activeItem === 'upload'}
+                           onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
-              <Link to="/category">
-                <Menu.Item name='category' active={activeItem === 'category'}
-                           onClick={this.handleItemClick}>Category</Menu.Item>
+              <Link to="/explore">
+                <Menu.Item name='explore' active={activeItem === 'explore'}
+                           onClick={this.handleItemClick}>Explore</Menu.Item>
               </Link>
+
               <Menu.Item position='right'>
+                
                 {this.props.isAuth ?
                   <Link to={'/p/' + this.props.userId}>
                     <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
@@ -134,12 +156,20 @@ TabletContainer.propTypes = {
 
 
 class MobileContainer extends Component {
-  state = {
+  
+  constructor(props) {
+    super(props)
+    
+    this.state = {
     activeItem: 'home',
     calculations: {
       direction: 'none',
     },
+    go_url:""
   }
+
+  this.handleItemClick = this.handleItemClick.bind(this);
+}
 
   handlePusherClick = () => {
     const {sidebarOpened} = this.state
@@ -150,7 +180,20 @@ class MobileContainer extends Component {
     this.setState({calculations});
     console.log(calculations.direction);
   }
+  
+  handleItemClick(e, { name, value }) {
+    if (name =="home"){
+      this.setState({activeItem: name, go_url: "/"}); 
+    }else{
+      this.setState({activeItem: name, go_url: "/"+name}); 
+    }
+    
+    //this.props.history.push('/'+name);
+    //return history.push("/"+name);
 
+    
+  }
+  //handleItemClick = (e, {name}) => this.setState({activeItem: name})
 
   handleToggle = () => this.setState({sidebarOpened: !this.state.sidebarOpened})
 
@@ -161,6 +204,7 @@ class MobileContainer extends Component {
 
     return (
       <Responsive {...Responsive.onlyMobile}>
+        {this.state.go_url ? <Redirect to={this.state.go_url} /> :"" }
         <Visibility onUpdate={this.handleUpdate}
                     once={false}
         >
@@ -171,11 +215,11 @@ class MobileContainer extends Component {
               </Link>
               <Link to="/history">
                 <Menu.Item name='history' active={activeItem === 'history'}
-                           onClick={this.handleItemClick}>History</Menu.Item>
+                           onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
-              <Link to="/category">
-                <Menu.Item name='category' active={activeItem === 'category'}
-                           onClick={this.handleItemClick}>Category</Menu.Item>
+              <Link to="/explore">
+                <Menu.Item name='explore' active={activeItem === 'explore'}
+                           onClick={this.handleItemClick}>Explore</Menu.Item>
               </Link>
             </Sidebar>
 
@@ -185,6 +229,14 @@ class MobileContainer extends Component {
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar'/>
                   </Menu.Item>
+                  <Search
+                    //loading={isLoading}
+                    //onResultSelect={this.handleResultSelect}
+                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
+                    //results={results}
+                    //value={value}
+                    {...this.props}
+                  /> 
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
                       <Link to={'/p/' + this.props.userId}>
@@ -204,11 +256,18 @@ class MobileContainer extends Component {
           {this.state.calculations.direction == 'up' ?
             <div className='footer'>
               <div className="ui fluid five item menu">
-                <Menu.Item active><Icon name='newspaper outline'/></Menu.Item>
-                <Menu.Item><Icon name='star outline'/></Menu.Item>
-                <Menu.Item><Icon name='camera'/></Menu.Item>
-                <Menu.Item><Icon name='heart outline'/></Menu.Item>
-                <Menu.Item><Icon name='user outline'/></Menu.Item>
+               
+              <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} ><Icon name='newspaper outline'/></Menu.Item>
+              
+              <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
+               
+              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/> </Menu.Item>
+              
+              
+              <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
+             
+              <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}><Icon name='user outline'/></Menu.Item>
+             
               </div>
             </div>
             :
