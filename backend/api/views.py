@@ -212,7 +212,9 @@ class ImageList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
-        serializer.save(profile=self.request.user.profile)
+        category_id = request.data.pop('category')[0]
+        c = Category.objects.get(pk=category_id)
+        serializer.save(profile=self.request.user.profile, category=c)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
