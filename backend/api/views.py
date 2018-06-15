@@ -9,11 +9,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer, LikeImageSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -299,6 +299,7 @@ class FollowCategory(generics.CreateAPIView):
         c = Category.objects.get(id=self.request.data['category'])
         return serializer.save(profile=self.request.user.profile, category=c)
 
+
 class UnfollowCategory(generics.DestroyAPIView):
     serializer_class = FollowCategorySerializer
 
@@ -309,6 +310,7 @@ class UnfollowCategory(generics.DestroyAPIView):
     def perform_destroy(self, instance):
         return instance.delete()
 
+
 class FollowProfile(generics.CreateAPIView):
     serializer_class = FollowProfileSerializer
 
@@ -316,6 +318,7 @@ class FollowProfile(generics.CreateAPIView):
         profile = self.request.user.profile
         fp = Profile.objects.get(id=self.request.data['profile_id'])
         return serializer.save(profile=self.request.user.profile, following_profile=fp)
+
 
 class UnfollowProfile(generics.DestroyAPIView):
     serializer_class = FollowProfileSerializer
@@ -327,8 +330,8 @@ class UnfollowProfile(generics.DestroyAPIView):
     def perform_destroy(self, instance):
         return instance.delete()
 
+
 class Feed(generics.ListAPIView):
-    queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = []
 
@@ -340,8 +343,11 @@ class Feed(generics.ListAPIView):
         fc = profile.following_categories.all()
         fp = profile.following_profiles.all()
         if len(fc) > 0 or len(fp) > 0:
-            return Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
-        return Image.objects.filter(~Q(image_profiles__profile=user.profile))
+            queryset = Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
+        else:
+            queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile))
+        return queryset
+
 
 class Search(generics.ListAPIView):
     serializer_class = ImageSerializer
@@ -357,3 +363,23 @@ class Search(generics.ListAPIView):
             queryset = queryset.filter(category__id__in=category_ids.split(','))
 
         return queryset.order_by('-created')
+
+
+class LikeImage(generics.CreateAPIView):
+    serializer_class = LikeImageSerializer
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        i = Image.objects.get(id=self.request.data['image'])
+        return serializer.save(profile=self.request.user.profile, image=i)
+
+
+class UnlikeImage(generics.DestroyAPIView):
+    serializer_class = LikeImageSerializer
+
+    def get_object(self):
+        i = Image.objects.get(id=self.request.data['image'])
+        return LikedImage.objects.filter(profile=self.request.user.profile, image=i)
+
+    def perform_destroy(self, instance):
+        return instance.delete()

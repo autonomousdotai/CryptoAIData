@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage
 import requests
 
 
@@ -166,6 +166,7 @@ class OscarUploadSerializer(serializers.Serializer):
     link3 = serializers.FileField()
     category = serializers.IntegerField()
 
+
 class FollowCategorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         obj, _ = FollowingCategory.objects.get_or_create(
@@ -178,6 +179,7 @@ class FollowCategorySerializer(serializers.ModelSerializer):
         model = FollowingCategory
         fields = '__all__'
         read_only_fields = ('profile',)
+
 
 class FollowProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
@@ -193,10 +195,33 @@ class FollowProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ('profile', 'following_profile')
 
 
+class LikeImageSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        obj, _ = LikedImage.objects.get_or_create(
+            profile=validated_data['profile'],
+            image=validated_data['image']
+        )
+        return obj
+
+    class Meta:
+        model = LikedImage
+        fields = '__all__'
+        read_only_fields = ('profile', 'image')
+
+
+class LikedImageField(serializers.BooleanField):
+
+    def get_attribute(self, instance):
+        if self.context['request'].user.is_authenticated is False:
+            return False
+        return LikedImage.objects.filter(profile=self.context['request'].user.profile, image=instance).exists()
+
+
 class ImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    liked = LikedImageField()
 
     class Meta:
         model = Image
         fields = '__all__'
-        #  depth = 1
+        #  depth = 2

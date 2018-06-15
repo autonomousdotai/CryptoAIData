@@ -17,6 +17,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=255, null=True, default=None)
     following_categories = models.ManyToManyField('Category', through='FollowingCategory')
     following_profiles = models.ManyToManyField('Profile', through='FollowingProfile')
+    liked_images = models.ManyToManyField('Image', related_name='liked_images', through='LikedImage')
 
 
 class Product(models.Model):
@@ -108,6 +109,7 @@ def create_contract_category(sender, instance, created, **kwargs):
         instance.tx = tx
         instance.save()
 
+
 class FollowingCategory(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -117,6 +119,7 @@ class FollowingCategory(models.Model):
         unique_together = (("profile", "category"),)
         ordering = ('-created',)
 
+
 class FollowingProfile(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     following_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following_profile')
@@ -124,4 +127,14 @@ class FollowingProfile(models.Model):
 
     class Meta:
         unique_together = (("profile", "following_profile"),)
+        ordering = ('-created',)
+
+
+class LikedImage(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("profile", "image"),)
         ordering = ('-created',)

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
@@ -12,21 +12,29 @@ class Login extends React.Component {
     this.handleUpdate = this.handleUpdate.bind(this);
     this.state = {
       isLoading: false,
-      categories: [],
+      // categories: [],
+      images: [],
       nextURL: '',
       calculations: {
         bottomVisible: false,
       },
     };
+    this.handleLikeImage = this.handleLikeImage.bind(this);
+    this.handleClassifyImage = this.handleClassifyImage.bind(this);
   }
 
   componentDidMount() {
     document.title = 'Data oscar'
     this.setState({isLoading: true})
-    agent.req.get(agent.API_ROOT + '/api/category/').then((response) => {
-      let resBody = response.body;
-      this.setState({isLoading: false})
-      this.setState({categories: resBody.results, nextURL: resBody.next})
+
+    const req = agent.req.get(agent.API_ROOT + '/api/feed/');
+    if (this.props.isAuth) {
+      req.set('authorization', `JWT ${this.props.token}`);
+    }
+    req.then((response) => {
+      const body = response.body;
+      this.setState({isLoading: false});
+      this.setState({images: body.results, nextURL: body.next});
     }).catch((e) => {
     })
   }
@@ -41,13 +49,38 @@ class Login extends React.Component {
           let resBody = response.body;
           this.setState({isLoading: false})
           if (resBody.next != self.state.nextURL) {
-            let newData = this.state.categories.concat(resBody.results)
-            this.setState({categories: newData, nextURL: resBody.next})
+            let newData = this.state.images.concat(resBody.results)
+            this.setState({images: newData, nextURL: resBody.next})
           }
         }).catch((e) => {
         })
       }
     }
+  }
+
+  handleLikeImage(e, imageId) {
+    e.preventDefault();
+
+    if (!this.props.isAuth) {
+      // redirect to login page
+      return;
+    }
+
+    agent.req.post(agent.API_ROOT + '/api/image-profile/like/')
+      .send({ image: imageId })
+      .set('authorization', `JWT ${this.props.token}`)
+      .set('accept', 'application/json')
+      .then((resp) => {
+        console.log(resp)
+      })
+      .catch((err) => {
+      });
+  }
+
+  handleClassifyImage(e, categoryId) {
+    e.preventDefault();
+    console.log(categoryId)
+    // agent.req.get('/api/classify/?category_id=' + )
   }
 
   render() {
@@ -58,24 +91,35 @@ class Login extends React.Component {
             <div className="row">
               <div className="one wide column"></div>
               <div className="fourteen wide column">
-                <h1 style={{fontSize: '3rem'}}>Category list</h1>
+                <h1 style={{fontSize: '3rem'}}>Images</h1>
                 <h1 style={{fontSize: '1.8rem'}}>List of data set.</h1>
                 <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
-                  {this.state.categories.map(function (item, i) {
+                  {this.state.images.map((item, i) => {
+                    let icon;
+                    if (item.liked) {
+                      icon = <Icon name='heart' size='large' />;
+                    } else {
+                      icon = <a href='javascript:void(0);' onClick={(e) => this.handleLikeImage(e, item.id)}>
+                                  <Icon name='heart outline' size='large' />
+                             </a>
+                    }
                     return (
-                      <Card href={"/" + item.id} key={i}>
-                        <Image src={item.img_present}/>
+                      <Card href={"/image/" + item.id} key={i}>
+                        <Image src={item.link}/>
                         <Card.Content>
-                        </Card.Content>
-                        <Card.Content extra>
-                          <p className='date' style={{overflow: 'hidden', color: 'black'}}>Name: {item.name}, Total <Icon
-                            name='file image outline'/>: {item.total_images}</p>
-                          {!!item.contract_address ?
-                            <p className='date' style={{overflow: 'hidden', color: 'black'}}>{item.contract_address}</p>
-                            :
-                            <p className='date' style={{overflow: 'hidden'}}>Creating</p>
-                          }
-                          <p className='date'>{item.created}</p>
+                          <div style={{float: 'left'}}>
+                            <a href={'/category/' + item.category.id}>{item.category.name}</a>
+                          </div>
+                          <div style={{float: 'right'}}>
+                            <div style={{display: 'inline', marginRight: '2em'}}>
+                              {icon}
+                            </div>
+                            <div style={{display: 'inline'}}>
+                              <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.category.id)}>
+                                <Icon name='plus' size='large' />
+                              </a>
+                            </div>
+                          </div>
                         </Card.Content>
                       </Card>
                     )
@@ -94,8 +138,8 @@ class Login extends React.Component {
 }
 
 export default props => (<AuthConsumer>
-    {({login, isLoading, isAuth}) => {
-      return <Login {...props} login={login} isAuth={isAuth} isLoading={isLoading}/>
+    {({login, token, isLoading, isAuth}) => {
+      return <Login {...props} login={login} isAuth={isAuth} isLoading={isLoading} token={token} />
     }}
   </AuthConsumer>
 )
