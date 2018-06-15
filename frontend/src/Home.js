@@ -5,6 +5,25 @@ import {Route, Redirect} from 'react-router'
 import agent from './agent'
 import {Link} from 'react-router-dom'
 
+function LikedIcon(props) {
+  if (!props.isAuth) {
+    return (
+      <Icon name='heart outline' size='large' />
+    );
+  }
+  if (props.liked) {
+    return (
+        <a href='javascript:void(0);' onClick={props.onUnlike}>
+          <Icon name='heart' size='large' />
+        </a>
+    );
+  }
+  return (
+      <a href='javascript:void(0);' onClick={props.onLike}>
+        <Icon name='heart outline' size='large' />
+      </a>
+  );
+}
 
 class Login extends React.Component {
   constructor(props) {
@@ -58,20 +77,47 @@ class Login extends React.Component {
     }
   }
 
-  handleLikeImage(e, imageId) {
+  handleLikeImage(e, i) {
     e.preventDefault();
 
     if (!this.props.isAuth) {
-      // redirect to login page
-      return;
+      // window.location.href = '/login';
+      return <Redirect to="/login" />;
     }
 
+    const id = this.state.images[i].id;
+
     agent.req.post(agent.API_ROOT + '/api/image-profile/like/')
-      .send({ image: imageId })
+      .send({ image: id })
       .set('authorization', `JWT ${this.props.token}`)
       .set('accept', 'application/json')
       .then((resp) => {
-        console.log(resp)
+        const images = this.state.images.slice();
+        images[i].liked = true;
+        this.setState({images});
+      })
+      .catch((err) => {
+      });
+  }
+
+  handleUnlikeImage(e, i) {
+    e.preventDefault();
+
+    if (!this.props.isAuth) {
+      // window.location.href = '/login';
+      return <Redirect to="/login" />;
+    }
+
+    const id = this.state.images[i].id;
+
+    agent.req.del(agent.API_ROOT + '/api/image-profile/unlike/')
+      .send({ image: id })
+      .set('authorization', `JWT ${this.props.token}`)
+      .set('accept', 'application/json')
+      .then((resp) => {
+        const images = this.state.images.slice();
+        images[i].liked = false;
+        this.setState({images});
       })
       .catch((err) => {
       });
@@ -81,6 +127,17 @@ class Login extends React.Component {
     e.preventDefault();
     console.log(categoryId)
     // agent.req.get('/api/classify/?category_id=' + )
+  }
+
+  renderLikedIcon(i) {
+    return (
+      <LikedIcon
+        isAuth={this.props.isAuth}
+        liked={this.state.images[i].liked}
+        onLike={e => this.handleLikeImage(e, i)}
+        onUnlike={e => this.handleUnlikeImage(e, i)}
+      />
+    );
   }
 
   render() {
@@ -93,14 +150,6 @@ class Login extends React.Component {
               <div className="fourteen wide column">
                 <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
                   {this.state.images.map((item, i) => {
-                    let icon;
-                    if (item.liked) {
-                      icon = <Icon name='heart' size='large' />;
-                    } else {
-                      icon = <a href='javascript:void(0);' onClick={(e) => this.handleLikeImage(e, item.id)}>
-                                  <Icon name='heart outline' size='large' />
-                             </a>
-                    }
                     return (
                       <Card href={"/image/" + item.id} key={i}>
                         <Image src={item.link}/>
@@ -110,7 +159,7 @@ class Login extends React.Component {
                           </div>
                           <div style={{float: 'right'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
-                              {icon}
+                              {this.renderLikedIcon(i)}
                             </div>
                             <div style={{display: 'inline'}}>
                               <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.category.id)}>
