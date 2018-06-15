@@ -42,11 +42,6 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ('user',)
 
 
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = '__all__'
-
 
 class ImageDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -196,3 +191,12 @@ class FollowProfileSerializer(serializers.ModelSerializer):
         model = FollowingProfile
         fields = '__all__'
         read_only_fields = ('profile', 'following_profile')
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+
+    class Meta:
+        model = Image
+        fields = '__all__'
+        #  depth = 1
