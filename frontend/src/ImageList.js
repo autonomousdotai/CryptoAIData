@@ -105,13 +105,12 @@ class Login extends React.Component {
             <div className="row">
               <Form>
                 <Form.Field>
-                    <label>Upload image to this category</label>
+                  <label>Upload image to this category</label>
                   <input type='file' onChange={this.handleFile} placeholder='First Name'/>
                 </Form.Field>
               </Form>
             </div>
-            <div className="row">
-              <div className="one wide column"></div>
+            <div className="row"> 
               <div className="fourteen wide column">
                 <h1 style={{fontSize: '3rem'}}>List image</h1>
                 <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
@@ -126,14 +125,13 @@ class Login extends React.Component {
                         <Card.Content extra>
                           <Dropdown onChange={(e, value) => self.handleChange(item.id, e, value.value)}
                                     placeholder='Select classify' fluid selection search
-                                    options={self.state.classifies}/>
+                                    options={self.state.classifies} style={{marginLeft:0}}/>
                         </Card.Content>
                       </Card>
                     )
                   })}
                 </div>
-              </div>
-              <div className="one wide column"></div>
+              </div> 
             </div>
           </div>
         </Segment>

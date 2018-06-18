@@ -15,7 +15,7 @@ import  HeaderPage from './HeaderPage'
 import  History from './History'
 import  CategoryClassify from './CategoryClassify'
 import  Profile from './Profile' 
- 
+import  FileUploader from './Upload'  
 import Explore from './Explore'
 
 const App = () => (
@@ -28,6 +28,7 @@ const App = () => (
           <Route exact path="/login" component={Login} />
           <Route exact path="/explore" component={Explore} />
           <ProtectedRoute exact path="/history" component={History} />
+          <ProtectedRoute exact path="/upload" component={FileUploader} />
           <ProtectedRoute exact path="/category/create" component={CategoryClassify} />
           <ProtectedRoute exact path="/p/:profileId" component={Profile} />
           <ProtectedRoute exact path="/cat/:categoryId" component={ImageList} />

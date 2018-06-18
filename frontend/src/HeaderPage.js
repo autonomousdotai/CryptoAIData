@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
+ 
 import {Route, Link,Redirect} from 'react-router-dom'
 import {AuthConsumer} from './AuthContext'
  
 
 import {
+  Form,
   Button,
   Container,
   Icon,
@@ -204,7 +206,7 @@ class MobileContainer extends Component {
 
     return (
       <Responsive {...Responsive.onlyMobile}>
-        {this.state.go_url ? <Redirect to={this.state.go_url} /> :"" }
+        {this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
         <Visibility onUpdate={this.handleUpdate}
                     once={false}
         >
@@ -229,7 +231,7 @@ class MobileContainer extends Component {
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar'/>
                   </Menu.Item>
-                  <Search
+                  <Search size="mini"
                     //loading={isLoading}
                     //onResultSelect={this.handleResultSelect}
                     //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
@@ -239,12 +241,16 @@ class MobileContainer extends Component {
                   /> 
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
-                      <Link to={'/p/' + this.props.userId}>
-                        <Button inverted style={{marginLeft: '0.5em'}}>Profile</Button>
+                      <Link to="/upload">
+                        <Button inverted size="mini">
+                            <Icon name='cloud upload'/>
+                        </Button>
                       </Link>
                       :
                       <Link to="/login">
-                        <Button inverted style={{marginLeft: '0.5em'}}>Login</Button>
+                        <Button inverted  size="mini">
+                          <Icon name='sign in alternate'/>
+                        </Button>
                       </Link>}
                   </Menu.Item>
                 </Menu>
@@ -261,8 +267,8 @@ class MobileContainer extends Component {
               
               <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
                
-              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/> </Menu.Item>
-              
+              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/>
+              </Menu.Item>
               
               <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
              

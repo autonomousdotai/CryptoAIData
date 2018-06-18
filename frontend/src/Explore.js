@@ -1,10 +1,17 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
+import {Grid, Modal, Image, Container, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
 import {Link} from 'react-router-dom'
 
+const inlineStyle = {
+  modal : {
+    marginTop: '0px !important',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  }
+};
 
 class Explore extends React.Component {
   constructor(props) {
@@ -18,11 +25,37 @@ class Explore extends React.Component {
       calculations: {
         bottomVisible: false,
       },
+      open:false,
+      choice_address:"",
+
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
   }
 
+  show = size => () => this.setState({ size, open: true })
+  close = () => this.setState({ open: false })
+
+  Copy(item){
+    console.log("copy",item); 
+    const el = document.createElement('textarea');
+    el.value = item;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert("Copped!");
+    
+  }
+
+
+  showQR(item){
+    console.log(item);
+    //this.setState({ choice_address: item.address ,  open: true })
+    this.setState({ choice_address: item, open: true })
+    //this.Copy(item);
+  }
+  
   componentDidMount() {
     document.title = 'Data oscar'
     this.setState({isLoading: true})
@@ -90,8 +123,7 @@ class Explore extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
           <div className="ui center aligned grid container">
-            <div className="row">
-              <div className="one wide column"></div>
+            <div className="row"> 
               <div className="fourteen wide column">
                 <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
                   {this.state.images.map((item, i) => {
@@ -99,38 +131,52 @@ class Explore extends React.Component {
                     if (item.liked) {
                       icon = <Icon name='heart' size='large' />;
                     } else {
-                      icon = <a href='javascript:void(0);' onClick={(e) => this.handleLikeImage(e, item.id)}>
+                      icon = <a href='javascript:void(0);' onClick={(e) => this.handleLikeCategory(e, item.id)}>
                                   <Icon name='heart outline' size='large' />
                              </a>
                     }
                     return (
-                      <Card href={"/cat/" + item.id} key={i}>
-                        <Image src={item.img_present}/>
-                        <Card.Content>
-                          <div style={{float: 'left'}}>
-                            <a href={'/category/' + item.id}>{item.name}</a>
-                          </div>
-                          <div style={{float: 'right'}}>
-                            <div style={{display: 'inline', marginRight: '2em'}}>
-                              {icon}
-                            </div>
-                            <div style={{display: 'inline'}}>
-                              <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.id)}>
-                                <Icon name='plus' size='large' />
-                              </a>
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
+                      
+                        <Card key={i}>
+                            <Link to={"/cat/" + item.id}>
+                                <Image src={item.img_present}/>
+                            </Link>
+                            <Card.Content>
+                              <div style={{float: 'left'}}>
+                                <p><a href={'/category/' + item.id}>{item.name}</a></p>
+                                <p> { "Images " + item.total_images} </p>
+                              </div>
+                              <div style={{float: 'right', marginTop:17}}>
+                                <div style={{display: 'inline', marginRight: '2em'}}>
+                                  {icon}
+                                </div>
+                                <div style={{display: 'inline'}}>
+                                        <Button basic color='blue' onClick={this.showQR.bind(this,item.contract_address)} content='Buy' />   
+                                </div>
+                              </div>
+                            </Card.Content>
+                          
+                        </Card>
+                      
                     )
                   })}
                 </div>
-              </div>
-              <div className="one wide column"></div>
+              </div> 
             </div>
           </div>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
+
+          <Modal dimmer="inverted" size="small" open={this.state.open} onClose={this.close} style={inlineStyle.modal}>
+                  <Modal.Header>{"Deposit ETH to buy data"   }</Modal.Header>
+                  <Modal.Content>
+                    <Image src={"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl="+this.state.choice_address+"&choe=UTF-8"}/>
+                    <h3>Your wallet address is : </h3>
+                    <p>{this.state.choice_address} </p>
+                    <p><Button onClick={this.Copy.bind(this, this.state.choice_address)} color='blue'> <Icon name='copy' /> copy address</Button></p>
+                    <h3>Send only ETH to your address.</h3>
+                  </Modal.Content> 
+        </Modal>
       </Visibility>
 
     )

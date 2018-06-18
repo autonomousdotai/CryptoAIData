@@ -144,15 +144,16 @@ class Login extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
           <div className="ui center aligned grid container">
-            <div className="row">
-              <div className="one wide column"></div>
-              <div className="fourteen wide column">
-                <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
+            <div className="row"> 
+              <div   className="fourteen wide column">
+                <div  className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
                   {this.state.images.map((item, i) => {
                     return (
-                      <Card href={"/image/" + item.id} key={i}>
-                        <Image src={item.link}/>
-                        <Card.Content>
+                      <Card key={i} >   
+                        <Link to={"/cat/" + item.category.id}>
+                          <Image src={item.link}/>
+                         </Link>
+                        <Card.Content> 
                           <div style={{float: 'left'}}>
                             <a href={'/category/' + item.category.id}>{item.category.name}</a>
                           </div>
@@ -167,12 +168,11 @@ class Login extends React.Component {
                             </div>
                           </div>
                         </Card.Content>
-                      </Card>
+                        </Card> 
                     )
                   })}
                 </div>
-              </div>
-              <div className="one wide column"></div>
+              </div> 
             </div>
           </div>
         </Segment>
