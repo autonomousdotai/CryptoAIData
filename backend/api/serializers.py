@@ -221,6 +221,13 @@ class ImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     liked = LikedImageField()
 
+    def create(self, validated_data):
+        return Image.objects.create(
+            link=validated_data['link'],
+            profile=validated_data['profile'],
+            category=validated_data['category']
+        )
+
     class Meta:
         model = Image
         fields = '__all__'
