@@ -8,20 +8,22 @@ import {Link} from 'react-router-dom'
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Icon name='heart outline' size='large' />
+      <Link to="/login">
+        <Icon name='heart outline' size='large' />
+      </Link>
     );
   }
   if (props.liked) {
     return (
-        <a href='javascript:void(0);' onClick={props.onUnlike}>
-          <Icon name='heart' size='large' />
-        </a>
+      <a href='javascript:void(0);' onClick={props.onUnlike}>
+        <Icon name='heart' size='large' />
+      </a>
     );
   }
   return (
-      <a href='javascript:void(0);' onClick={props.onLike}>
-        <Icon name='heart outline' size='large' />
-      </a>
+    <a href='javascript:void(0);' onClick={props.onLike}>
+      <Icon name='heart outline' size='large' />
+    </a>
   );
 }
 
@@ -78,13 +80,11 @@ class Login extends React.Component {
   }
 
   handleLikeImage(e, i) {
-    e.preventDefault();
-
     if (!this.props.isAuth) {
-      // window.location.href = '/login';
-      return <Redirect to="/login" />;
+      return;
     }
 
+    e.preventDefault();
     const id = this.state.images[i].id;
 
     agent.req.post(agent.API_ROOT + '/api/image-profile/like/')
@@ -101,13 +101,12 @@ class Login extends React.Component {
   }
 
   handleUnlikeImage(e, i) {
-    e.preventDefault();
-
     if (!this.props.isAuth) {
       // window.location.href = '/login';
       return <Redirect to="/login" />;
     }
 
+    e.preventDefault();
     const id = this.state.images[i].id;
 
     agent.req.del(agent.API_ROOT + '/api/image-profile/unlike/')
