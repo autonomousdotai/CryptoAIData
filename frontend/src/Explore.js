@@ -104,7 +104,7 @@ class Explore extends React.Component {
                              </a>
                     }
                     return (
-                      <Card href={"/image/" + item.id} key={i}>
+                      <Card href={"/cat/" + item.id} key={i}>
                         <Image src={item.img_present}/>
                         <Card.Content>
                           <div style={{float: 'left'}}>

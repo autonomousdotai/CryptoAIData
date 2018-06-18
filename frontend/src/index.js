@@ -30,7 +30,7 @@ const App = () => (
           <ProtectedRoute exact path="/history" component={History} />
           <ProtectedRoute exact path="/category/create" component={CategoryClassify} />
           <ProtectedRoute exact path="/p/:profileId" component={Profile} />
-          <ProtectedRoute exact path="/:categoryId" component={ImageList} />
+          <ProtectedRoute exact path="/cat/:categoryId" component={ImageList} />
           <Route exact path="/" component={Home} />
         </Switch>
         </HeaderPage>
