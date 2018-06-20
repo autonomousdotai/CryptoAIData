@@ -1,9 +1,10 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button, Modal, List, Input} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
 import {Link} from 'react-router-dom'
+import filter from 'lodash.filter'
 
 function LikedIcon(props) {
   if (!props.isAuth) {
@@ -27,6 +28,24 @@ function LikedIcon(props) {
   );
 }
 
+function ClassifiedIcon(props) {
+  if (!props.isAuth) {
+    return (
+      <Link to="/login">
+        <Icon name='plus' size='large' />
+      </Link>
+    );
+  }
+  if (props.classified) {
+    return <Icon name='checkmark' size='large' />;
+  }
+  return (
+    <a href='javascript:void(0);' onClick={props.onClassify}>
+      <Icon name='plus' size='large' />
+    </a>
+  );
+}
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -39,9 +58,19 @@ class Login extends React.Component {
       calculations: {
         bottomVisible: false,
       },
+      modal: {
+        open: false,
+        imageIndex: null,
+        classifies: [],
+        classifyId: null,
+        searchableClassfies: []
+      }
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSelectedClassify = this.handleSelectedClassify.bind(this);
+    this.submitClassify = this.submitClassify.bind(this);
   }
 
   componentDidMount() {
@@ -102,8 +131,7 @@ class Login extends React.Component {
 
   handleUnlikeImage(e, i) {
     if (!this.props.isAuth) {
-      // window.location.href = '/login';
-      return <Redirect to="/login" />;
+      return;
     }
 
     e.preventDefault();
@@ -122,10 +150,102 @@ class Login extends React.Component {
       });
   }
 
-  handleClassifyImage(e, categoryId) {
+  closeModal() {
+    const modal = {...this.state.modal};
+    modal.open = false;
+    modal.imageIndex = null;
+    modal.classifyId = null;
+    modal.classifies = [];
+    this.setState({modal});
+  }
+
+  submitClassify() {
+    if (!this.state.modal.classifyId) {
+      this.closeModal();
+      return;
+    }
+
+    const imageIndex = this.state.modal.imageIndex;
+    const imageId = this.state.images[imageIndex].id;
+    const classifyId = this.state.modal.classifyId;
+    agent.req.post(agent.API_ROOT + '/api/image-profile/', {image: imageId, classify: classifyId})
+      .set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+        const images = this.state.images.slice();
+        images[imageIndex].classified = true;
+        this.setState({images});
+
+        this.closeModal();
+    }).catch((e) => {
+    })
+  }
+
+  handleSelectedClassify(classifyId) {
+    const modal = {...this.state.modal};
+    modal.searchableClassfies.forEach(function(c) {
+      if (c.value === classifyId) {
+        if (c.active) {
+          c.active = false;
+          c.content = <List.Content>{c.text}</List.Content>;
+          modal.classifyId = null;
+        } else {
+          c.active = true;
+          c.content = (
+            <List.Content>
+              <List.Content floated='right'>
+                <Icon name='checkmark' />
+              </List.Content>
+              <List.Content>
+                {c.text}
+              </List.Content>
+            </List.Content>
+          );
+          modal.classifyId = classifyId;
+        }
+      } else {
+        c.active = false;
+        c.content = <List.Content>{c.text}</List.Content>;
+      }
+    });
+    this.setState({modal});
+  }
+
+  handleClassifyImage(e, i) {
     e.preventDefault();
-    console.log(categoryId)
-    // agent.req.get('/api/classify/?category_id=' + )
+
+    const searchableClassfies = [];
+    agent.req.get(agent.API_ROOT + `/api/classify/?category=${this.state.images[i].category.id}&limit=50`).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      const resBody = response.body;
+      for (let i = 0; i < resBody.results.length; i++) {
+        searchableClassfies.push({
+          content: <List.Content>{resBody.results[i].name}</List.Content>,
+          text: resBody.results[i].name,
+          value: resBody.results[i].id,
+          active: false
+        });
+      }
+
+      const modal = {...this.state.modal};
+      modal.open = true;
+      modal.imageIndex = i;
+      modal.classifies = searchableClassfies;
+      modal.searchableClassfies = searchableClassfies;
+      this.setState({modal});
+    }).catch((e) => {
+    });
+  }
+
+  handleModalSearch(text) {
+    const modal = {...this.state.modal};
+    if (!text) {
+      modal.searchableClassfies = modal.classifies;
+      this.setState({modal});
+      return;
+    }
+
+    const re = new RegExp(text, 'i');
+    const isMatch = result => re.test(result.text);
+    modal.searchableClassfies = filter(modal.classifies, isMatch);
+    this.setState({modal});
   }
 
   renderLikedIcon(i) {
@@ -135,6 +255,16 @@ class Login extends React.Component {
         liked={this.state.images[i].liked}
         onLike={e => this.handleLikeImage(e, i)}
         onUnlike={e => this.handleUnlikeImage(e, i)}
+      />
+    );
+  }
+
+  renderClassifiedIcon(i) {
+    return (
+      <ClassifiedIcon
+        isAuth={this.props.isAuth}
+        classified={this.state.images[i].classified}
+        onClassify={e => this.handleClassifyImage(e, i)}
       />
     );
   }
@@ -162,9 +292,7 @@ class Login extends React.Component {
                               {this.renderLikedIcon(i)}
                             </div>
                             <div style={{display: 'inline'}}>
-                              <a href='javascript:void(0)' onClick={(e) => this.handleClassifyImage(e, item.category.id)}>
-                                <Icon name='plus' size='large' />
-                              </a>
+                              {this.renderClassifiedIcon(i)}
                             </div>
                           </div>
                         </Card.Content>
@@ -174,11 +302,22 @@ class Login extends React.Component {
                 </div>
               </div> 
             </div>
+            <div>
+              <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
+                <Modal.Header>Choose classify</Modal.Header>
+                <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>
+                  {/*<Input fluid onChange={(e, data) => this.handleModalSearch(data.value)} icon='search' placeholder='Search classify...' />*/}
+                  <List divided selection items={this.state.modal.searchableClassfies} onItemClick={(e, data) => this.handleSelectedClassify(data.value)} />
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button fluid positive content='Done' onClick={this.submitClassify} style={{marginLeft: 0}} />
+                </Modal.Actions>
+              </Modal>
+            </div>
           </div>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
       </Visibility>
-
     )
   }
 }

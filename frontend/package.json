@@ -8,14 +8,15 @@
   "dependencies": {
     "css-loader": "^0.28.11",
     "prop-types": "^15.6.1",
+    "lodash.filter": "^4.6.0",
     "react": "16.3.0",
     "react-dom": "16.3.0",
     "react-router": "^4.3.1",
     "react-router-dom": "4.2.2",
     "react-scripts": "1.1.0",
     "sass-loader": "^7.0.1",
-    "semantic-ui": "^2.3.1",
-    "semantic-ui-react": "^0.80.0",
+    "semantic-ui": "2.3.2",
+    "semantic-ui-react": "0.81.1",
     "style-loader": "^0.21.0",
     "superagent": "^3.8.3",
     "superagent-promise": "^1.1.0"
