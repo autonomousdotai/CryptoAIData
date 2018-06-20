@@ -274,18 +274,18 @@ class Login extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
           <div className="ui center aligned grid container">
-            <div className="row"> 
-              <div   className="fourteen wide column">
-                <div  className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
+            <div className="row">
+              <div className="fourteen wide column">
+                <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
                   {this.state.images.map((item, i) => {
                     return (
-                      <Card key={i} >   
+                      <Card key={i}>
                         <Link to={"/cat/" + item.category.id}>
                           <Image src={item.link}/>
                          </Link>
-                        <Card.Content> 
+                        <Card.Content>
                           <div style={{float: 'left'}}>
-                            <a href={'/category/' + item.category.id}>{item.category.name}</a>
+                            <a href={'/cat/' + item.category.id}>{item.category.name}</a>
                           </div>
                           <div style={{float: 'right'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
@@ -296,11 +296,11 @@ class Login extends React.Component {
                             </div>
                           </div>
                         </Card.Content>
-                        </Card> 
+                      </Card>
                     )
                   })}
                 </div>
-              </div> 
+              </div>
             </div>
             <div>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>

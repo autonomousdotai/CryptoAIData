@@ -108,18 +108,23 @@ class ImageProfileDetailSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     total_images = serializers.SerializerMethodField()
-    img_present = serializers.SerializerMethodField()
+    display_images = serializers.SerializerMethodField()
     contract_address = serializers.SerializerMethodField()
 
     def get_total_images(self, obj):
         return obj.images.count()
 
-    def get_img_present(self, obj):
+    def get_display_images(self, obj):
         img = obj.images.order_by('id').first()
+        images = obj.images.order_by('id')[:3]
         url = 'https://lh3.googleusercontent.com/-7AQtXjvEm48/U7pPOjP28XI/AAAAAAAADqs/gssorSrOl1wxxraa0BmQhhAWzjTu4qVMQCJkCGAYYCw/s1000-fcrop64=1,17ce2bc4fc98ffff/451660716.jpg'
-        if img:
-            url = img.link.url
-        return url
+        urls = []
+        if len(images) == 0:
+            urls.append(url)
+        else:
+            for image in images:
+                urls.append(image.link.url)
+        return urls
 
     def get_contract_address(self, obj):
         if not obj.contract_address:
