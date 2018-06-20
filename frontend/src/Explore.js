@@ -167,7 +167,8 @@ class Explore extends React.Component {
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
 
-          <Modal dimmer="inverted" size="small" open={this.state.open} onClose={this.close} style={inlineStyle.modal}>
+          <Modal dimmer="inverted" size="small" open={this.state.open} 
+                onClose={this.close} style={inlineStyle.modal}>
                   <Modal.Header>{"Deposit ETH to buy data"   }</Modal.Header>
                   <Modal.Content>
                     <Image src={"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl="+this.state.choice_address+"&choe=UTF-8"}/>
