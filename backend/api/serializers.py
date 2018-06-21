@@ -106,10 +106,19 @@ class ImageProfileDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ('profile',)
 
 
+class FollowedCategoryField(serializers.BooleanField):
+
+    def get_attribute(self, instance):
+        if self.context['request'].user.is_authenticated is False:
+            return False
+        return FollowingCategory.objects.filter(profile=self.context['request'].user.profile, category=instance).exists()
+
+
 class CategorySerializer(serializers.ModelSerializer):
     total_images = serializers.SerializerMethodField()
     display_images = serializers.SerializerMethodField()
     contract_address = serializers.SerializerMethodField()
+    followed = FollowedCategoryField()
 
     def get_total_images(self, obj):
         return obj.images.count()

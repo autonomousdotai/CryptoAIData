@@ -273,6 +273,9 @@ class CategoryList(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
     permission_classes = []
 
+    def get_queryset(self):
+        return Category.objects.filter(images__isnull=False).distinct()
+
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()

@@ -13,14 +13,67 @@ const inlineStyle = {
   }
 };
 
+function ImageGrid(props) {
+  if (props.displayImages.length === 1) {
+    return (
+      <Grid>
+        <Grid.Row>
+          <Grid.Column>
+            <Image src={props.displayImages[0]} />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
+  return (
+    <Grid>
+      <Grid.Row>
+        <Grid.Column>
+          <Image src={props.displayImages[0]} />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row columns={2}>
+        <Grid.Column>
+          <Image src={props.displayImages[1]} />
+        </Grid.Column>
+        <Grid.Column>
+          <Image src={props.displayImages[2]} />
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
+  );
+}
+
+function LikedIcon(props) {
+  if (!props.isAuth) {
+    return (
+      <Link to="/login">
+        <Icon name='heart outline' size='large' />
+      </Link>
+    );
+  }
+  if (props.followed) {
+    return (
+      <a href='javascript:void(0);' onClick={props.onUnfollow}>
+        <Icon name='heart' size='large' />
+      </a>
+    );
+  }
+  return (
+    <a href='javascript:void(0);' onClick={props.onFollow}>
+      <Icon name='heart outline' size='large' />
+    </a>
+  );
+}
+
 class Explore extends React.Component {
   constructor(props) {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.state = {
       isLoading: false,
-      // categories: [],
-      images: [],
+      categories: [],
       nextURL: '',
       calculations: {
         bottomVisible: false,
@@ -29,15 +82,13 @@ class Explore extends React.Component {
       choice_address:"",
 
     };
-    this.handleLikeImage = this.handleLikeImage.bind(this);
-    this.handleClassifyImage = this.handleClassifyImage.bind(this);
   }
 
   show = size => () => this.setState({ size, open: true })
   close = () => this.setState({ open: false })
 
   Copy(item){
-    console.log("copy",item); 
+    console.log("copy",item);
     const el = document.createElement('textarea');
     el.value = item;
     document.body.appendChild(el);
@@ -45,9 +96,7 @@ class Explore extends React.Component {
     document.execCommand('copy');
     document.body.removeChild(el);
     alert("Copped!");
-    
   }
-
 
   showQR(item){
     console.log(item);
@@ -55,7 +104,7 @@ class Explore extends React.Component {
     this.setState({ choice_address: item, open: true })
     //this.Copy(item);
   }
-  
+
   componentDidMount() {
     document.title = 'Data oscar'
     this.setState({isLoading: true})
@@ -69,7 +118,7 @@ class Explore extends React.Component {
       console.log(body);
 
       this.setState({isLoading: false});
-      this.setState({images: body.results, nextURL: body.next});
+      this.setState({categories: body.results, nextURL: body.next});
     }).catch((e) => {
     })
   }
@@ -93,29 +142,57 @@ class Explore extends React.Component {
     }
   }
 
-  handleLikeImage(e, imageId) {
-    e.preventDefault();
-
+  handleFollowCategory(e, i) {
     if (!this.props.isAuth) {
-      // redirect to login page
       return;
     }
 
-    agent.req.post(agent.API_ROOT + '/api/image-profile/like/')
-      .send({ image: imageId })
+    e.preventDefault();
+    const id = this.state.categories[i].id;
+
+    agent.req.post(agent.API_ROOT + '/api/profile-category/follow/')
+      .send({ category: id })
       .set('authorization', `JWT ${this.props.token}`)
       .set('accept', 'application/json')
       .then((resp) => {
-        console.log(resp)
+        const categories = this.state.categories.slice();
+        categories[i].followed = true;
+        this.setState({categories});
       })
       .catch((err) => {
       });
   }
 
-  handleClassifyImage(e, categoryId) {
+  handleUnfollowCategory(e, i) {
+    if (!this.props.isAuth) {
+      return;
+    }
+
     e.preventDefault();
-    console.log(categoryId)
-    // agent.req.get('/api/classify/?category_id=' + )
+    const id = this.state.categories[i].id;
+
+    agent.req.del(agent.API_ROOT + '/api/profile-category/unfollow/')
+      .send({ category: id })
+      .set('authorization', `JWT ${this.props.token}`)
+      .set('accept', 'application/json')
+      .then((resp) => {
+        const categories = this.state.categories.slice();
+        categories[i].followed = false;
+        this.setState({categories});
+      })
+      .catch((err) => {
+      });
+  }
+
+  renderLikedIcon(i) {
+    return (
+      <LikedIcon
+        isAuth={this.props.isAuth}
+        followed={this.state.categories[i].followed}
+        onFollow={e => this.handleFollowCategory(e, i)}
+        onUnfollow={e => this.handleUnfollowCategory(e, i)}
+      />
+    );
   }
 
   render() {
@@ -123,51 +200,34 @@ class Explore extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
           <div className="ui center aligned grid container">
-            <div className="row"> 
+            <div className="row">
               <div className="fourteen wide column">
-                <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
-                  {this.state.images.map((item, i) => {
-                    let icon;
-                    if (item.liked) {
-                      icon = <Icon name='heart' size='large' />;
-                    } else {
-                      icon = <a href='javascript:void(0);' onClick={(e) => this.handleLikeCategory(e, item.id)}>
-                                  <Icon name='heart outline' size='large' />
-                             </a>
-                    }
+                <div className="ui two doubling stackable cards" style={{marginTop: "1em"}}>
+                  {this.state.categories.map((cat, i) => {
                     return (
-                      
-                        <Card key={i}>
-                            <Link to={"/cat/" + item.id}>
-                                <Image src={item.img_present}/>
-                            </Link>
-                            <Card.Content>
-                              <div style={{float: 'left'}}>
-                                <p><a href={'/category/' + item.id}>{item.name}</a></p>
-                                <p> { "Images " + item.total_images} </p>
-                              </div>
-                              <div style={{float: 'right', marginTop:17}}>
-                                <div style={{display: 'inline', marginRight: '2em'}}>
-                                  {icon}
-                                </div>
-                                <div style={{display: 'inline'}}>
-                                        <Button basic color='blue' onClick={this.showQR.bind(this,item.contract_address)} content='Buy' />   
-                                </div>
-                              </div>
-                            </Card.Content>
-                          
-                        </Card>
-                      
+                      <Card key={i}>
+                        <Card.Content>
+                          <ImageGrid displayImages={cat.display_images} />
+                        </Card.Content>
+                        <Card.Content>
+                          <div style={{float: 'left'}}>
+                            <a href={'/cat/' + cat.id}>{cat.name} ({cat.total_images} images)</a>
+                          </div>
+                          <div style={{float: 'right'}}>
+                            {this.renderLikedIcon(i)}
+                          </div>
+                        </Card.Content>
+                      </Card>
                     )
                   })}
                 </div>
-              </div> 
+              </div>
             </div>
           </div>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
 
-          <Modal dimmer="inverted" size="small" open={this.state.open} 
+          <Modal dimmer="inverted" size="small" open={this.state.open}
                 onClose={this.close} style={inlineStyle.modal}>
                   <Modal.Header>{"Deposit ETH to buy data"   }</Modal.Header>
                   <Modal.Content>
@@ -176,10 +236,9 @@ class Explore extends React.Component {
                     <p>{this.state.choice_address} </p>
                     <p><Button onClick={this.Copy.bind(this, this.state.choice_address)} color='blue'> <Icon name='copy' /> copy address</Button></p>
                     <h3>Send only ETH to your address.</h3>
-                  </Modal.Content> 
+                  </Modal.Content>
         </Modal>
       </Visibility>
-
     )
   }
 }
