@@ -184,12 +184,20 @@ class MobileContainer extends Component {
   }
   
   handleItemClick(e, { name, value }) {
+    //to={'/p/' + this.props.userId}
+    
     if (name =="home"){
       this.setState({activeItem: name, go_url: "/"}); 
-    }else{
+      return;
+    }
+    if(name=="profile"){
+      this.setState({activeItem: name, go_url:  '/p/' + this.props.userId});  //{'/p/' + this.props.userId}
+      return;
+    }
+    else{
       this.setState({activeItem: name, go_url: "/"+name}); 
     }
-    
+     
     //this.props.history.push('/'+name);
     //return history.push("/"+name);
 
@@ -257,29 +265,23 @@ class MobileContainer extends Component {
                 {this.props.children}
               </Segment>
             </Sidebar.Pusher>
-          </Sidebar.Pushable>
-
-          {this.state.calculations.direction == 'up' ?
-            <div className='footer'>
-              <div className="ui fluid five item menu">
-               
-              <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} ><Icon name='newspaper outline'/></Menu.Item>
+          </Sidebar.Pushable> 
+          <div className='footer'>
+            <div className="ui fluid five item menu">
               
-              <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
-               
-              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/>
-              </Menu.Item>
+            <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} ><Icon name='newspaper outline'/></Menu.Item>
+            
+            <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
               
-              <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
-             
-              <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}><Icon name='user outline'/></Menu.Item>
-             
-              </div>
+            <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/>
+            </Menu.Item>
+            
+            <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
+            
+            <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}><Icon name='user outline'/></Menu.Item>
+            
             </div>
-            :
-            null
-          }
-
+          </div>  
         </Visibility>
       </Responsive>
     )

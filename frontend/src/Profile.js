@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Input,Header, Icon, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
+import {Grid, Image, Container, Input,Header, Tab, Icon, Card, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
@@ -53,38 +53,82 @@ class Profile extends React.Component {
 
   render() {
     let self = this;
+
+    const panes = [
+      { menuItem: 'DataSet Owner', render: () => 
+            <Tab.Pane attached={false}> 
+                {this.state.categories.map(function (item, i) {
+                  return (
+                    <Item key={i}>
+                      <Item.Content style={{textAlign: "left"}}>
+                        <Item.Header as='a'>Category: {item.name}</Item.Header>
+                        <Item.Description>Contract: {item.contract}</Item.Description>
+                        <Item.Description>Image classified / Total images: {item.total_classify} / {item.total_image}</Item.Description>
+                        <Item.Description>Balance: {item.balance}</Item.Description>
+                        <Item.Description>
+                          <div className='ui input' >
+                          <input style={{minWidth: "27em"}} placeholder='Your wallet address' type="text" value={self.state.values[i] || ''}
+                                onChange={self.handleChange.bind(self, i)}/>
+                          </div>
+                          <Button type='submit' onClick={self.handleClick.bind(self, i)}>Withdrawn</Button>
+                        </Item.Description>
+                      </Item.Content>
+                    </Item>
+                  )
+                })} 
+            </Tab.Pane> },
+      { menuItem: 'Photos Upload', render: () => 
+            <Tab.Pane attached={false}>  
+
+            t</Tab.Pane> },
+      { menuItem: 'Wallets', render: () => 
+            <Tab.Pane attached={false}>  
+              <Card.Group centered>
+                <Card >
+                    <Image src="/images/eth.png"/>
+                    <Card.Content>
+                      <p style={{fontSize:'10px', padding:5}}>{this.props.user.ether_address}</p>
+                    </Card.Content>
+                    <Card.Content extra>
+                      <Button color='teal'> + Deposit</Button>
+                    </Card.Content>
+                    
+                </Card>
+            </Card.Group>
+
+            </Tab.Pane> },
+      { menuItem: 'Reward Coin', render: () => 
+      <Tab.Pane attached={false}>  
+
+      </Tab.Pane> },
+    ]
+
     return (
+
       <Segment vertical>
         <Container>
-        <Header as='h2' icon textAlign='left'>
-          <Icon name='user' circular style={{margin:0}} />
-          <Header.Content>
-          {this.props.user.ether_address}
-          </Header.Content> 
-        </Header>  
-          {/*Segments for Avata Profile */ }
-          
-          <Item.Group>
-            {this.state.categories.map(function (item, i) {
-              return (
-                <Item key={i}>
-                  <Item.Content style={{textAlign: "left"}}>
-                    <Item.Header as='a'>Category: {item.name}</Item.Header>
-                    <Item.Description>Contract: {item.contract}</Item.Description>
-                    <Item.Description>Image classified / Total images: {item.total_classify} / {item.total_image}</Item.Description>
-                    <Item.Description>Balance: {item.balance}</Item.Description>
-                    <Item.Description>
-                      <div className='ui input' >
-                      <input style={{minWidth: "27em"}} placeholder='Your wallet address' type="text" value={self.state.values[i] || ''}
-                             onChange={self.handleChange.bind(self, i)}/>
-                      </div>
-                      <Button type='submit' onClick={self.handleClick.bind(self, i)}>Withdrawn</Button>
-                    </Item.Description>
-                  </Item.Content>
-                </Item>
-              )
-            })}
-          </Item.Group>
+        <Header as='h2' icon textAlign='center'>
+          <Icon name='user' circular  />
+          <Header.Content  >    
+                <div className='ui three buttons'>
+                     <Button basic color='grey' content='Datasets 50' ></Button> 
+                     <Button basic color='grey' content='Photos 1205' ></Button> 
+                     <Button basic color='grey' content='Follows 100' ></Button>   
+                </div>  
+          </Header.Content>
+        </Header>
+         
+        <Container> 
+              <Card fluid  color='orange'>  
+                <Card.Content> 
+                  <Card.Meta>  
+                      <Tab menu={{ secondary: true, pointing: true }} panes={panes}  />
+                </Card.Meta>
+                </Card.Content>
+                </Card>
+
+          </Container> 
+          {/*Segments for Avata Profile */ } 
 
               <Link to={'/login'}  > 
                     <Button style={{marginTop:60}} size='mini' onClick={()=>this.props.logout()}  >

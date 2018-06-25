@@ -58,8 +58,7 @@ class Login extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
           <div className="ui center aligned grid container">
-            <div className="row">
-              <div className="one wide column"></div>
+            <div className="row"> 
               <div className="fourteen wide column"> 
                 {this.state.images.length == 0 ?
                   <h1>No image classified, Go Home or Explore to classified and earn reward.</h1>
@@ -79,8 +78,7 @@ class Login extends React.Component {
                     })}
                   </div>
                 }
-              </div>
-              <div className="one wide column"></div>
+              </div> 
             </div>
           </div>
         </Segment>
