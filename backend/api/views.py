@@ -213,8 +213,13 @@ class ImageList(generics.ListCreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         category_id = request.data.pop('category')[0]
+        classify_id = request.data.pop('classify')[0]
         c = Category.objects.get(pk=category_id)
-        serializer.save(profile=self.request.user.profile, category=c)
+        if classify_id is not None:
+            cl = Classify.objects.get(pk=classify_id)
+            serializer.save(profile=self.request.user.profile, category=c, classify=cl)
+        else:
+            serializer.save(profile=self.request.user.profile, category=c)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -269,6 +274,12 @@ class ImageProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = []
+
+
+class ExploreCategory(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = []

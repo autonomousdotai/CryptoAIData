@@ -68,7 +68,7 @@ class DesktopContainer extends Component {
                     //value={value}
                     {...this.props}
                   />
-              <Link to='/upload'>
+              <Link to='#'>
               <Menu.Item name='upload' active={activeItem === 'upload'}
                          onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>

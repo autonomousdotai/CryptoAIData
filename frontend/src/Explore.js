@@ -109,7 +109,7 @@ class Explore extends React.Component {
     document.title = 'Data oscar'
     this.setState({isLoading: true})
 
-    const req = agent.req.get(agent.API_ROOT + '/api/category/');
+    const req = agent.req.get(agent.API_ROOT + '/api/explore-category/');
     if (this.props.isAuth) {
       req.set('authorization', `JWT ${this.props.token}`);
     }
