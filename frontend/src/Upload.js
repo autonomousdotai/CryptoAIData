@@ -90,15 +90,7 @@ class FileUploader extends React.Component {
       this.setState({isLoading: false})
     }).catch((e) => {
     });
-
-
-    // agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
-    //   let resBody = response.body;
-    //   this.setState({isLoading: false})
-    //   this.setState({images: resBody.results, nextURL: resBody.next})
-    // }).catch((e) => {
-    // })
-
+ 
   }
 
   handleUpdate = (e, {calculations}) => {
@@ -152,7 +144,7 @@ class FileUploader extends React.Component {
         return;
     }
     
-    this.setState({ loaded: false });
+    this.setState({ loaded: false, isLoading:true });
     
     reader.onload = (e) => {
         this.setState({ 
@@ -171,8 +163,12 @@ class FileUploader extends React.Component {
     console.log('submit image')
     agent.req.post(agent.API_ROOT + '/api/image/', form).set('authorization', `JWT ${this.props.token}`).then((response) => {
         console.log(response.body);
-        this.setState({images: response.body})
+        this.setState({isLoading:false, 
+          images: response.body})
     }).catch((e) => {
+
+      this.setState({isLoading:false })
+
     })
 
 
@@ -214,11 +210,15 @@ class FileUploader extends React.Component {
                     <input type="file" accept="image/*" onChange={this.onFileChange} ref="input" />
                 </label>
             </div>
+
             <div className="row">
-                <Dropdown placeholder='Select category' selection search
+
+                <Dropdown placeholder='Choose classiffied' selection search
                            onChange={(e, value) => self.handleChange(this.state.images.id, e, value.value)}
                           options={self.state.classifies}/> 
+
             </div>
+
           </div>
         </Segment> 
       </Visibility>

@@ -1,8 +1,9 @@
 import React from 'react';
-import {Grid, Image, Container, Input, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
+import {Grid, Image, Container, Input,Header, Icon, Button, Form, Segment, Item, Visibility} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
+import {Link} from 'react-router-dom'
 
 
 class Profile extends React.Component {
@@ -55,6 +56,12 @@ class Profile extends React.Component {
     return (
       <Segment vertical>
         <Container>
+        <Header as='h2' icon textAlign='left'>
+          <Icon name='user' circular style={{margin:0}} />
+          <Header.Content>
+          {this.props.user.ether_address}
+          </Header.Content> 
+        </Header>  
           {/*Segments for Avata Profile */ }
           
           <Item.Group>
@@ -78,6 +85,13 @@ class Profile extends React.Component {
               )
             })}
           </Item.Group>
+
+              <Link to={'/login'}  > 
+                    <Button style={{marginTop:60}} size='mini' onClick={()=>this.props.logout()}  >
+                     <Icon name='sign out'  /> Logout
+                  </Button>
+                </Link> 
+
         </Container>
       </Segment>
     )
@@ -85,8 +99,8 @@ class Profile extends React.Component {
 }
 
 export default props => (<AuthConsumer>
-    {({token, isLoading, isAuth}) => {
-      return <Profile {...props} token={token} isLoading={isLoading} isAuth={isAuth}/>
+    {({token,user, logout, isLoading, isAuth}) => {
+      return <Profile {...props} token={token} user={user} logout={logout} isLoading={isLoading} isAuth={isAuth}/>
     }}
   </AuthConsumer>
 )

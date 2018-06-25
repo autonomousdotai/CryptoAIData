@@ -64,7 +64,8 @@ class Login extends React.Component {
         classifies: [],
         classifyId: null,
         searchableClassfies: []
-      }
+      },
+      token: this.props.token,
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
@@ -73,13 +74,12 @@ class Login extends React.Component {
     this.submitClassify = this.submitClassify.bind(this);
   }
 
-  componentDidMount() {
-    document.title = 'Data oscar'
+  init_data(token){
     this.setState({isLoading: true})
 
     const req = agent.req.get(agent.API_ROOT + '/api/feed/');
-    if (this.props.isAuth) {
-      req.set('authorization', `JWT ${this.props.token}`);
+    if (this.props.isAuth && token !=undefined) { 
+      req.set('authorization', `JWT ${token}`);
     }
     req.then((response) => {
       const body = response.body;
@@ -88,6 +88,16 @@ class Login extends React.Component {
     }).catch((e) => {
     })
   }
+  componentDidMount() {
+    document.title = 'Data oscar'
+    this.init_data(this.props.token);
+  }
+  componentWillReceiveProps(nextProps) { 
+    if(this.state.token == undefined){ 
+      this.setState({token: nextProps.token});
+      this.init_data(nextProps.token);
+    }
+  }
 
   handleUpdate = (e, {calculations}) => {
     let self = this;
@@ -95,7 +105,12 @@ class Login extends React.Component {
     if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
         this.setState({isLoading: true})
-        agent.req.get(this.state.nextURL).then((response) => {
+        const req  = agent.req.get(this.state.nextURL); 
+        if (this.props.isAuth && this.state.token !=undefined) { 
+          req.set('authorization', `JWT ${this.props.token}`);
+        }
+
+        req.then((response) => {
           let resBody = response.body;
           this.setState({isLoading: false})
           if (resBody.next != self.state.nextURL) {
@@ -211,7 +226,7 @@ class Login extends React.Component {
 
   handleClassifyImage(e, i) {
     e.preventDefault();
-
+    
     const searchableClassfies = [];
     agent.req.get(agent.API_ROOT + `/api/classify/?category=${this.state.images[i].category.id}&limit=50`).set('authorization', `JWT ${this.props.token}`).then((response) => {
       const resBody = response.body;
