@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Form, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Header, Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
@@ -314,19 +314,32 @@ class Login extends React.Component {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
+
+        <Header as='h2' icon>
+          <Icon name='file image' /> Trash
+            <Header.Subheader>
+              <p> 0x549b7c75b605dcdf1c4ad20cacd8120572366a9b </p>
+              </Header.Subheader>
+            <div className='ui three'>
+                <Button basic color='grey' content='Followers 5000' ></Button> 
+                <Button basic color='grey' content='Photos 4205' ></Button> 
+                <Button basic color='grey' content='Providers 2000' ></Button>   
+                <Button basic color='green' content='Buy' ></Button>   
+            </div> 
+        </Header> 
           <div className="ui center aligned grid container">
-            <div className="row">
+            {/* <div className="row">
               <Form>
                 <Form.Field>
                   <label>Upload image to this category</label>
                   <input type='file' onChange={this.handleFile} placeholder='First Name'/>
                 </Form.Field>
               </Form>
-            </div>
-            <div className="row">
-              <div className="fourteen wide column">
-                <h1 style={{fontSize: '3rem'}}>List image</h1>
-                <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
+            </div> */} 
+            
+            <div className="row"> 
+              <div className="fourteen wide column"> 
+                <div className="ui three doubling stackable cards" >
                   {this.state.images.map((item, i) => {
                     return (
                       <Card key={i}>

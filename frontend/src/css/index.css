@@ -85,8 +85,7 @@ height: 40px;
        position: absolute;
        top: 50%;
        transition: all 300ms ease-in;
-       transform: translate(-50%, -50%);
-       z-index: -1; 
+       transform: translate(-50%, -50%); 
 }
 .uploader img.loaded {
           opacity: 1;
