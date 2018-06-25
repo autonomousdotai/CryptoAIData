@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
- 
+
 import {Route, Link,Redirect} from 'react-router-dom'
 import {AuthConsumer} from './AuthContext'
- 
+import UploadModal from './UploadModal'
 
 import {
   Form,
@@ -20,14 +20,27 @@ import {
 
 
 class DesktopContainer extends Component {
-  state = {activeItem: 'home'}
+  state = {
+    activeItem: 'home',
+    uploadModalOpen: false
+  }
 
   componentDidMount() {
   }
 
   hideFixedMenu = () => this.setState({fixed: false})
   showFixedMenu = () => this.setState({fixed: true})
-  handleItemClick = (e, {name}) => this.setState({activeItem: name})
+  handleItemClick = (e, {name}) => {
+    if (name === 'upload') {
+      this.setState({activeItem: name, uploadModalOpen: true})
+    } else {
+      this.setState({activeItem: name})
+    }
+  }
+
+  closeModal = () => {
+    this.setState({uploadModalOpen: false})
+  }
 
   render() {
     const {children} = this.props
@@ -46,7 +59,7 @@ class DesktopContainer extends Component {
               <Link to="/">
                 <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
               </Link>
-             
+
                 <Search
                     //loading={isLoading}
                     //onResultSelect={this.handleResultSelect}
@@ -54,10 +67,10 @@ class DesktopContainer extends Component {
                     //results={results}
                     //value={value}
                     {...this.props}
-                  />  
-              <Link to="/upload">
-                <Menu.Item name='upload' active={activeItem === 'upload'}
-                           onClick={this.handleItemClick}>Upload</Menu.Item>
+                  />
+              <Link to='/upload'>
+              <Menu.Item name='upload' active={activeItem === 'upload'}
+                         onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
               <Link to="/explore">
                 <Menu.Item name='explore' active={activeItem === 'explore'}
@@ -76,6 +89,7 @@ class DesktopContainer extends Component {
             </Container>
           </Menu>
           {this.props.children}
+          <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
         </Segment>
       </Responsive>
     )
@@ -110,11 +124,11 @@ class TabletContainer extends Component {
             style={{marginTop: "-1em", borderRadius: "0"}}
           >
             <Container>
-             
+
             <Link to="/">
                 <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
               </Link>
-             
+
                 <Search
                     //loading={isLoading}
                     //onResultSelect={this.handleResultSelect}
@@ -122,7 +136,7 @@ class TabletContainer extends Component {
                     //results={results}
                     //value={value}
                     {...this.props}
-                  />  
+                  />
               <Link to="/upload">
                 <Menu.Item name='upload' active={activeItem === 'upload'}
                            onClick={this.handleItemClick}>Upload</Menu.Item>
@@ -133,7 +147,7 @@ class TabletContainer extends Component {
               </Link>
 
               <Menu.Item position='right'>
-                
+
                 {this.props.isAuth ?
                   <Link to={'/p/' + this.props.userId}>
                     <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
@@ -158,10 +172,10 @@ TabletContainer.propTypes = {
 
 
 class MobileContainer extends Component {
-  
+
   constructor(props) {
     super(props)
-    
+
     this.state = {
     activeItem: 'home',
     calculations: {
@@ -182,18 +196,18 @@ class MobileContainer extends Component {
     this.setState({calculations});
     console.log(calculations.direction);
   }
-  
+
   handleItemClick(e, { name, value }) {
     if (name =="home"){
-      this.setState({activeItem: name, go_url: "/"}); 
+      this.setState({activeItem: name, go_url: "/"});
     }else{
-      this.setState({activeItem: name, go_url: "/"+name}); 
+      this.setState({activeItem: name, go_url: "/"+name});
     }
-    
+
     //this.props.history.push('/'+name);
     //return history.push("/"+name);
 
-    
+
   }
   //handleItemClick = (e, {name}) => this.setState({activeItem: name})
 
@@ -238,7 +252,7 @@ class MobileContainer extends Component {
                     //results={results}
                     //value={value}
                     {...this.props}
-                  /> 
+                  />
                   <Menu.Item position='right'>
                     {this.props.isAuth ?
                       <Link to="/upload">
@@ -262,18 +276,18 @@ class MobileContainer extends Component {
           {this.state.calculations.direction == 'up' ?
             <div className='footer'>
               <div className="ui fluid five item menu">
-               
+
               <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} ><Icon name='newspaper outline'/></Menu.Item>
-              
+
               <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
-               
+
               <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/>
               </Menu.Item>
-              
+
               <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
-             
+
               <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}><Icon name='user outline'/></Menu.Item>
-             
+
               </div>
             </div>
             :
