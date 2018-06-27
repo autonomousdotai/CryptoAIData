@@ -118,7 +118,7 @@ class CategorySerializer(serializers.ModelSerializer):
     total_images = serializers.SerializerMethodField()
     display_images = serializers.SerializerMethodField()
     contract_address = serializers.SerializerMethodField()
-    followed = FollowedCategoryField()
+    followed = FollowedCategoryField(read_only=True)
 
     def get_total_images(self, obj):
         return obj.images.count()
@@ -237,12 +237,19 @@ class ImageSerializer(serializers.ModelSerializer):
     liked = LikedImageField()
 
     def create(self, validated_data):
-        return Image.objects.create(
-            link=validated_data['link'],
-            profile=validated_data['profile'],
-            category=validated_data['category'],
-            classify=validated_data['classify'],
-        )
+        if 'classify' not in validated_data:
+            return Image.objects.create(
+                link=validated_data['link'],
+                profile=validated_data['profile'],
+                category=validated_data['category'],
+            )
+        else:
+            return Image.objects.create(
+                link=validated_data['link'],
+                profile=validated_data['profile'],
+                category=validated_data['category'],
+                classify=validated_data['classify'],
+            )
 
     class Meta:
         model = Image

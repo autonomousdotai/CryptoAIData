@@ -212,12 +212,15 @@ class ImageList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
+
         category_id = request.data.pop('category')[0]
-        classify_id = request.data.pop('classify')[0]
         c = Category.objects.get(pk=category_id)
-        if classify_id is not None:
-            cl = Classify.objects.get(pk=classify_id)
-            serializer.save(profile=self.request.user.profile, category=c, classify=cl)
+
+        if 'classify' in request.data:
+            classify_id = request.data.pop('classify')[0]
+            if classify_id is not None:
+                cl = Classify.objects.get(pk=classify_id)
+                serializer.save(profile=self.request.user.profile, category=c, classify=cl)
         else:
             serializer.save(profile=self.request.user.profile, category=c)
         headers = self.get_success_headers(serializer.data)
