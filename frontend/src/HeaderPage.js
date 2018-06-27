@@ -85,74 +85,67 @@ class DesktopContainer extends Component {
     const {fixed} = this.state
     const {activeItem} = this.state 
     return ( 
-      <Responsive as={Segment} minWidth={768}>
-        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}> 
-          <Segment textAlign='center' vertical >
-          <Container  style={{"marginBottom": "4em"}}>
-          <Menu
-            fixed='top'
-            inverted={true}
-            size='large'
-            style={{marginTop: "0em", borderRadius: "0", padding:'0em 1em 0.4em'}}
-            id="topbarMenu"
-          > 
-              <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
-                  <Image src="/images/logo2.png"  avatar style={{width:'35px', height:'35px'}} />
-                </Menu.Item>
-              </Link>
-
-              <Search fluid id="desktopsearch"
-                  //loading={isLoading}
-                  //onResultSelect={this.handleResultSelect}
-                  //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
-                  //results={results}
-                  //value={value}
-                  {...this.props}
-                />   
-                <Menu.Item position='right'/>
-                
-                <Link to="/explore" >
-                <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
-                            <SideIconTopContainer icon={iosNavigateOutline}/> 
-                </Menu.Item>
-                </Link>    
-                <Link to='#'  className="right">
-                  <Menu.Item position='right' name='upload' active={activeItem === 'upload'}
-                          onClick={this.handleItemClick}>
-                          <SideIconTopContainer icon={iosCloudUploadOutline}/></Menu.Item>
-                </Link>
-
-                <Link to="/dataset/create"  className="right">
-                  <Menu.Item position='right' name='create' active={activeItem === 'create'}
-                            onClick={this.handleItemClick}>
-                              <SideIconTopContainer icon={iosPlusOutline}/> 
-                            </Menu.Item>
-                </Link>
-                <Link to="/history"  className="right">
-                  <Menu.Item position='right' name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
-                      <SideIconTopContainer icon={iosAnalytics}/>
+      <Responsive  minWidth={768}>
+        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>  
+          <Container  style={{"marginBottom": "4.5em"}}>
+            <Menu fixed='top'  inverted={true}  size='large' 
+            style={{marginTop: "0em", borderRadius: "0", padding:'0em 1em 0.8em'}}  id="topbarMenu"
+            > 
+                <Link to="/" >
+                  <Menu.Item position='left' name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
+                    <Image src="/images/logo2.png"  avatar style={{width:'35px', height:'35px'}} />
                   </Menu.Item>
                 </Link> 
-                
-                {this.props.isAuth ?
-                
-                  <Link to={'/p/' + this.props.userId}  className="right">
-                    <Menu.Item position='right'  name={'/p/' + this.props.userId} active={activeItem ==='/p/' + this.props.userId } onClick={this.handleItemClick} >
-                      <SideIconTopContainer icon={iosPersonOutline}/> 
-                     </Menu.Item>
+                  <Menu.Item position='right'/>
+                  <Search fluid id="desktopsearch"
+                    //loading={isLoading}
+                    //onResultSelect={this.handleResultSelect}
+                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
+                    //results={results}
+                    //value={value}
+                    {...this.props}
+                  />   
+                  
+                  <Link to="/explore" >
+                  <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
+                              <SideIconTopContainer icon={iosNavigateOutline}/> 
+                  </Menu.Item>
+                  </Link>    
+                  <Link to='#'  className="right">
+                    <Menu.Item position='right' name='upload' active={activeItem === 'upload'}
+                            onClick={this.handleItemClick}>
+                            <SideIconTopContainer icon={iosCloudUploadOutline}/></Menu.Item>
                   </Link>
-                  :
-                  <Link to="/login">
-                     <Menu.Item position='right'>
-                        <Button color='blue' basic inverted={!fixed}  style={{marginLeft: '0.5em'}}>
-                        Login
-                        </Button>
+
+                  <Link to="/dataset/create"  className="right">
+                    <Menu.Item position='right' name='create' active={activeItem === 'create'}
+                              onClick={this.handleItemClick}>
+                                <SideIconTopContainer icon={iosPlusOutline}/> 
+                              </Menu.Item>
+                  </Link>
+                  <Link to="/history"  className="right">
+                    <Menu.Item position='right' name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
+                        <SideIconTopContainer icon={iosAnalytics}/>
                     </Menu.Item>
-                  </Link>} 
-          </Menu> 
-          </Container>
-          </Segment>  
+                  </Link> 
+                  
+                  {this.props.isAuth ?
+                  
+                    <Link to={'/p/' + this.props.userId}  className="right">
+                      <Menu.Item position='right'  name={'/p/' + this.props.userId} active={activeItem ==='/p/' + this.props.userId } onClick={this.handleItemClick} >
+                        <SideIconTopContainer icon={iosPersonOutline}/> 
+                      </Menu.Item>
+                    </Link>
+                    :
+                    <Link to="/login">
+                      <Menu.Item position='right'>
+                          <Button color='blue' basic inverted={!fixed}  style={{marginLeft: '0.5em'}}>
+                          Login
+                          </Button>
+                      </Menu.Item>
+                    </Link>} 
+            </Menu> 
+          </Container> 
           {this.props.children}
           <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
         </Segment> 

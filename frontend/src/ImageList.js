@@ -321,9 +321,9 @@ class Login extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical>
+        <Segment>
 
-        <Header as='h2' icon>
+          <Header as='h2' icon>
           <Icon name='file image' /> Trash
             <Header.Subheader>
               <p>{this.state.category ? this.state.category.contract_address : ''}</p>
@@ -334,7 +334,10 @@ class Login extends React.Component {
                 <Button basic color='green' content='Buy' ></Button>
             </div>
         </Header>
-
+        
+        </Segment>
+        <Segment vertical> 
+        
             {/* <div className="row">
               <Form>
                 <Form.Field>

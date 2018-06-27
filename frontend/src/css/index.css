@@ -187,11 +187,19 @@ body{
     box-shadow: none!important;
 
 } 
+#footer{
+    
+}
 #footer item:before{
     border: none!important;
 }
-#footer .ui.menu .active.item{
+#footer.ui.menu .item{
     background: none;
+    padding-top: 0.8em;
+}
+#footer.ui.menu .active.item{
+    background: none;
+    padding-top: 0.8em;
 }
 .ui.menu .active.item, .ui.menu .item:before{
     background: none; 
@@ -204,6 +212,9 @@ body{
 /* .ui.card .content img, .ui.cards>.card .content img{
     border-radius: .28571429rem .28571429rem 0 0!important;
 } */
+#topbarMenu{
+    border-bottom: 1px solid #eaeaea;
+}
 #topbarMenu.ui.menu .item{
     padding: 0em 1.14285714em!important;
     color: #2e2e2e;
@@ -239,4 +250,6 @@ div#head-searchbox .ui.input{
 }
 input#desktopsearch {
     min-width: 360px;
+    padding: .4em 1em;
+
 }
