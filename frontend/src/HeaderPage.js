@@ -6,7 +6,7 @@ import {AuthConsumer} from './AuthContext'
 import UploadModal from './UploadModal'
 import {iosTimer, iosTimerOutline , iosNavigateOutline , iosAnalytics, iosPersonOutline ,iosCameraOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
-
+import faker from 'faker' 
 import {
   Form,
   Button,
@@ -22,6 +22,34 @@ import {
 } from 'semantic-ui-react'
  
 
+const source =[{
+  title: faker.commerce.department(),
+  description: faker.commerce.productMaterial(),
+  image: faker.image.image() 
+  
+
+},
+{
+  title: faker.commerce.department(),
+  description: faker.commerce.productMaterial(),
+  image: faker.image.image() 
+},
+{
+  title: faker.commerce.department(),
+  description: faker.commerce.productMaterial(),
+  image: faker.image.image() 
+}
+,{
+  title: faker.commerce.department(),
+  description: faker.commerce.productMaterial(),
+  image: faker.image.image() 
+}
+,{
+  title: faker.commerce.department(),
+  description: faker.commerce.productMaterial(),
+  image: faker.image.image() 
+}
+]
 //lets say the icons on your side navigation are all color red style: {color: '#EF233C'}
 const SideIconContainer =  withBaseIcon({ size:32}) 
 const SideIconCenterContainer =  withBaseIcon({ size:64, style:{marginTop:'-18px', color:'#54c8ff'}})
@@ -207,6 +235,7 @@ TabletContainer.propTypes = {
 }
 
 
+
 class MobileContainer extends Component {
 
   constructor(props) {
@@ -219,9 +248,28 @@ class MobileContainer extends Component {
     },
     go_url:"",
     uploadModalOpen:false,
+    isLoading: false,
+    results:[],
+    value:'',
+
   }
 
   this.handleItemClick = this.handleItemClick.bind(this);
+}
+
+resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
+
+handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+
+handleSearchChange = (e, { value }) => {
+  this.setState({ isLoading: true, value })
+
+  setTimeout(() => { 
+    this.setState({
+      isLoading: false,
+      results: source,
+    })
+  }, 300)
 }
 
 closeModal = () => {
@@ -272,63 +320,23 @@ closeModal = () => {
     return (
       <Responsive {...Responsive.onlyMobile}>
         { this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
-        <Visibility onUpdate={this.handleUpdate} once={false}
-        >
-          <Sidebar.Pushable style={{minHeight: "100vh"}}>
-            <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
-              <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
-              </Link>
-              <Link to="/history">
-                <Menu.Item name='history' active={activeItem === 'history'}
-                           onClick={this.handleItemClick}>Upload</Menu.Item>
-              </Link>
+        <Visibility onUpdate={this.handleUpdate} once={false}  > 
+            <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">  
+                <Search fluid
+                        loading={this.state.isLoading}
+                        onResultSelect={this.handleResultSelect}
+                        onSearchChange={this.handleSearchChange}
+                        results={this.state.results}
+                        value={this.state.value}
+                        {...this.props}
+                      />
+            </Menu>
+            
+            <Segment textAlign='center' style={{marginTop:'8em', padding: '1em 0em',bottom:'4em'}} vertical>
+              {this.props.children}
+              <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
+            </Segment>
 
-              <Link to="/dataset/create">
-                <Menu.Item name='create' active={activeItem === 'create'}
-                           onClick={this.handleItemClick}>New dataset</Menu.Item>
-              </Link>
-
-              <Link to="/explore">
-                <Menu.Item name='explore' active={activeItem === 'explore'}
-                           onClick={this.handleItemClick}>Explore</Menu.Item>
-              </Link>
-            </Sidebar>
-
-            <Sidebar.Pusher dimmed={sidebarOpened} onClick={this.handlePusherClick}>
-              <Segment textAlign='center' style={{padding: '1em 0em'}} vertical>
-                <Menu inverted pointing style={{marginTop: "-1em", borderRadius: "inherit"}}>
-                  <Menu.Item onClick={this.handleToggle}>
-                    <Icon name='sidebar'/>
-                  </Menu.Item>
-                  <Search size="mini"
-                    //loading={isLoading}
-                    //onResultSelect={this.handleResultSelect}
-                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
-                    //results={results}
-                    //value={value}
-                    {...this.props}
-                  />
-                  <Menu.Item position='right'>
-                    {this.props.isAuth ?
-                      <Link to="/upload">
-                        <Button inverted size="mini">
-                            <Icon name='cloud upload'/>
-                        </Button>
-                      </Link>
-                      :
-                      <Link to="/login">
-                        <Button inverted  size="mini">
-                          <Icon name='sign in alternate'/>
-                        </Button>
-                      </Link>}
-                  </Menu.Item>
-                </Menu>
-                {this.props.children}
-                <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
-              </Segment>
-            </Sidebar.Pusher>
-          </Sidebar.Pushable>  
             <Menu icon  className="ui fluid five item menu footer" id="footer">  
               <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} >
               <SideIconContainer icon={iosTimerOutline}/></Menu.Item>

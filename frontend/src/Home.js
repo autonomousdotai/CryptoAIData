@@ -292,7 +292,7 @@ class Login extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical loading={this.state.isLoading}> 
+        <Segment vertical > 
            <Container>
             <Card.Group centered>
               {this.state.images.map((item, i) => {
@@ -303,7 +303,9 @@ class Login extends React.Component {
                       </Link>
                     <Card.Content>
                       <div style={{float: 'left'}}>
-                        <a href={'/cat/' + item.category.id}>{item.category.name}</a>
+                        <Link className="ui image" to={"/cat/" + item.category.id}>
+                          {item.category.name}
+                        </Link>
                       </div>
                       <div style={{float: 'right'}}>
                         <div style={{display: 'inline', marginRight: '2em'}}>
@@ -330,6 +332,8 @@ class Login extends React.Component {
                 </Modal.Actions>
               </Modal> 
         </Segment> 
+        <Segment vertical loading={this.state.isLoading}/> 
+        
       </Visibility>
     )
   }
