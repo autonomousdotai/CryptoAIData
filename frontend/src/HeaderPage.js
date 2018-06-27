@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {Route, Link,Redirect} from 'react-router-dom'
 import {AuthConsumer} from './AuthContext'
 import UploadModal from './UploadModal'
-import {iosTimer, iosTimerOutline , iosNavigateOutline , iosAnalytics, iosPersonOutline ,iosCameraOutline} from 'react-icons-kit/ionicons'
+import {iosTimer, iosTimerOutline,iosCloudUploadOutline,iosPlusOutline, iosNavigateOutline , iosAnalytics, iosPersonOutline ,iosCameraOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
 import faker from 'faker' 
 import {
@@ -19,6 +19,7 @@ import {
   Visibility,
   Search,
   Header,
+  Image,
 } from 'semantic-ui-react'
  
 
@@ -52,6 +53,8 @@ const source =[{
 ]
 //lets say the icons on your side navigation are all color red style: {color: '#EF233C'}
 const SideIconContainer =  withBaseIcon({ size:32}) 
+const SideIconTopContainer =  withBaseIcon({ size:32, color:'#333'}) 
+
 const SideIconCenterContainer =  withBaseIcon({ size:64, style:{marginTop:'-18px', color:'#54c8ff'}})
 
 class DesktopContainer extends Component {
@@ -80,59 +83,80 @@ class DesktopContainer extends Component {
   render() {
     const {children} = this.props
     const {fixed} = this.state
-    const {activeItem} = this.state
-    return (
-      <Responsive {...Responsive.onlyComputer}>
-        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>
+    const {activeItem} = this.state 
+    return ( 
+      <Responsive as={Segment} minWidth={768}>
+        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}> 
+          <Segment textAlign='center' vertical >
+          <Container  style={{"marginBottom": "4em"}}>
           <Menu
-            fixed={fixed ? 'top' : null}
+            fixed='top'
             inverted={true}
             size='large'
-            style={{marginTop: "-1em", borderRadius: "0"}}
-          >
-            <Container>
+            style={{marginTop: "0em", borderRadius: "0", padding:'0em 1em 0.4em'}}
+            id="topbarMenu"
+          > 
               <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
+                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
+                  <Image src="/images/logo2.png"  avatar style={{width:'35px', height:'35px'}} />
+                </Menu.Item>
               </Link>
 
-                <Search
-                    //loading={isLoading}
-                    //onResultSelect={this.handleResultSelect}
-                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
-                    //results={results}
-                    //value={value}
-                    {...this.props}
-                  />
-              <Link to='#'>
-                <Menu.Item name='upload' active={activeItem === 'upload'}
-                         onClick={this.handleItemClick}>Upload</Menu.Item>
-              </Link>
+              <Search fluid id="desktopsearch"
+                  //loading={isLoading}
+                  //onResultSelect={this.handleResultSelect}
+                  //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
+                  //results={results}
+                  //value={value}
+                  {...this.props}
+                />   
+                <Menu.Item position='right'/>
+                
+                <Link to="/explore" >
+                <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
+                            <SideIconTopContainer icon={iosNavigateOutline}/> 
+                </Menu.Item>
+                </Link>    
+                <Link to='#'  className="right">
+                  <Menu.Item position='right' name='upload' active={activeItem === 'upload'}
+                          onClick={this.handleItemClick}>
+                          <SideIconTopContainer icon={iosCloudUploadOutline}/></Menu.Item>
+                </Link>
 
-              <Link to="/dataset/create">
-                <Menu.Item name='create' active={activeItem === 'create'}
-                           onClick={this.handleItemClick}>New dataset</Menu.Item>
-              </Link>
-              
-              <Link to="/explore">
-                <Menu.Item name='explore' active={activeItem === 'explore'}
-                           onClick={this.handleItemClick}>Explore</Menu.Item>
-              </Link>
-              <Menu.Item position='right'>
+                <Link to="/dataset/create"  className="right">
+                  <Menu.Item position='right' name='create' active={activeItem === 'create'}
+                            onClick={this.handleItemClick}>
+                              <SideIconTopContainer icon={iosPlusOutline}/> 
+                            </Menu.Item>
+                </Link>
+                <Link to="/history"  className="right">
+                  <Menu.Item position='right' name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
+                      <SideIconTopContainer icon={iosAnalytics}/>
+                  </Menu.Item>
+                </Link> 
+                
                 {this.props.isAuth ?
-                  <Link to={'/p/' + this.props.userId}>
-                    <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
+                
+                  <Link to={'/p/' + this.props.userId}  className="right">
+                    <Menu.Item position='right'  name={'/p/' + this.props.userId} active={activeItem ==='/p/' + this.props.userId } onClick={this.handleItemClick} >
+                      <SideIconTopContainer icon={iosPersonOutline}/> 
+                     </Menu.Item>
                   </Link>
                   :
                   <Link to="/login">
-                    <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Login</Button>
-                  </Link>}
-              </Menu.Item>
-            </Container>
-          </Menu>
+                     <Menu.Item position='right'>
+                        <Button color='blue' basic inverted={!fixed}  style={{marginLeft: '0.5em'}}>
+                        Login
+                        </Button>
+                    </Menu.Item>
+                  </Link>} 
+          </Menu> 
+          </Container>
+          </Segment>  
           {this.props.children}
           <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
-        </Segment>
-      </Responsive>
+        </Segment> 
+         </Responsive >
     )
   }
 }
@@ -141,98 +165,47 @@ DesktopContainer.propTypes = {
   children: PropTypes.node,
 }
 
-class TabletContainer extends Component {
-  state = {
-    activeItem: 'home',
-    uploadModalOpen:false
-  }
+// class TabletContainer extends Component {
+//   state = {
+//     activeItem: 'home',
+//     uploadModalOpen:false
+//   }
 
-  componentDidMount() {
-  }
+//   componentDidMount() {
+//   }
 
-  hideFixedMenu = () => this.setState({fixed: false})
-  showFixedMenu = () => this.setState({fixed: true})
-  //handleItemClick = (e, {name}) => this.setState({activeItem: name})
+//   hideFixedMenu = () => this.setState({fixed: false})
+//   showFixedMenu = () => this.setState({fixed: true})
+//   //handleItemClick = (e, {name}) => this.setState({activeItem: name})
 
-  handleItemClick = (e, {name}) => {
-    if (name === 'upload') {
-      this.setState({activeItem: name, uploadModalOpen: true})
-    } else {
-      this.setState({activeItem: name})
-    }
-  }
+//   handleItemClick = (e, {name}) => {
+//     if (name === 'upload') {
+//       this.setState({activeItem: name, uploadModalOpen: true})
+//     } else {
+//       this.setState({activeItem: name})
+//     }
+//   }
 
 
-  closeModal = () => {
-    this.setState({uploadModalOpen: false})
-  }
+//   closeModal = () => {
+//     this.setState({uploadModalOpen: false})
+//   }
 
-  render() {
-    const {children} = this.props
-    const {fixed} = this.state
-    const {activeItem} = this.state
-    return (
-      <Responsive {...Responsive.onlyTablet}>
-        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>
-          <Menu
-            fixed={fixed ? 'top' : null}
-            inverted={true}
-            size='large'
-            style={{marginTop: "-1em", borderRadius: "0"}}
-          >
-            <Container>
+//   render() {
+//     const {children} = this.props
+//     const {fixed} = this.state
+//     const {activeItem} = this.state
+//     return (
+//       <Responsive {...Responsive.onlyTablet}>
+        
+//       </Responsive>
+//     )
+//   }
+// }
 
-            <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
-              </Link>
-
-                <Search
-                    //loading={isLoading}
-                    //onResultSelect={this.handleResultSelect}
-                    //onSearchChange={_.debounce(this.handleSearchChange, 500, { leading: true })}
-                    //results={results}
-                    //value={value}
-                    {...this.props}
-                  />
-              <Link to='#'>
-                <Menu.Item name='upload' active={activeItem === 'upload'}
-                         onClick={this.handleItemClick}>Upload</Menu.Item>
-              </Link>
-
-              <Link to="/dataset/create">
-                <Menu.Item name='create' active={activeItem === 'create'}
-                           onClick={this.handleItemClick}>New dataset</Menu.Item>
-              </Link>
-              
-              <Link to="/explore">
-                <Menu.Item name='explore' active={activeItem === 'explore'}
-                           onClick={this.handleItemClick}>Explore</Menu.Item>
-              </Link>
-
-              <Menu.Item position='right'>
-
-                {this.props.isAuth ?
-                  <Link to={'/p/' + this.props.userId}>
-                    <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
-                  </Link>
-                  :
-                  <Link to="/login">
-                    <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Login</Button>
-                  </Link>}
-              </Menu.Item>
-            </Container>
-          </Menu>
-          {this.props.children}
-          <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
-        </Segment>
-      </Responsive>
-    )
-  }
-}
-
-TabletContainer.propTypes = {
-  children: PropTypes.node,
-}
+// TabletContainer.propTypes = {
+//   children: PropTypes.node,
+// }
 
 
 
@@ -322,7 +295,15 @@ closeModal = () => {
         { this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
         <Visibility onUpdate={this.handleUpdate} once={false}  > 
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">  
-                <Search fluid
+               
+              <Link to="/">
+                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
+                    <Image src="/images/logo2.png"  avatar style={{marginTop:'-1em',width:'35px', height:'35px'}} />
+                </Menu.Item>
+              </Link> 
+
+               <Search 
+                       fluid
                         loading={this.state.isLoading}
                         onResultSelect={this.handleResultSelect}
                         onSearchChange={this.handleSearchChange}
@@ -368,7 +349,7 @@ export default props => (<AuthConsumer>
     {({isAuth, userId}) => {
       return <div>
         <DesktopContainer {...props} userId={userId} isAuth={isAuth}/>
-        <TabletContainer {...props} userId={userId} isAuth={isAuth}/>
+        {/* <TabletContainer {...props} userId={userId} isAuth={isAuth}/> */}
         <MobileContainer {...props} userId={userId} isAuth={isAuth}/>
       </div>
     }}

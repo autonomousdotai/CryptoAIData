@@ -200,10 +200,20 @@ body{
     background: none; 
     color: #00b5ad;
 }
-
+ 
 /* .ui.card .content img, .ui.cards>.card .content img{
     border-radius: .28571429rem .28571429rem 0 0!important;
 } */
+#topbarMenu.ui.menu .item{
+    padding: 0em 1.14285714em!important;
+    color: #2e2e2e;
+    margin-top: 1em;
+}
+
+#topbarMenu.ui.inverted.menu .active.item{
+    color: #00b5ad!important;
+}
+
 .fistgridimage{
     border-radius: .28571429rem .28571429rem 0 0!important;
 }
@@ -226,4 +236,7 @@ div#head-searchbox .ui.search {
 }
 div#head-searchbox .ui.input{
     width: 100%;
+}
+input#desktopsearch {
+    min-width: 360px;
 }
