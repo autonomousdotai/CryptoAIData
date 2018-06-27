@@ -56,33 +56,26 @@ class Login extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical>
-          <div className="ui center aligned grid container">
-            <div className="row"> 
-              <div className="fourteen wide column"> 
+        <Segment vertical loading={this.state.isLoading}>
+        <Container> 
                 {this.state.images.length == 0 ?
                   <h1>No image classified, Go Home or Explore to classified and earn reward.</h1>
                   :
-                  <div className="ui three doubling stackable cards" style={{marginTop: "2em"}}>
-                    {this.state.images.map(function (item, i) {
+                  <Card.Group centered>
+                  {this.state.images.map(function (item, i) {
                       return (
                         <Card key={i}>
-                          <Image src={item.image_url}/>
-                          <Card.Content>
-                          </Card.Content>
+                          <Image src={item.image_url}/> 
                           <Card.Content extra>
                             {item.category_name} - {item.classify_name}
                           </Card.Content>
                         </Card>
                       )
-                    })}
-                  </div>
+                    })} 
+                   </Card.Group> 
                 }
-              </div> 
-            </div>
-          </div>
-        </Segment>
-        <Segment vertical loading={this.state.isLoading}/>
+              </Container> 
+        </Segment> 
       </Visibility>
 
     )

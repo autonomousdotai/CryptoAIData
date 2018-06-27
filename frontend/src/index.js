@@ -29,7 +29,7 @@ const App = () => (
           <Route exact path="/explore" component={Explore} />
           <ProtectedRoute exact path="/history" component={History} />
           <ProtectedRoute exact path="/upload" component={FileUploader} />
-          <ProtectedRoute exact path="/category/create" component={CategoryClassify} />
+          <ProtectedRoute exact path="/dataset/create" component={CategoryClassify} />
           <ProtectedRoute exact path="/p/:profileId" component={Profile} />
           <ProtectedRoute exact path="/cat/:categoryId" component={ImageList} />
           <Route exact path="/" component={Home} />

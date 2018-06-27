@@ -4,6 +4,8 @@ import React, {Component} from 'react'
 import {Route, Link,Redirect} from 'react-router-dom'
 import {AuthConsumer} from './AuthContext'
 import UploadModal from './UploadModal'
+import {iosTimer, iosTimerOutline , iosNavigateOutline , iosAnalytics, iosPersonOutline ,iosCameraOutline} from 'react-icons-kit/ionicons'
+import { withBaseIcon } from 'react-icons-kit'
 
 import {
   Form,
@@ -16,8 +18,13 @@ import {
   Sidebar,
   Visibility,
   Search,
+  Header,
 } from 'semantic-ui-react'
+ 
 
+//lets say the icons on your side navigation are all color red style: {color: '#EF233C'}
+const SideIconContainer =  withBaseIcon({ size:32}) 
+const SideIconCenterContainer =  withBaseIcon({ size:64, style:{marginTop:'-18px', color:'#54c8ff'}})
 
 class DesktopContainer extends Component {
   state = {
@@ -69,9 +76,15 @@ class DesktopContainer extends Component {
                     {...this.props}
                   />
               <Link to='#'>
-              <Menu.Item name='upload' active={activeItem === 'upload'}
+                <Menu.Item name='upload' active={activeItem === 'upload'}
                          onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
+
+              <Link to="/dataset/create">
+                <Menu.Item name='create' active={activeItem === 'create'}
+                           onClick={this.handleItemClick}>New dataset</Menu.Item>
+              </Link>
+              
               <Link to="/explore">
                 <Menu.Item name='explore' active={activeItem === 'explore'}
                            onClick={this.handleItemClick}>Explore</Menu.Item>
@@ -101,14 +114,30 @@ DesktopContainer.propTypes = {
 }
 
 class TabletContainer extends Component {
-  state = {activeItem: 'home'}
+  state = {
+    activeItem: 'home',
+    uploadModalOpen:false
+  }
 
   componentDidMount() {
   }
 
   hideFixedMenu = () => this.setState({fixed: false})
   showFixedMenu = () => this.setState({fixed: true})
-  handleItemClick = (e, {name}) => this.setState({activeItem: name})
+  //handleItemClick = (e, {name}) => this.setState({activeItem: name})
+
+  handleItemClick = (e, {name}) => {
+    if (name === 'upload') {
+      this.setState({activeItem: name, uploadModalOpen: true})
+    } else {
+      this.setState({activeItem: name})
+    }
+  }
+
+
+  closeModal = () => {
+    this.setState({uploadModalOpen: false})
+  }
 
   render() {
     const {children} = this.props
@@ -137,10 +166,16 @@ class TabletContainer extends Component {
                     //value={value}
                     {...this.props}
                   />
-              <Link to="/upload">
+              <Link to='#'>
                 <Menu.Item name='upload' active={activeItem === 'upload'}
-                           onClick={this.handleItemClick}>Upload</Menu.Item>
+                         onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
+
+              <Link to="/dataset/create">
+                <Menu.Item name='create' active={activeItem === 'create'}
+                           onClick={this.handleItemClick}>New dataset</Menu.Item>
+              </Link>
+              
               <Link to="/explore">
                 <Menu.Item name='explore' active={activeItem === 'explore'}
                            onClick={this.handleItemClick}>Explore</Menu.Item>
@@ -160,6 +195,7 @@ class TabletContainer extends Component {
             </Container>
           </Menu>
           {this.props.children}
+          <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
         </Segment>
       </Responsive>
     )
@@ -181,10 +217,15 @@ class MobileContainer extends Component {
     calculations: {
       direction: 'none',
     },
-    go_url:""
+    go_url:"",
+    uploadModalOpen:false,
   }
 
   this.handleItemClick = this.handleItemClick.bind(this);
+}
+
+closeModal = () => {
+  this.setState({uploadModalOpen: false})
 }
 
   handlePusherClick = () => {
@@ -194,14 +235,17 @@ class MobileContainer extends Component {
 
   handleUpdate = (e, {calculations}) => {
     this.setState({calculations});
-    console.log(calculations.direction);
+    // console.log(calculations.direction);
   }
 
-  handleItemClick(e, { name, value }) {
-    //to={'/p/' + this.props.userId}
-    
-    if (name =="home"){
+  handleItemClick(e, { name, value }) { 
+
+    if (name =="home" && this.state.go_url !="/"){
       this.setState({activeItem: name, go_url: "/"}); 
+      return;
+    }
+    if (name === 'upload') {
+      this.setState({activeItem: name, uploadModalOpen: true})
       return;
     }
     if(name=="profile"){
@@ -211,11 +255,10 @@ class MobileContainer extends Component {
     else{
       this.setState({activeItem: name, go_url: "/"+name}); 
     }
-     
-    //this.props.history.push('/'+name);
-    //return history.push("/"+name);
-
-
+      
+  } 
+  componentDidMount() {
+    console.log(this.props);
   }
   //handleItemClick = (e, {name}) => this.setState({activeItem: name})
 
@@ -228,9 +271,8 @@ class MobileContainer extends Component {
 
     return (
       <Responsive {...Responsive.onlyMobile}>
-        {this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
-        <Visibility onUpdate={this.handleUpdate}
-                    once={false}
+        { this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
+        <Visibility onUpdate={this.handleUpdate} once={false}
         >
           <Sidebar.Pushable style={{minHeight: "100vh"}}>
             <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
@@ -241,6 +283,12 @@ class MobileContainer extends Component {
                 <Menu.Item name='history' active={activeItem === 'history'}
                            onClick={this.handleItemClick}>Upload</Menu.Item>
               </Link>
+
+              <Link to="/dataset/create">
+                <Menu.Item name='create' active={activeItem === 'create'}
+                           onClick={this.handleItemClick}>New dataset</Menu.Item>
+              </Link>
+
               <Link to="/explore">
                 <Menu.Item name='explore' active={activeItem === 'explore'}
                            onClick={this.handleItemClick}>Explore</Menu.Item>
@@ -277,25 +325,27 @@ class MobileContainer extends Component {
                   </Menu.Item>
                 </Menu>
                 {this.props.children}
+                <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
               </Segment>
             </Sidebar.Pusher>
-          </Sidebar.Pushable> 
-          <div className='footer'>
-            <div className="ui fluid five item menu">
+          </Sidebar.Pushable>  
+            <Menu icon  className="ui fluid five item menu footer" id="footer">  
+              <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} >
+              <SideIconContainer icon={iosTimerOutline}/></Menu.Item>
               
-            <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} ><Icon name='newspaper outline'/></Menu.Item>
-            
-            <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} > <Icon name='star outline'/></Menu.Item>
+              <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} >
+              <SideIconContainer icon={iosNavigateOutline}/></Menu.Item>
+                
+              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}>
+              <SideIconCenterContainer icon={iosCameraOutline}/>
+              </Menu.Item>
               
-            <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}><Icon name='camera'/>
-            </Menu.Item>
-            
-            <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} ><Icon name='heart outline'/></Menu.Item>
-            
-            <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}><Icon name='user outline'/></Menu.Item>
-            
-            </div>
-          </div>  
+              <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
+              <SideIconContainer icon={iosAnalytics}/></Menu.Item>
+              
+              <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}>
+              <SideIconContainer icon={iosPersonOutline}/></Menu.Item>
+            </Menu>  
         </Visibility>
       </Responsive>
     )

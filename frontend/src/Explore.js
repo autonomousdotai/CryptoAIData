@@ -14,34 +14,28 @@ const inlineStyle = {
 };
 
 function ImageGrid(props) {
-  if (props.displayImages.length === 1) {
+  if (props.displayImages.length <=2 ) {
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Column>
-            <Image src={props.displayImages[0]} />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Image src={props.displayImages[0]} />
     );
   }
 
   return (
-    <Grid>
-      <Grid.Row>
-        <Grid.Column>
-          <Image src={props.displayImages[0]} />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row columns={2}>
-        <Grid.Column>
-          <Image src={props.displayImages[1]} />
-        </Grid.Column>
-        <Grid.Column>
-          <Image src={props.displayImages[2]} />
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
+    <div>
+        <Grid columns={1} padded>
+        <Grid.Column fluid>
+            <Image src={props.displayImages[0]} className="fistgridimage" />
+         </Grid.Column>
+        </Grid>
+        <Grid columns={2} padded>
+          <Grid.Column fluid>
+           <Image src={props.displayImages[1]} /> 
+          </Grid.Column>
+          <Grid.Column fluid>
+           <Image src={props.displayImages[2]} /> 
+          </Grid.Column>
+        </Grid> 
+     </div>
   );
 }
 
@@ -199,19 +193,17 @@ class Explore extends React.Component {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
-          <div className="ui center aligned grid container">
-            <div className="row">
-              <div className="fourteen wide column">
-                <div className="ui two doubling stackable cards" style={{marginTop: "1em"}}>
+        <Container>
+            <Card.Group centered>
                   {this.state.categories.map((cat, i) => {
                     return (
-                      <Card key={i}>
-                        <Card.Content>
-                          <ImageGrid displayImages={cat.display_images} />
-                        </Card.Content>
+                      <Card key={i}> 
+                        <Link className="ui image" to={'/cat/' + cat.id}>
+                            <ImageGrid displayImages={cat.display_images} />
+                        </Link> 
                         <Card.Content>
                           <div style={{float: 'left'}}>
-                            <a href={'/cat/' + cat.id}>{cat.name} ({cat.total_images} images)</a>
+                            <Link to={'/cat/' + cat.id}>{cat.name} ({cat.total_images} images)</Link>
                           </div>
                           <div style={{float: 'right'}}>
                             {this.renderLikedIcon(i)}
@@ -219,11 +211,9 @@ class Explore extends React.Component {
                         </Card.Content>
                       </Card>
                     )
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+                  })} 
+               </Card.Group>
+            </Container>         
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
 

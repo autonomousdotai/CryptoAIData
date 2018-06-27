@@ -243,7 +243,7 @@ class FileUploader extends React.Component {
                                 props.overlayColor : props.baseColor;
     console.log('moddal', this.props)
     return (
-      <Modal size='large'closeOnEscape closeIcon open={this.props.open} onClose={this.props.handleClose}>
+      <Modal size='small' closeOnEscape closeIcon open={this.props.open} onClose={this.props.handleClose}>
         <Modal.Header>Upload</Modal.Header>
         <Modal.Content image>
           <div className="ui center aligned grid container">
@@ -262,12 +262,12 @@ class FileUploader extends React.Component {
               </label>
             </div>
             <div className="row">
-              <Dropdown placeholder='Select category'
+              <Dropdown fluid placeholder='Select category'
                 selection search
                 onChange={(e, data) => this.handleSelectCategory(data.value)}
                 options={this.state.categories}
               />
-              <Dropdown placeholder='Select classify'
+              <Dropdown fluid placeholder='Select classify'
                 selection search
                 onChange={(e, data) => this.handleSelectClassify(data.value)}
                 options={this.state.classifies}

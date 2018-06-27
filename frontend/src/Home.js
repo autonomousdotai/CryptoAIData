@@ -6,24 +6,29 @@ import agent from './agent'
 import {Link} from 'react-router-dom'
 import filter from 'lodash.filter'
 
+import {iosHeartOutline, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
+import { withBaseIcon } from 'react-icons-kit'
+const SideIconContainer =  withBaseIcon({ size:32})
+
+
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
       <Link to="/login">
-        <Icon name='heart outline' size='large' />
+          <SideIconContainer icon={iosHeartOutline}/>
       </Link>
     );
   }
   if (props.liked) {
     return (
       <a href='javascript:void(0);' onClick={props.onUnlike}>
-        <Icon name='heart' size='large' />
+         <SideIconContainer icon={iosHeart}/>
       </a>
     );
   }
   return (
     <a href='javascript:void(0);' onClick={props.onLike}>
-      <Icon name='heart outline' size='large' />
+        <SideIconContainer icon={iosHeartOutline}/>
     </a>
   );
 }
@@ -31,17 +36,17 @@ function LikedIcon(props) {
 function ClassifiedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login">
-        <Icon name='plus' size='large' />
+      <Link to="/login"> 
+        <SideIconContainer icon={iosPlusOutline}/> 
       </Link>
     );
   }
   if (props.classified) {
-    return <Icon name='checkmark' size='large' />;
+    return <a href='javascript:void(0);'><SideIconContainer icon={iosCheckmarkOutline}/></a> ;
   }
   return (
     <a href='javascript:void(0);' onClick={props.onClassify}>
-      <Icon name='plus' size='large' />
+       <SideIconContainer icon={iosPlusOutline}/> 
     </a>
   );
 }
@@ -287,37 +292,33 @@ class Login extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical>
-          <div className="ui center aligned grid container">
-            <div className="row">
-              <div className="fourteen wide column">
-                <div className="ui three doubling stackable cards" style={{marginTop: "1em"}}>
-                  {this.state.images.map((item, i) => {
-                    return (
-                      <Card key={i}>
-                        <Link to={"/cat/" + item.category.id}>
-                          <Image src={item.link}/>
-                         </Link>
-                        <Card.Content>
-                          <div style={{float: 'left'}}>
-                            <a href={'/cat/' + item.category.id}>{item.category.name}</a>
-                          </div>
-                          <div style={{float: 'right'}}>
-                            <div style={{display: 'inline', marginRight: '2em'}}>
-                              {this.renderLikedIcon(i)}
-                            </div>
-                            <div style={{display: 'inline'}}>
-                              {this.renderClassifiedIcon(i)}
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-            <div>
+        <Segment vertical loading={this.state.isLoading}> 
+           <Container>
+            <Card.Group centered>
+              {this.state.images.map((item, i) => {
+                return (
+                  <Card key={i}>
+                      <Link className="ui image" to={"/cat/" + item.category.id}>
+                        <Image src={item.link}/>
+                      </Link>
+                    <Card.Content>
+                      <div style={{float: 'left'}}>
+                        <a href={'/cat/' + item.category.id}>{item.category.name}</a>
+                      </div>
+                      <div style={{float: 'right'}}>
+                        <div style={{display: 'inline', marginRight: '2em'}}>
+                          {this.renderLikedIcon(i)}
+                        </div>
+                        <div style={{display: 'inline'}}>
+                          {this.renderClassifiedIcon(i)}
+                        </div>
+                      </div>
+                    </Card.Content>
+                  </Card>
+                )
+              })}  
+            </Card.Group>
+            </Container>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
                 <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>
@@ -327,11 +328,8 @@ class Login extends React.Component {
                 <Modal.Actions>
                   <Button fluid positive content='Done' onClick={this.submitClassify} style={{marginLeft: 0}} />
                 </Modal.Actions>
-              </Modal>
-            </div>
-          </div>
-        </Segment>
-        <Segment vertical loading={this.state.isLoading}/>
+              </Modal> 
+        </Segment> 
       </Visibility>
     )
   }

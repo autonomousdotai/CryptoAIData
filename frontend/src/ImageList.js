@@ -6,24 +6,28 @@ import agent from './agent'
 import {Link} from 'react-router-dom'
 import filter from 'lodash.filter'
 
+import {iosHeartOutline, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
+import { withBaseIcon } from 'react-icons-kit'
+const SideIconContainer =  withBaseIcon({ size:32})
+
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
       <Link to="/login">
-        <Icon name='heart outline' size='large' />
+          <SideIconContainer icon={iosHeartOutline}/>
       </Link>
     );
   }
   if (props.liked) {
     return (
       <a href='javascript:void(0);' onClick={props.onUnlike}>
-        <Icon name='heart' size='large' />
+         <SideIconContainer icon={iosHeart}/>
       </a>
     );
   }
   return (
     <a href='javascript:void(0);' onClick={props.onLike}>
-      <Icon name='heart outline' size='large' />
+        <SideIconContainer icon={iosHeartOutline}/>
     </a>
   );
 }
@@ -31,17 +35,17 @@ function LikedIcon(props) {
 function ClassifiedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login">
-        <Icon name='plus' size='large' />
+      <Link to="/login"> 
+        <SideIconContainer icon={iosPlusOutline}/> 
       </Link>
     );
   }
   if (props.classified) {
-    return <Icon name='checkmark' size='large' />;
+    return <a href='javascript:void(0);'><SideIconContainer icon={iosCheckmarkOutline}/></a> ;
   }
   return (
     <a href='javascript:void(0);' onClick={props.onClassify}>
-      <Icon name='plus' size='large' />
+       <SideIconContainer icon={iosPlusOutline}/> 
     </a>
   );
 }
@@ -327,7 +331,7 @@ class Login extends React.Component {
                 <Button basic color='green' content='Buy' ></Button>   
             </div> 
         </Header> 
-          <div className="ui center aligned grid container">
+           
             {/* <div className="row">
               <Form>
                 <Form.Field>
@@ -336,21 +340,16 @@ class Login extends React.Component {
                 </Form.Field>
               </Form>
             </div> */} 
-            
-            <div className="row"> 
-              <div className="fourteen wide column"> 
-                <div className="ui three doubling stackable cards" >
+           <Container>
+            <Card.Group centered>
                   {this.state.images.map((item, i) => {
                     return (
                       <Card key={i}>
-                        <Link to={"/cat/" + item.category.id}>
+                        <Link className="ui image" to={"/cat/" + item.category.id}>
                           <Image src={item.link}/>
                          </Link>
-                        <Card.Content>
+                        <Card.Content> 
                           <div style={{float: 'left'}}>
-                            <a href={'/cat/' + item.category.id}>{item.category.name}</a>
-                          </div>
-                          <div style={{float: 'right'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
                               {this.renderLikedIcon(i)}
                             </div>
@@ -361,11 +360,10 @@ class Login extends React.Component {
                         </Card.Content>
                       </Card>
                     )
-                  })}
-                </div>
-              </div>
-            </div>
-            <div>
+                  })} 
+
+                </Card.Group>
+                </Container>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
                 <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>
@@ -375,9 +373,7 @@ class Login extends React.Component {
                 <Modal.Actions>
                   <Button fluid positive content='Done' onClick={this.submitClassify} style={{marginLeft: 0}} />
                 </Modal.Actions>
-              </Modal>
-            </div>
-          </div>
+              </Modal> 
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
       </Visibility>
