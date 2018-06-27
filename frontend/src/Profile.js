@@ -13,7 +13,8 @@ class Profile extends React.Component {
     this.state = {
       categories: [],
       name: '',
-      values: []
+      values: [],
+      profile: null
     };
   }
 
@@ -22,9 +23,11 @@ class Profile extends React.Component {
     let profileId = this.props.match.params.profileId
     agent.req.get(agent.API_ROOT + '/api/profile/' + profileId).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
-      console.log(resBody);
-      self.setState({categories: resBody.categories})
-      self.setState({values: Array(resBody.categories.length).fill('')})
+      self.setState({
+        categories: resBody.categories,
+        profile: resBody,
+        values: Array(resBody.categories.length).fill('')
+      });
     }).catch((e) => {
     })
   }
@@ -55,8 +58,8 @@ class Profile extends React.Component {
     let self = this;
 
     const panes = [
-      { menuItem: 'DataSet Owner', render: () => 
-            <Tab.Pane attached={false}> 
+      { menuItem: 'DataSet Owner', render: () =>
+            <Tab.Pane attached={false}>
                 {this.state.categories.map(function (item, i) {
                   return (
                     <Item key={i}>
@@ -75,14 +78,14 @@ class Profile extends React.Component {
                       </Item.Content>
                     </Item>
                   )
-                })} 
+                })}
             </Tab.Pane> },
-      { menuItem: 'Photos Upload', render: () => 
-            <Tab.Pane attached={false}>  
+      { menuItem: 'Photos Upload', render: () =>
+            <Tab.Pane attached={false}>
 
             t</Tab.Pane> },
-      { menuItem: 'Wallets', render: () => 
-            <Tab.Pane attached={false}>  
+      { menuItem: 'Wallets', render: () =>
+            <Tab.Pane attached={false}>
               <Card.Group centered>
                 <Card >
                     <Image src="/images/eth.png"/>
@@ -92,13 +95,13 @@ class Profile extends React.Component {
                     <Card.Content extra>
                       <Button color='teal'> + Deposit</Button>
                     </Card.Content>
-                    
+
                 </Card>
             </Card.Group>
 
             </Tab.Pane> },
-      { menuItem: 'Reward Coin', render: () => 
-      <Tab.Pane attached={false}>  
+      { menuItem: 'Reward Coin', render: () =>
+      <Tab.Pane attached={false}>
 
       </Tab.Pane> },
     ]
@@ -109,32 +112,32 @@ class Profile extends React.Component {
         <Container>
         <Header as='h2' icon textAlign='center'>
           <Icon name='user' circular  />
-          <Header.Content  >    
+          <Header.Content  >
                 <div className='ui three buttons'>
-                     <Button basic color='grey' content='Datasets 50' ></Button> 
-                     <Button basic color='grey' content='Photos 1205' ></Button> 
-                     <Button basic color='grey' content='Follows 100' ></Button>   
-                </div>  
+                     <Button basic color='grey' content={this.state.profile && this.state.profile.following_categories ? `Datasets ${this.state.profile.following_categories.length}` : 'Datasets 0'} ></Button>
+                     <Button basic color='grey' content={this.state.profile ? `Photos ${this.state.profile.total_upload_images}` : 'Photos'} ></Button>
+                     <Button basic color='grey' content={this.state.profile && this.state.profile.following_profile ? `Follows ${this.state.profile.following_profile.length}` : 'Follows 0'} ></Button>
+                </div>
           </Header.Content>
         </Header>
-         
-        <Container> 
-              <Card fluid  color='orange'>  
-                <Card.Content> 
-                  <Card.Meta>  
+
+        <Container>
+              <Card fluid  color='orange'>
+                <Card.Content>
+                  <Card.Meta>
                       <Tab menu={{ secondary: true, pointing: true }} panes={panes}  />
                 </Card.Meta>
                 </Card.Content>
                 </Card>
 
-          </Container> 
-          {/*Segments for Avata Profile */ } 
+          </Container>
+          {/*Segments for Avata Profile */ }
 
-              <Link to={'/login'}  > 
+              <Link to={'/login'}  >
                     <Button style={{marginTop:60}} size='mini' onClick={()=>this.props.logout()}  >
                      <Icon name='sign out'  /> Logout
                   </Button>
-                </Link> 
+                </Link>
 
         </Container>
       </Segment>

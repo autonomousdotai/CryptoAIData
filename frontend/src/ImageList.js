@@ -35,8 +35,8 @@ function LikedIcon(props) {
 function ClassifiedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login"> 
-        <SideIconContainer icon={iosPlusOutline}/> 
+      <Link to="/login">
+        <SideIconContainer icon={iosPlusOutline}/>
       </Link>
     );
   }
@@ -45,7 +45,7 @@ function ClassifiedIcon(props) {
   }
   return (
     <a href='javascript:void(0);' onClick={props.onClassify}>
-       <SideIconContainer icon={iosPlusOutline}/> 
+       <SideIconContainer icon={iosPlusOutline}/>
     </a>
   );
 }
@@ -71,7 +71,8 @@ class Login extends React.Component {
         classifies: [],
         classifyId: null,
         searchableClassfies: []
-      }
+      },
+      category: null
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
@@ -121,8 +122,11 @@ class Login extends React.Component {
     //   this.setState({classifies: temp})
     // }).catch((e) => {
     // });
-    //
-    //
+    agent.req.get(agent.API_ROOT + '/api/category/' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      this.setState({category: response.body})
+    }).catch((e) => {
+    })
+
     agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
       this.setState({isLoading: false})
@@ -322,16 +326,15 @@ class Login extends React.Component {
         <Header as='h2' icon>
           <Icon name='file image' /> Trash
             <Header.Subheader>
-              <p> 0x549b7c75b605dcdf1c4ad20cacd8120572366a9b </p>
+              <p>{this.state.category ? this.state.category.contract_address : ''}</p>
               </Header.Subheader>
             <div className='ui three'>
-                <Button basic color='grey' content='Followers 5000' ></Button> 
-                <Button basic color='grey' content='Photos 4205' ></Button> 
-                <Button basic color='grey' content='Providers 2000' ></Button>   
-                <Button basic color='green' content='Buy' ></Button>   
-            </div> 
-        </Header> 
-           
+                <Button basic color='grey' content={this.state.category && this.state.category.total_followers ? `Followers ${this.state.category.total_followers}` : 'Followers 0'} ></Button>
+                <Button basic color='grey' content={this.state.category && this.state.category.total_images ? `Images ${this.state.category.total_images}` : 'Images 0'} ></Button>
+                <Button basic color='green' content='Buy' ></Button>
+            </div>
+        </Header>
+
             {/* <div className="row">
               <Form>
                 <Form.Field>
@@ -339,7 +342,7 @@ class Login extends React.Component {
                   <input type='file' onChange={this.handleFile} placeholder='First Name'/>
                 </Form.Field>
               </Form>
-            </div> */} 
+            </div> */}
            <Container>
             <Card.Group centered>
                   {this.state.images.map((item, i) => {
@@ -348,7 +351,7 @@ class Login extends React.Component {
                         <Link className="ui image" to={"/cat/" + item.category.id}>
                           <Image src={item.link}/>
                          </Link>
-                        <Card.Content> 
+                        <Card.Content>
                           <div style={{float: 'left'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
                               {this.renderLikedIcon(i)}
@@ -360,7 +363,7 @@ class Login extends React.Component {
                         </Card.Content>
                       </Card>
                     )
-                  })} 
+                  })}
 
                 </Card.Group>
                 </Container>
@@ -373,7 +376,7 @@ class Login extends React.Component {
                 <Modal.Actions>
                   <Button fluid positive content='Done' onClick={this.submitClassify} style={{marginLeft: 0}} />
                 </Modal.Actions>
-              </Modal> 
+              </Modal>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
       </Visibility>

@@ -17,6 +17,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
     categories = serializers.SerializerMethodField()
+    total_upload_images = serializers.SerializerMethodField()
+
+    def get_total_upload_images(self, obj):
+        return Image.objects.filter(profile=obj).count()
 
     def get_categories(self, obj):
         categories = Category.objects.all()
@@ -152,6 +156,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
+    total_followers = serializers.SerializerMethodField()
+    total_images = serializers.SerializerMethodField()
+
+    def get_total_images(self, obj):
+        return Image.objects.filter(category=obj).count()
+
+    def get_total_followers(self, obj):
+        return FollowingCategory.objects.filter(category=obj).count()
+
     class Meta:
         model = Category
         fields = '__all__'

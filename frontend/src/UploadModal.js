@@ -241,7 +241,7 @@ class FileUploader extends React.Component {
     iconColor   = state.active   ?
                                 props.activeColor : (state.loaded) ?
                                 props.overlayColor : props.baseColor;
-    console.log('moddal', this.props)
+
     return (
       <Modal size='small' closeOnEscape closeIcon open={this.props.open} onClose={this.props.handleClose}>
         <Modal.Header>Upload</Modal.Header>
