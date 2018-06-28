@@ -124,6 +124,7 @@ class Login extends React.Component {
     // });
     agent.req.get(agent.API_ROOT + '/api/category/' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
       this.setState({category: response.body})
+      console.log(response.body);
     }).catch((e) => {
     })
 
@@ -321,12 +322,12 @@ class Login extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical>
+        <Segment>
 
         <Header as='h2' icon>
-          <Icon name='file image' />{this.state.category ? this.state.category.name : ''}
+        <Image src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
+            {this.state.category ? this.state.category.name :''}
             <Header.Subheader>
-              <p>{this.state.category ? this.state.category.contract_address : ''}</p>
               </Header.Subheader>
             <div className='ui three'>
                 <Button basic color='grey' content={this.state.category && this.state.category.total_followers ? `Followers ${this.state.category.total_followers}` : 'Followers 0'} ></Button>
@@ -334,6 +335,9 @@ class Login extends React.Component {
                 <Button basic color='green' content='Buy' ></Button>
             </div>
         </Header>
+
+        </Segment>
+        <Segment vertical>
 
             {/* <div className="row">
               <Form>

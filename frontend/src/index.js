@@ -26,12 +26,12 @@ const App = () => (
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/explore" component={Explore} />
+          <withRouter exact path="/explore" component={Explore} />
           <ProtectedRoute exact path="/history" component={History} />
           <ProtectedRoute exact path="/upload" component={FileUploader} />
           <ProtectedRoute exact path="/dataset/create" component={CategoryClassify} />
           <ProtectedRoute exact path="/p/:profileId" component={Profile} />
-          <ProtectedRoute exact path="/cat/:categoryId" component={ImageList} />
+          <Route exact path="/cat/:categoryId" component={ImageList} />
           <Route exact path="/" component={Home} />
         </Switch>
         </HeaderPage>
