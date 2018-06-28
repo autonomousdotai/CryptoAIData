@@ -324,7 +324,7 @@ class Login extends React.Component {
         <Segment vertical>
 
         <Header as='h2' icon>
-          <Icon name='file image' /> Trash
+          <Icon name='file image' />{this.state.category ? this.state.category.name : ''}
             <Header.Subheader>
               <p>{this.state.category ? this.state.category.contract_address : ''}</p>
               </Header.Subheader>

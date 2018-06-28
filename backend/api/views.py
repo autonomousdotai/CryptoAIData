@@ -400,3 +400,17 @@ class UnlikeImage(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         return instance.delete()
+
+
+class Search(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = []
+
+    def get_queryset(self):
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = Category.objects.filter(name__icontains=q)
+        else:
+            queryset = Category.objects.all()
+        return queryset.order_by('-created')
