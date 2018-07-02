@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M674,436 L688.000293,436 C689.104701,436 690,436.88773 690,438 C690,439.104569 689.110107,440 688.000293,440 L674,440 L674,454.000293 C674,455.104701 673.11227,456 672,456 C670.895431,456 670,455.110107 670,454.000293 L670,440 L655.999707,440 C654.895299,440 654,439.11227 654,438 C654,436.895431 654.889893,436 655.999707,436 L670,436 L670,421.999707 C670,420.895299 670.88773,420 672,420 C673.104569,420 674,420.889893 674,421.999707 L674,436 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1" transform="translate(-684.000000, -1065.000000)">
+            <g id="post-copy" transform="translate(30.000000, 645.000000)">
+                <g id="photo">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Combined-Shape" fill="#262628" transform="translate(672.000000, 438.000000) rotate(-360.000000) translate(-672.000000, -438.000000) " xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

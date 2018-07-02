@@ -6,29 +6,32 @@ import agent from './agent'
 import {Link} from 'react-router-dom'
 import filter from 'lodash.filter'
 
-import {iosHeartOutline, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
+import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
-const SideIconContainer =  withBaseIcon({ size:32})
+const SideIconContainer =  withBaseIcon({ size:28, color:'black'})
+
+//{activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
 
 
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login">
-          <SideIconContainer icon={iosHeartOutline}/>
+      <Link to="/login" style={{color:'#333'}}>
+          <img class="my-icon" src="/icons/activity.svg"/>
+          {/* <SideIconContainer icon={androidDone}/> */}
       </Link>
     );
   }
   if (props.liked) {
     return (
-      <a href='javascript:void(0);' onClick={props.onUnlike}>
-         <SideIconContainer icon={iosHeart}/>
+      <a href='javascript:void(0);' onClick={props.onUnlike} style={{color:'#333'}}>
+         <img class="my-icon" src="/icons/activityactive.svg"/>
       </a>
     );
   }
   return (
-    <a href='javascript:void(0);' onClick={props.onLike}>
-        <SideIconContainer icon={iosHeartOutline}/>
+    <a href='javascript:void(0);' onClick={props.onLike} style={{color:'#333'}} >
+        <img class="my-icon" src="/icons/activity.svg"/>
     </a>
   );
 }
@@ -36,17 +39,19 @@ function LikedIcon(props) {
 function ClassifiedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login"> 
-        <SideIconContainer icon={iosPlusOutline}/> 
+      <Link to="/login" style={{color:'#333'}}> 
+        <img class="my-icon" src="/icons/plus.svg"/>
       </Link>
     );
   }
   if (props.classified) {
-    return <a href='javascript:void(0);'><SideIconContainer icon={iosCheckmarkOutline}/></a> ;
+    return <a href='javascript:void(0);' style={{color:'#333'}}>
+        <img class="my-icon" src="/icons/plus.svg"/> 
+    </a> ;
   }
   return (
-    <a href='javascript:void(0);' onClick={props.onClassify}>
-       <SideIconContainer icon={iosPlusOutline}/> 
+    <a href='javascript:void(0);' onClick={props.onClassify} style={{color:'#333'}}>
+       <img class="my-icon" src="/icons/plus.svg"/>
     </a>
   );
 }
@@ -294,20 +299,20 @@ class Login extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical > 
            <Container>
-            <Card.Group centered>
+            <Card.Group centered >
               {this.state.images.map((item, i) => {
                 return (
-                  <Card key={i}>
+                  <Card key={i} className="my-card">
                       <Link className="ui image" to={"/cat/" + item.category.id}>
                         <Image src={item.link}/>
                       </Link>
                     <Card.Content>
-                      <div style={{float: 'left'}}>
-                        <Link className="ui image" to={"/cat/" + item.category.id}>
-                          {item.category.name}
+                      <div style={{float: 'left',marginTop:'-8px'}}> 
+                        <Link  to={"/cat/" + item.category.id } className="title">
+                            {item.category.name}
                         </Link>
                       </div>
-                      <div style={{float: 'right'}}>
+                      <div style={{float: 'right', marginTop:'-10px'}}>
                         <div style={{display: 'inline', marginRight: '2em'}}>
                           {this.renderLikedIcon(i)}
                         </div>

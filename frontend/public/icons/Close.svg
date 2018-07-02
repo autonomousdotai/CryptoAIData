@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/instagram Copy 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M20,16 L34.0002927,16 C35.1047006,16 36,16.8877296 36,18 C36,19.1045695 35.1101074,20 34.0002927,20 L20,20 L20,34.0002927 C20,35.1047006 19.1122704,36 18,36 C16.8954305,36 16,35.1101074 16,34.0002927 L16,20 L1.99970728,20 C0.895299444,20 0,19.1122704 0,18 C0,16.8954305 0.889892578,16 1.99970728,16 L16,16 L16,1.99970728 C16,0.895299444 16.8877296,0 18,0 C19.1045695,0 20,0.889892578 20,1.99970728 L20,16 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2" transform="translate(-697.000000, -69.000000)">
+            <g id="navbar">
+                <g id="Icons/instagram-Copy-2" transform="translate(711.000000, 83.000000) rotate(-45.000000) translate(-711.000000, -83.000000) translate(693.000000, 65.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Combined-Shape" fill="#262628" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

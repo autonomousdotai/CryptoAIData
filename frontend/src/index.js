@@ -26,7 +26,7 @@ const App = () => (
         <Switch>
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route exact path="/login" component={Login} />
-          <withRouter exact path="/explore" component={Explore} />
+          <Route exact path="/explore" component={Explore} />
           <ProtectedRoute exact path="/history" component={History} />
           <ProtectedRoute exact path="/upload" component={FileUploader} />
           <ProtectedRoute exact path="/dataset/create" component={CategoryClassify} />

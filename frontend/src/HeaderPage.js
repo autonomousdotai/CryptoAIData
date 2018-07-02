@@ -22,6 +22,7 @@ import {
   Header,
   Image,
 } from 'semantic-ui-react'
+ 
 
 //lets say the icons on your side navigation are all color red style: {color: '#EF233C'}
 const SideIconContainer =  withBaseIcon({ size:32})
@@ -88,22 +89,22 @@ class DesktopContainer extends Component {
   render() {
     const {children} = this.props
     const {fixed} = this.state
-    const {activeItem} = this.state
-    return (
-      <Responsive {...Responsive.onlyComputer}>
-        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>
-          <Menu
-            fixed={fixed ? 'top' : null}
-            inverted={true}
-            size='large'
-            style={{marginTop: "-1em", borderRadius: "0"}}
-          >
-            <Container>
-              <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
-              </Link>
-
-                <Search fluid
+    const {activeItem} = this.state 
+    return ( 
+      <Responsive  minWidth={768}>
+        <Segment textAlign='center' vertical style={{"marginBottom": "1em"}}>  
+          <Container  style={{"marginBottom": "4.5em"}}>
+            <Menu fixed='top'  inverted={true}  size='large' 
+            style={{marginTop: "0em", borderRadius: "0", padding:'0em 1em 0.8em'}}  id="topbarMenu"
+            > 
+                <Link to="/" >
+                  <Menu.Item position='left' name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
+                    <Image src="/images/logo2.png"  avatar style={{width:'35px', height:'35px'}} />
+                  </Menu.Item>
+                </Link> 
+                  <Menu.Item position='right'/>
+                  
+                  <Search fluid
                         loading={this.state.isLoading}
                         onResultSelect={this.handleResultSelect}
                         onSearchChange={this.handleSearchChange}
@@ -111,43 +112,35 @@ class DesktopContainer extends Component {
                         value={this.state.value}
                         {...this.props}
                       />
-              <Link to='#'>
-                <Menu.Item name='upload' active={activeItem === 'upload'}
-                         onClick={this.handleItemClick}>Upload</Menu.Item>
-              </Link>
-
-              <Link to="/dataset/create">
-                <Menu.Item name='create' active={activeItem === 'create'}
-                           onClick={this.handleItemClick}>New dataset</Menu.Item>
-              </Link>
-
-              <Link to="/explore">
-                <Menu.Item name='explore' active={activeItem === 'explore'}
-                           onClick={this.handleItemClick}>Explore</Menu.Item>
-              </Link>
-              <Menu.Item position='right'>
-                {this.props.isAuth ?
-                  <Link to={'/p/' + this.props.userId}>
-                    <Button inverted={!fixed} primary={fixed} style={{marginLeft: '0.5em'}}>Profile</Button>
+                  
+                  <Link to="/explore" >
+                  <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
+                              <SideIconTopContainer icon={iosNavigateOutline}/> 
+                  </Menu.Item>
+                  </Link>    
+                  <Link to='#'  className="right">
+                    <Menu.Item position='right' name='upload' active={activeItem === 'upload'}
+                            onClick={this.handleItemClick}>
+                            <SideIconTopContainer icon={iosCloudUploadOutline}/></Menu.Item>
                   </Link>
 
                   <Link to="/dataset/create"  className="right">
                     <Menu.Item position='right' name='create' active={activeItem === 'create'}
                               onClick={this.handleItemClick}>
-                                <SideIconTopContainer icon={iosPlusOutline}/>
+                                <SideIconTopContainer icon={iosPlusOutline}/> 
                               </Menu.Item>
                   </Link>
                   <Link to="/history"  className="right">
                     <Menu.Item position='right' name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
                         <SideIconTopContainer icon={iosAnalytics}/>
                     </Menu.Item>
-                  </Link>
-
+                  </Link> 
+                  
                   {this.props.isAuth ?
-
+                  
                     <Link to={'/p/' + this.props.userId}  className="right">
                       <Menu.Item position='right'  name={'/p/' + this.props.userId} active={activeItem ==='/p/' + this.props.userId } onClick={this.handleItemClick} >
-                        <SideIconTopContainer icon={iosPersonOutline}/>
+                        <SideIconTopContainer icon={iosPersonOutline}/> 
                       </Menu.Item>
                     </Link>
                     :
@@ -157,13 +150,13 @@ class DesktopContainer extends Component {
                           Login
                           </Button>
                       </Menu.Item>
-                    </Link>}
-            </Menu>
-          </Container>
+                    </Link>} 
+            </Menu> 
+          </Container> 
           {this.props.children}
           <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
-        </Segment>
-         </Responsive >
+        </Segment> 
+      </Responsive >
     )
   }
 }
@@ -275,13 +268,7 @@ class MobileContainer extends Component {
         { this.state.go_url !="/upload" ? <Redirect to={this.state.go_url} /> :"" }
         <Visibility onUpdate={this.handleUpdate} once={false}  >
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">
-
-              <Link to="/">
-                <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
-                    <Image src="/images/logo2.png"  avatar style={{marginTop:'-1em',width:'35px', height:'35px'}} />
-                </Menu.Item>
-              </Link>
-
+  
                <Search
                        fluid
                         loading={this.state.isLoading}
@@ -293,27 +280,32 @@ class MobileContainer extends Component {
                       />
             </Menu>
 
-            <Segment textAlign='center' style={{marginTop:'8em', padding: '1em 0em',bottom:'4em'}} vertical>
+            <Segment textAlign='center' style={{marginTop:'7.5em', padding: '1em 0em',bottom:'4em'}} vertical>
               {this.props.children}
               <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
             </Segment>
 
             <Menu icon  className="ui fluid five item menu footer" id="footer">
               <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} >
-              <SideIconContainer icon={iosTimerOutline}/></Menu.Item>
+                  {activeItem === 'home' ? <img class="my-menu-bar" src="/icons/homeactive.svg"/>: <img class="my-menu-bar" src="/icons/home.svg"/> }
+                </Menu.Item>
 
               <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} >
-              <SideIconContainer icon={iosNavigateOutline}/></Menu.Item>
+                {activeItem === 'explore' ? <img class="my-menu-bar" src="/icons/compassactive.svg"/>: <img class="my-menu-bar" src="/icons/Compass.svg"/> }
 
-              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}>
-              <SideIconCenterContainer icon={iosCameraOutline}/>
+              </Menu.Item>
+
+              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}> 
+                 <img class="my-menu-bar-center" src="/icons/qa.png"/>
               </Menu.Item>
 
               <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
-              <SideIconContainer icon={iosAnalytics}/></Menu.Item>
+                 {activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
+              </Menu.Item>
 
               <Menu.Item  name='profile' active={activeItem === 'profile'} onClick={this.handleItemClick}>
-              <SideIconContainer icon={iosPersonOutline}/></Menu.Item>
+                <img class="my-menu-bar" src="/icons/user.svg"/>
+              </Menu.Item>
             </Menu>
         </Visibility>
       </Responsive>

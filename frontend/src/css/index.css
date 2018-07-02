@@ -8,6 +8,7 @@
 
 body{
     background-color: #FFF;
+    font-family: Roboto;
 }
 
 .ui.inverted.menu { 
@@ -41,7 +42,7 @@ body{
 }
 
 .footer {
-    height: 60px;
+    height: 65px;
     position: fixed;
     bottom:0%;
     width:100%;
@@ -173,7 +174,7 @@ body{
 
 .ui.card, .ui.cards>.card{
     width: 360px;
-    margin:0em 0.5em 1em 0.5em;
+    margin: 0em 0.5em 6px 0.5em; /*0em 0.5em 1em 0.5em;*/
 
 }
 
@@ -186,20 +187,23 @@ body{
     border: 0!important;
     box-shadow: none!important;
 
-} 
-#footer{
-    
-}
+    opacity: 0.9;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    background-color: #ffffff;
+
+
+}  
 #footer item:before{
     border: none!important;
 }
 #footer.ui.menu .item{
     background: none;
-    padding-top: 0.8em;
+    padding-top: 0.5em;
 }
 #footer.ui.menu .active.item{
     background: none;
-    padding-top: 0.8em;
+    padding-top: 0.5em;
 }
 .ui.menu .active.item, .ui.menu .item:before{
     background: none; 
@@ -235,10 +239,11 @@ body{
 #head-searchbox{
     border: none;
     box-shadow: none;
-    background-color: rgba(255, 255, 255, 0.84);
+    background-color: rgba(255, 255, 255);
     padding: 5px;
     padding-top: 10px;
     padding-bottom: 10px;
+    border-bottom: 1px solid #e8e1e1;
     
 }
 div#head-searchbox .ui.search { 
@@ -247,9 +252,131 @@ div#head-searchbox .ui.search {
 }
 div#head-searchbox .ui.input{
     width: 100%;
+   
 }
+div#head-searchbox .ui.icon.input>input{
+    padding: .467857143em 1em !important;
+    border-radius: 5px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+div#head-searchbox .ui.input.down input, div#head-searchbox .ui.input>input:active{
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+
 input#desktopsearch {
     min-width: 360px;
     padding: .4em 1em;
 
 }
+
+.my-card{
+    border: none!important;
+    box-shadow: none!important;
+    /* Plastic oceanic debr: */ 
+    font-size: 32px;
+    color: #262628;
+    letter-spacing: -0.24px;
+    line-height: 36px; 
+    border-radius: 5px;
+    /* Combined Shape: */
+    transform: rotate(-360deg); 
+    background: #262628;
+    
+
+}
+.my-card img.ui.image{ 
+/* Rectangle 18 Copy 6: */
+/* Sketch doesnt export pattern fills at this point */
+    border-radius: 6px!important ;
+}
+.ui.card>.content, .ui.cards>.card>.content{
+    padding:1em 0em 0em 0em; /*01em 0em 0.4em 0em; .4em 0em 0em 0em; */
+    border-top: none;
+    
+}
+/* Rectangle 18 Copy 6: */
+/* Sketch doesnt export pattern fills at this point */
+ 
+/* 1ETH: */
+
+/* 1000 img 14:20 PM, T: */   
+
+/* font-family: .SFNSDisplay; /* food: 
+font-family: HelveticaNeue-Bold;
+font-size: 32px;
+color: #262628;
+letter-spacing: -0.32px;
+line-height: 32px;
+
+font-size: 32px;
+color: #262628;
+letter-spacing: 0;
+line-height: 32px; */
+.ui.card>.content p, .ui.cards>.card>.content p {
+    margin: 0.2em 0em 0em 0em;
+    text-align: left;
+    line-height: 1em;
+}
+
+#explore-menu{
+    border: none;
+    box-shadow: none;
+    margin-top: -1.4em;
+    top: 4.5em;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+ 
+}
+#explore-menu.ui.menu .active.item:hover, #explore-menu.ui.menu .active.item {
+    background: none;
+    color: #000000;
+    /* border-bottom: 1px solid; */
+    text-decoration: underline;
+    font-weight: bold;
+}
+#explore-menu.ui.menu>.item:first-child{
+    padding-left: 0px;
+    border-radius: none!important;
+}
+
+.my-card .title{  
+        font-size: 16px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal; 
+        letter-spacing: -0.1px;
+        color: #262628; 
+}
+
+.my-icon{
+    width: 20px!important;
+    height: 20px!important;
+   
+
+}
+
+.my-menu-bar{
+    width: 20px!important;
+    height: 20px!important;
+    margin-top: 0.7em!important;
+
+}
+.my-menu-bar-center{
+    width: 60px!important;
+    height: 60px!important;
+    margin: 0!important;
+}
+
+.my-btn-buy-eth{
+    border: 0.7px solid #262628!important;
+    margin-left: 20px!important;
+    font-size: 10px!important;
+     font-weight: 900!important;
+
+}
+ 
+ 

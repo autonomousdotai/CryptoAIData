@@ -1,15 +1,21 @@
 import React from 'react';
-import {Grid, Modal, Image, Container, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
+import {Grid, Menu, Modal,List, Image, Container, Transition, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
 import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from './agent'
 import {Link} from 'react-router-dom'
 
+
+import {iosHeartOutline, iosCopyOutline, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
+import { withBaseIcon } from 'react-icons-kit'
+const SideIconContainer =  withBaseIcon({ size:20})
+
 const inlineStyle = {
   modal : {
     marginTop: '0px !important',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    width:'80%',
   }
 };
 
@@ -42,21 +48,21 @@ function ImageGrid(props) {
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
-      <Link to="/login">
-        <Icon name='heart outline' size='large' />
+      <Link to="/login" style={{color:'#333'}}>
+        <img class="my-icon" src="/icons/activity.svg"/>
       </Link>
     );
   }
   if (props.followed) {
     return (
-      <a href='javascript:void(0);' onClick={props.onUnfollow}>
-        <Icon name='heart' size='large' />
+      <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
+        <img class="my-icon" src="/icons/activityactive.svg"/>
       </a>
     );
   }
   return (
-    <a href='javascript:void(0);' onClick={props.onFollow}>
-      <Icon name='heart outline' size='large' />
+    <a href='javascript:void(0);'style={{color:'#333'}} onClick={props.onFollow}>
+      <img class="my-icon" src="/icons/activity.svg"/>
     </a>
   );
 }
@@ -194,20 +200,33 @@ class Explore extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical>
         <Container>
-            <Card.Group centered>
+            <Menu horizontal id="explore-menu">
+               <Menu.Item name="cars" active="cars">Cars  </Menu.Item>
+               <Menu.Item>Trash </Menu.Item>
+               <Menu.Item>Girl </Menu.Item>
+               <Menu.Item>Faces </Menu.Item>
+            </Menu>
+            <Card.Group centered style={{ marginTop:"20px" }} >
                   {this.state.categories.map((cat, i) => {
                     return (
-                      <Card key={i}> 
+                      <Card key={i} className="my-card"> 
                         <Link className="ui image" to={'/cat/' + cat.id}>
-                            <ImageGrid displayImages={cat.display_images} />
+                            {/* <ImageGrid displayImages={cat.display_images} />  className="fistgridimage"  */}
+                            <Image src={cat.display_images[0]}/>
                         </Link> 
-                        <Card.Content>
-                          <div style={{float: 'left'}}>
-                            <Link to={'/cat/' + cat.id}>{cat.name} ({cat.total_images} images)</Link>
-                          </div>
-                          <div style={{float: 'right'}}>
-                            {this.renderLikedIcon(i)}
-                          </div>
+                        <Card.Content style={{marginBottom: '10px'}}> 
+                          <div style={{float: 'left', marginTop:'-8px'}}>
+                            <p  className="title">{cat.total_images * 0.001} ETH</p>
+                            <p  style={{color:'#232323' , opacity:'0.4'}}>{cat.total_images} images</p>
+                          </div> 
+                          <div style={{float: 'right',marginTop:'-8px' }}> 
+                              <div style={{display: 'inline'}}>
+                               {this.renderLikedIcon(i)}
+                              </div>
+                            <div style={{display: 'inline'}}>
+                               <Button onClick={()=>this.showQR(cat)}  size="mini" basic color='black' className="my-btn-buy-eth">Buy ETH</Button>
+                            </div>
+                          </div> 
                         </Card.Content>
                       </Card>
                     )
@@ -216,18 +235,17 @@ class Explore extends React.Component {
             </Container>         
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
-
-          <Modal dimmer="inverted" size="small" open={this.state.open}
+         
+          <Modal  animation="fly up" duration="1699" dimmer="inverted" size="mini" open={this.state.open}
                 onClose={this.close} style={inlineStyle.modal}>
-                  <Modal.Header>{"Deposit ETH to buy data"   }</Modal.Header>
                   <Modal.Content>
-                    <Image src={"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl="+this.state.choice_address+"&choe=UTF-8"}/>
-                    <h3>Your wallet address is : </h3>
-                    <p>{this.state.choice_address} </p>
-                    <p><Button onClick={this.Copy.bind(this, this.state.choice_address)} color='blue'> <Icon name='copy' /> copy address</Button></p>
-                    <h3>Send only ETH to your address.</h3>
+                    <h3 style={{fontFamily: 'Roboto',lineHeight:'1em', opacity:0.7, marginBottom:'0.5em', fontWeight:'normal', fontSize:'18px', textAlign:'center',color:'#262628'}}>Receive</h3>
+                    <h3 style={{fontFamily: 'Roboto', lineHeight:'1em', opacity:0.7, fontWeight:'normal',margin:'0',fontSize:'24px', textAlign:'center',color:'#2ED573'}}>{this.state.choice_address.total_images * 0.001} ETH</h3> 
+                    <Image src={"https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl="+this.state.choice_address.contract_address+"&choe=UTF-8"}/>
+                    {/* <p><span><SideIconContainer SideIconContainer icon={iosCopyOutline}/> {this.state.choice_address} </span></p> */}
+                    {/* <p><Button onClick={this.Copy.bind(this, this.state.choice_address)} color='blue'> <Icon name='copy' /> copy address</Button></p> */}
                   </Modal.Content>
-        </Modal>
+        </Modal> 
       </Visibility>
     )
   }

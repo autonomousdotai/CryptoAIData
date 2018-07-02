@@ -22,7 +22,8 @@
     "semantic-ui-react": "0.81.1",
     "style-loader": "^0.21.0",
     "superagent": "^3.8.3",
-    "superagent-promise": "^1.1.0"
+    "superagent-promise": "^1.1.0",
+    "svg-react-loader": "^0.4.5"
   },
   "devDependencies": {},
   "scripts": {

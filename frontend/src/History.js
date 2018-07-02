@@ -64,10 +64,15 @@ class Login extends React.Component {
                   <Card.Group centered>
                   {this.state.images.map(function (item, i) {
                       return (
-                        <Card key={i}>
-                          <Image src={item.image_url}/> 
-                          <Card.Content extra>
-                            {item.category_name} - {item.classify_name}
+                        <Card key={i}  className="my-card">
+                           <Link className="ui image" to="#" >
+                            <Image src={item.image_url}/>
+                        </Link>   
+                          <Card.Content  style={{marginBottom: '10px'}}>
+                            <div style={{float: 'left', marginTop:'-8px'}}>
+                              <p  className="title">{item.category_name}</p>
+                              <p  style={{color:'#232323' , opacity:'0.4'}}> {item.classify_name}</p>
+                            </div>  
                           </Card.Content>
                         </Card>
                       )
