@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from contract.owner_factory import OwnerTokenFactory
+from contract.dataset_factory import DatasetFactory
 from django.template.defaultfilters import slugify
 
 
@@ -102,10 +103,18 @@ def add_amount_classify_profile(sender, instance, created, **kwargs):
         cp.save()
 
 
+#  @receiver(post_save, sender=Category)
+#  def create_contract_category(sender, instance, created, **kwargs):
+#      if created:
+#          tx = OwnerTokenFactory(instance.name, instance.name.upper()[:6]).create_contract_tx_hash()
+#          instance.tx = tx
+#          instance.save()
+
+
 @receiver(post_save, sender=Category)
-def create_contract_category(sender, instance, created, **kwargs):
+def add_category_dataset(sender, instance, created, **kwargs):
     if created:
-        tx = OwnerTokenFactory(instance.name, instance.name.upper()[:6]).create_contract_tx_hash()
+        tx = DatasetFactory().add_dataset(instance.id, 0, 0)
         instance.tx = tx
         instance.save()
 

@@ -70,7 +70,7 @@ contract Ownable {
   }
 }
 
-contract DataAIToken is Ownable {
+contract DatasetAI is Ownable {
   using SafeMath for uint256;
 
   string public name;
@@ -84,7 +84,7 @@ contract DataAIToken is Ownable {
     Provider
   }
 
-  struct DataSet {
+  struct Dataset {
     bool created;
     uint256 requestGoal;
     uint256 currentQuanlity;
@@ -93,7 +93,7 @@ contract DataAIToken is Ownable {
     mapping (address => uint256) mappedProviders;
   }
 
-  mapping (bytes => DataSet) dataSets;
+  mapping (bytes => Dataset) datasets;
 
   event Transfers(address to, uint256 tokens, uint256 amount);
 
@@ -103,14 +103,11 @@ contract DataAIToken is Ownable {
   }
 
   function buy(bytes data) external payable {
-    // if (!dataSetExists(msg.data)) {
-    //   revert();
-    // }
-    // if (!dataSetExists(data)) {
+    // if (!datasetExists(data)) {
     //   revert();
     // }
 
-    DataSet storage ds = dataSets[data];
+    Dataset storage ds = datasets[data];
     uint length = ds.providers.length;
     uint256 total;
     for (uint i = 0; i < length; i++) {
@@ -127,34 +124,34 @@ contract DataAIToken is Ownable {
     }
   }
 
-  function dataSetExists(bytes ds) onlyOwner public view returns (bool) {
-    if (dataSets[ds].created) {
+  function datasetExists(bytes ds) onlyOwner public view returns (bool) {
+    if (datasets[ds].created) {
         return true;
     }
     return false;
   }
 
-  function addDataSet(bytes ds, uint8 createdBy, uint256 requestGoal) onlyOwner public returns (bool) {
-    if (dataSetExists(ds)) {
+  function addDataset(bytes ds, uint8 createdBy, uint256 requestGoal) onlyOwner public returns (bool) {
+    if (datasetExists(ds)) {
         return false;
     }
-    dataSets[ds] = DataSet(true, requestGoal, 0, CreatedBy(createdBy), new address[](0));
+    datasets[ds] = Dataset(true, requestGoal, 0, CreatedBy(createdBy), new address[](0));
     return true;
   }
 
   function getProviders(bytes ds) onlyOwner public view returns (address[]) {
-    return dataSets[ds].providers;
+    return datasets[ds].providers;
   }
 
   function addProvider(bytes ds, address provider, uint256 amount) onlyOwner public returns (uint) {
     require(provider != address(0));
-    require(dataSetExists(ds));
+    require(datasetExists(ds));
 
-    if (dataSets[ds].mappedProviders[provider] == 0) {
-      dataSets[ds].providers.push(provider);
+    if (datasets[ds].mappedProviders[provider] == 0) {
+      datasets[ds].providers.push(provider);
     }
 
-    dataSets[ds].mappedProviders[provider] += amount;
-    return dataSets[ds].mappedProviders[provider];
+    datasets[ds].mappedProviders[provider] += amount;
+    return datasets[ds].mappedProviders[provider];
   }
 }
