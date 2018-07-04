@@ -42,6 +42,7 @@ class Image(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, default=None)
     category = models.ForeignKey('Category', related_name='images', on_delete=models.CASCADE, null=True, default=None)
     classify = models.ForeignKey('Classify', related_name='images', on_delete=models.CASCADE, null=True, default=None)
+    tx = models.CharField(max_length=255, null=True, default=None)
 
     class Meta:
         ordering = ('-created', '-id',)
@@ -51,6 +52,7 @@ class ImageProfile(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='image_profiles')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     classify = models.ForeignKey('Classify', on_delete=models.CASCADE, null=True, default=None)
+    tx = models.CharField(max_length=255, null=True, default=None)
 
     class Meta:
         ordering = ('-id',)
@@ -96,11 +98,15 @@ class CategoryProfile(models.Model):
 
 
 @receiver(post_save, sender=ImageProfile)
-def add_amount_classify_profile(sender, instance, created, **kwargs):
+def inc_balance(sender, instance, created, **kwargs):
     if created:
         cp, _ = CategoryProfile.objects.get_or_create(category=instance.image.category, profile=instance.profile)
         cp.balance += 1
         cp.save()
+
+        tx = DatasetFactory().add_provider(instance.image.category.id, instance.profile.ether_address, 1)
+        instance.tx = tx
+        instance.save()
 
 
 #  @receiver(post_save, sender=Category)
@@ -115,6 +121,18 @@ def add_amount_classify_profile(sender, instance, created, **kwargs):
 def add_category_dataset(sender, instance, created, **kwargs):
     if created:
         tx = DatasetFactory().add_dataset(instance.id, 0, 0)
+        instance.tx = tx
+        instance.save()
+
+
+@receiver(post_save, sender=Image)
+def inc_balance(sender, instance, created, **kwargs):
+    if created:
+        cp, _ = CategoryProfile.objects.get_or_create(category=instance.category, profile=instance.profile)
+        cp.balance += 1
+        cp.save()
+
+        tx = DatasetFactory().add_provider(instance.category.id, instance.profile.ether_address, 1)
         instance.tx = tx
         instance.save()
 

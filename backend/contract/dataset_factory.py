@@ -35,11 +35,10 @@ class DatasetFactory(object):
     def add_dataset(self, id, created_by, goal):
         contract = self.contract()
 
-        unicorn_txn = contract.functions.addDataset(self.w3.toBytes(id), created_by, goal).buildTransaction({
-            'value': 0,
-            'gas': self.w3.toHex(21000),
+        unicorn_txn = contract.functions.addDataset(self.w3.toInt(id), created_by, goal).buildTransaction({
+            'gas': self.w3.toHex(100000),
             'chainId': 4,
-            'gasPrice': self.w3.toWei('21', 'gwei'),
+            'gasPrice': self.w3.toWei('1000', 'gwei'),
             'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']),
             'from': os.environ['ADDRESS']
         })
@@ -48,14 +47,13 @@ class DatasetFactory(object):
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
         return self.w3.toHex(tx)
 
-    def add_provider(self, ds_id, addr, amount):
+    def add_provider(self, id, addr, amount):
         contract = self.contract()
 
-        unicorn_txn = contract.functions.addProvider(self.w3.toBytes(ds_id), addr, amount).buildTransaction({
-            'value': 0,
-            'gas': self.w3.toHex(21000),
+        unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
+            'gas': self.w3.toHex(1000000),
             'chainId': 4,
-            'gasPrice': self.w3.toWei('21', 'gwei'),
+            'gasPrice': self.w3.toWei('1000', 'gwei'),
             'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']),
             'from': os.environ['ADDRESS']
         })

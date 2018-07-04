@@ -89,69 +89,150 @@ contract DatasetAI is Ownable {
     uint256 requestGoal;
     uint256 currentQuanlity;
     CreatedBy createdBy;
+
     address[] providers;
+    address[] requesters;
+
     mapping (address => uint256) mappedProviders;
+    mapping (address => uint256) mappedRequesters;
   }
 
-  mapping (bytes => Dataset) datasets;
+  mapping (uint32 => Dataset) datasets;
 
-  event Transfers(address to, uint256 tokens, uint256 amount);
+  event Transfer(address to, uint256 balance, uint256 total, uint256 amount, uint256 totalAmount);
+  event Refund(address requester, uint256 amount);
 
   constructor(string tokenName, string tokenSymbol) payable public {
     name = tokenName;
     symbol = tokenSymbol;
   }
 
-  function buy(bytes data) external payable {
-    // if (!datasetExists(data)) {
-    //   revert();
-    // }
-
-    Dataset storage ds = datasets[data];
-    uint length = ds.providers.length;
-    uint256 total;
-    for (uint i = 0; i < length; i++) {
-      total += ds.mappedProviders[ds.providers[i]];
-    }
-
-    for (i = 0; i < length; i++) {
-      address p = ds.providers[i];
-      uint256 tokens = ds.mappedProviders[p];
-      uint256 amount = tokens.mul(msg.value).div(total).sub(fee);
-      p.transfer(amount);
-
-      emit Transfers(p, tokens, amount);
-    }
-  }
-
-  function datasetExists(bytes ds) onlyOwner public view returns (bool) {
-    if (datasets[ds].created) {
+  function datasetExists(uint32 dsId) public view returns (bool) {
+    if (datasets[dsId].created) {
         return true;
     }
     return false;
   }
 
-  function addDataset(bytes ds, uint8 createdBy, uint256 requestGoal) onlyOwner public returns (bool) {
-    if (datasetExists(ds)) {
+  function addDataset(uint32 dsId, uint8 createdBy, uint256 requestGoal) onlyOwner public returns (bool) {
+    if (datasetExists(dsId)) {
         return false;
     }
-    datasets[ds] = Dataset(true, requestGoal, 0, CreatedBy(createdBy), new address[](0));
+    datasets[dsId] = Dataset(true, requestGoal, 0, CreatedBy(createdBy), new address[](0), new address[](0));
     return true;
   }
 
-  function getProviders(bytes ds) onlyOwner public view returns (address[]) {
-    return datasets[ds].providers;
-  }
-
-  function addProvider(bytes ds, address provider, uint256 amount) onlyOwner public returns (uint) {
+  function addProvider(uint32 dsId, address provider, uint256 amount) onlyOwner public returns (uint) {
     require(provider != address(0));
-    require(datasetExists(ds));
+    require(datasetExists(dsId));
 
-    if (datasets[ds].mappedProviders[provider] == 0) {
-      datasets[ds].providers.push(provider);
+    if (datasets[dsId].mappedProviders[provider] == 0) {
+      datasets[dsId].providers.push(provider);
     }
 
-    datasets[ds].mappedProviders[provider] += amount;
-    return datasets[ds].mappedProviders[provider];
+    datasets[dsId].mappedProviders[provider] += amount;
+    return datasets[dsId].mappedProviders[provider];
+  }
+
+  function getProviders(uint32 dsId) public view returns (address[]) {
+    require(datasetExists(dsId));
+
+    return datasets[dsId].providers;
+  }
+
+  function getProvider(uint32 dsId, address provider) public view returns (uint256) {
+    require(datasetExists(dsId));
+    require(provider != address(0));
+
+    return datasets[dsId].mappedProviders[provider];
+  }
+
+  function getRequesters(uint32 dsId) public view returns (address[]) {
+    require(datasetExists(dsId));
+
+    return datasets[dsId].requesters;
+  }
+
+  function getRequester(uint32 dsId, address requester) public view returns (uint256) {
+    require(datasetExists(dsId));
+    require(requester != address(0));
+
+    return datasets[dsId].mappedRequesters[requester];
+  }
+
+  function buy(uint32 dsId) external payable {
+    if (!datasetExists(dsId)) {
+      revert();
+    }
+
+    Dataset storage ds = datasets[dsId];
+    uint length = ds.providers.length;
+    uint256 total;
+    for (uint i = 0; i < length; i++) {
+      total = total.add(ds.mappedProviders[ds.providers[i]]);
+    }
+
+    for (i = 0; i < length; i++) {
+      address p = ds.providers[i];
+      uint256 balance = ds.mappedProviders[p];
+      uint256 amount = balance.mul(msg.value).div(total).sub(fee);
+      p.transfer(amount);
+
+      emit Transfer(p, balance, total, amount, msg.value);
+    }
+  }
+
+  function request(uint32 dsId) external payable returns (uint256) {
+    if (!datasetExists(dsId)) {
+      revert();
+    }
+
+    Dataset storage ds = datasets[dsId];
+    if (ds.mappedRequesters[msg.sender] == 0) {
+      ds.requesters.push(msg.sender);
+    }
+
+    ds.mappedRequesters[msg.sender] += msg.value;
+    return ds.mappedRequesters[msg.sender];
+  }
+
+  function paid(uint32 dsId, address requester) onlyOwner public {
+    require(datasetExists(dsId));
+    require(requester != address(0));
+
+    Dataset storage ds = datasets[dsId];
+
+    uint256 requestedAmount = ds.mappedRequesters[requester];
+    require(requestedAmount > fee);
+
+    uint length = ds.providers.length;
+    uint256 total;
+    for (uint i = 0; i < length; i++) {
+      total = total.add(ds.mappedProviders[ds.providers[i]]);
+    }
+
+    for (i = 0; i < length; i++) {
+      address p = ds.providers[i];
+      uint256 balance = ds.mappedProviders[p];
+      uint256 amount = balance.mul(requestedAmount).div(total).sub(fee);
+      p.transfer(amount);
+
+      emit Transfer(p, balance, total, amount, requestedAmount);
+    }
+
+    ds.mappedRequester[requester] = 0;
+  }
+
+  function refund(uint32 dsId, address requester) onlyOwner public {
+    require(datasetExists(dsId));
+    require(requester != address(0));
+
+    Dataset storage ds = datasets[dsId];
+    uint256 requestedAmount = ds.mappedRequesters[requester];
+    require(requestedAmount > fee);
+
+    requester.transfer(requestedAmount.sub(fee));
+
+    emit Refund(requester, requestedAmount);
   }
 }
