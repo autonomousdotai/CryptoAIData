@@ -77,9 +77,12 @@ class Category(models.Model):
     name = models.CharField(max_length=255, null=False)
     slug = models.SlugField(max_length=255, default=None, null=True, db_index=True, blank=True)
     desc = models.CharField(max_length=255, null=True, default=None)
-    contract_address = models.CharField(max_length=255, null=True, blank=True)
+    #  contract_address = models.CharField(max_length=255, null=True, blank=True)
     tx = models.CharField(max_length=255, null=True, default=None)
     created = models.DateTimeField(auto_now=True)
+    created_by_id = models.IntegerField(null=True)
+    request_goal = models.IntegerField(null=False, default=0)
+    request_eth_amount = models.BigIntegerField(null=True, default=0)
 
 
 class Classify(models.Model):
@@ -120,7 +123,10 @@ def inc_balance(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Category)
 def add_category_dataset(sender, instance, created, **kwargs):
     if created:
-        tx = DatasetFactory().add_dataset(instance.id, 0, 0)
+        created_by_type = 1
+        if (instance.request_goal > 0):
+            created_by_type = 0
+        tx = DatasetFactory().add_dataset(instance.id, created_by_type, instance.request_goal)
         instance.tx = tx
         instance.save()
 

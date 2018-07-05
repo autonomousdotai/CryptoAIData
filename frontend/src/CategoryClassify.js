@@ -13,6 +13,9 @@ class CategoryClassify extends React.Component {
       images: [],
       values: [''],
       categoryName: '',
+      desc: '',
+      requestGoal: null,
+      ethAmount: null
     };
   }
 
@@ -59,7 +62,15 @@ class CategoryClassify extends React.Component {
     event.preventDefault();
 
     let name = this.state.categoryName;
-    agent.req.post(agent.API_ROOT + '/api/category/', {name}).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+    const data = {
+      name: this.state.categoryName,
+      created_by_id: this.props.userId,
+    };
+    data.desc = this.state.desc;
+    data.request_goal = this.state.requestGoal;
+    data.request_eth_amount = this.state.ethAmount;
+
+    agent.req.post(agent.API_ROOT + '/api/category/', data).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
       let resBody = response.body;
       console.log(resBody);
       let category = resBody.id;
@@ -88,7 +99,15 @@ class CategoryClassify extends React.Component {
           <h1 style={{fontSize: '3rem'}}>Create new category and classifies</h1>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group widths='equal'>
-              <Form.Input placeholder='Category' name='categoryName' value={this.state.categoryName}
+              <Form.Input placeholder='Name' name='categoryName' value={this.state.categoryName}
+                          onChange={this.handleChangeInput}/>
+              <Form.Input placeholder='Description' name='desc' value={this.state.desc}
+                          onChange={this.handleChangeInput}/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Input placeholder='Goal' name='requestGoal' value={this.state.requestGoal}
+                          onChange={this.handleChangeInput}/>
+              <Form.Input placeholder='ETH Amount' name='ethAmount' value={this.state.ethAmount}
                           onChange={this.handleChangeInput}/>
             </Form.Group>
             {
@@ -103,8 +122,8 @@ class CategoryClassify extends React.Component {
 }
 
 export default props => (<AuthConsumer>
-    {({token, isLoading, isAuth}) => {
-      return <CategoryClassify {...props} token={token} isLoading={isLoading} isAuth={isAuth}/>
+    {({token, isLoading, userId, isAuth}) => {
+      return <CategoryClassify {...props} token={token} isLoading={isLoading} userId={userId} isAuth={isAuth}/>
     }}
   </AuthConsumer>
 )

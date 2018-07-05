@@ -87,7 +87,7 @@ contract DatasetAI is Ownable {
   struct Dataset {
     bool created;
     uint256 requestGoal;
-    uint256 currentQuanlity;
+    uint256 currentQuantity;
     CreatedBy createdBy;
 
     address[] providers;
@@ -126,12 +126,20 @@ contract DatasetAI is Ownable {
     require(provider != address(0));
     require(datasetExists(dsId));
 
-    if (datasets[dsId].mappedProviders[provider] == 0) {
-      datasets[dsId].providers.push(provider);
+    Dataset storage ds = datasets[dsId];
+    if (ds.mappedProviders[provider] == 0) {
+      ds.providers.push(provider);
     }
 
-    datasets[dsId].mappedProviders[provider] += amount;
-    return datasets[dsId].mappedProviders[provider];
+    ds.currentQuantity += amount;
+    ds.mappedProviders[provider] += amount;
+
+    if (ds.createdBy == CreatedBy.Buyer && ds.currentQuantity == ds.requestGoal) {
+      reachGoal(dsId, ds.requesters[0]);
+      ds.createdBy = CreatedBy.Provider;
+    }
+
+    return ds.mappedProviders[provider];
   }
 
   function getProviders(uint32 dsId) public view returns (address[]) {
@@ -196,7 +204,7 @@ contract DatasetAI is Ownable {
     return ds.mappedRequesters[msg.sender];
   }
 
-  function paid(uint32 dsId, address requester) onlyOwner public {
+  function reachGoal(uint32 dsId, address requester) internal {
     require(datasetExists(dsId));
     require(requester != address(0));
 
@@ -220,7 +228,7 @@ contract DatasetAI is Ownable {
       emit Transfer(p, balance, total, amount, requestedAmount);
     }
 
-    ds.mappedRequester[requester] = 0;
+    ds.mappedRequesters[requester] = 0;
   }
 
   function refund(uint32 dsId, address requester) onlyOwner public {

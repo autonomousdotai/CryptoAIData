@@ -121,7 +121,7 @@ class FollowedCategoryField(serializers.BooleanField):
 class CategorySerializer(serializers.ModelSerializer):
     total_images = serializers.SerializerMethodField()
     display_images = serializers.SerializerMethodField()
-    contract_address = serializers.SerializerMethodField()
+    #  contract_address = serializers.SerializerMethodField()
     followed = FollowedCategoryField(read_only=True)
 
     def get_total_images(self, obj):
@@ -139,16 +139,16 @@ class CategorySerializer(serializers.ModelSerializer):
                 urls.append(image.link.url)
         return urls
 
-    def get_contract_address(self, obj):
-        if not obj.contract_address:
-            try:
-                r = requests.get(
-                    'https://api-rinkeby.etherscan.io/api?module=proxy&action=eth_getTransactionReceipt&txhash=%s&apikey=YourApiKeyToken' % obj.tx)
-                obj.contract_address = r.json()['result']['contractAddress']
-                obj.save()
-            except Exception:
-                pass
-        return obj.contract_address
+    #  def get_contract_address(self, obj):
+    #      if not obj.contract_address:
+    #          try:
+    #              r = requests.get(
+    #                  'https://api-rinkeby.etherscan.io/api?module=proxy&action=eth_getTransactionReceipt&txhash=%s&apikey=YourApiKeyToken' % obj.tx)
+    #              obj.contract_address = r.json()['result']['contractAddress']
+    #              obj.save()
+    #          except Exception:
+    #              pass
+    #      return obj.contract_address
 
     class Meta:
         model = Category
