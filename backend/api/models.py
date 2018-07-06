@@ -123,10 +123,10 @@ def inc_balance(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Category)
 def add_category_dataset(sender, instance, created, **kwargs):
     if created:
-        created_by_type = 1
-        if (instance.request_goal > 0):
-            created_by_type = 0
-        tx = DatasetFactory().add_dataset(instance.id, created_by_type, instance.request_goal)
+        #  created_by_type = 1
+        #  if (instance.request_goal > 0):
+        #      created_by_type = 0
+        tx = DatasetFactory().add_dataset(instance.id, 1, instance.request_goal)
         instance.tx = tx
         instance.save()
 

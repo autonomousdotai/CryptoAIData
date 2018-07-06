@@ -200,6 +200,7 @@ contract DatasetAI is Ownable {
       ds.requesters.push(msg.sender);
     }
 
+    ds.createdBy = CreatedBy.Buyer;
     ds.mappedRequesters[msg.sender] += msg.value;
     return ds.mappedRequesters[msg.sender];
   }
