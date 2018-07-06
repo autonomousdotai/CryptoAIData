@@ -325,7 +325,7 @@ class Login extends React.Component {
         <Segment>
 
         <Header as='h2' icon>
-        <Image src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
+            {/*<Image src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>*/}
             {this.state.category ? this.state.category.name :''}
             <Header.Subheader>
               </Header.Subheader>
