@@ -123,6 +123,16 @@ class CategorySerializer(serializers.ModelSerializer):
     display_images = serializers.SerializerMethodField()
     #  contract_address = serializers.SerializerMethodField()
     followed = FollowedCategoryField(read_only=True)
+    classifies = serializers.SerializerMethodField()
+
+    def get_classifies(self, obj):
+        classifies = []
+        for c in Classify.objects.filter(category=obj).all():
+            classifies.append({
+                'id': c.id,
+                'name': c.name
+            })
+        return classifies
 
     def get_total_images(self, obj):
         return obj.images.count()
