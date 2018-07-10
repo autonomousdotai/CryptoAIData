@@ -21,7 +21,8 @@ def compile_source_file(file_path):
 
 
 class DatasetFactory(object):
-    w3 = Web3(HTTPProvider('https://rinkeby.infura.io/RdeatTLhBhkxE5KaA0v7'))
+    #  w3 = Web3(HTTPProvider('https://rinkeby.infura.io/RdeatTLhBhkxE5KaA0v7'))
+    w3 = Web3(HTTPProvider(os.environ['WEB3_HTTP_PROVIDER']))
 
     def contract(self):
         with open('%s/contract/dataset_contract_abi.json' % BASE_DIR, 'r') as abi_definition:
