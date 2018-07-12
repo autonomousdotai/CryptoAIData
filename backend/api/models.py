@@ -171,3 +171,14 @@ class LikedImage(models.Model):
     class Meta:
         unique_together = (("profile", "image"),)
         ordering = ('-created',)
+
+
+class BuyDataset(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    tx = models.CharField(max_length=255, null=True, default=None)
+    created = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("profile", "category"),)
+        ordering = ('-created',)

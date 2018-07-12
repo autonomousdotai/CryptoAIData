@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset
 import requests
 
 DEFAULT_IMAGE_URL = 'https://lh3.googleusercontent.com/-7AQtXjvEm48/U7pPOjP28XI/AAAAAAAADqs/gssorSrOl1wxxraa0BmQhhAWzjTu4qVMQCJkCGAYYCw/s1000-fcrop64=1,17ce2bc4fc98ffff/451660716.jpg'
@@ -278,3 +278,18 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = '__all__'
         #  depth = 2
+
+
+class BuyDatasetSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        obj, _ = BuyDataset.objects.get_or_create(
+            profile=validated_data['profile'],
+            category=validated_data['category'],
+            tx=validated_data['tx']
+        )
+        return obj
+
+    class Meta:
+        model = BuyDataset
+        fields = '__all__'
+        read_only_fields = ('profile', 'image')

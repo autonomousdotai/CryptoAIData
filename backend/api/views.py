@@ -9,11 +9,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer, LikeImageSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer, LikeImageSerializer, BuyDatasetSerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -414,3 +414,14 @@ class Search(generics.ListAPIView):
         else:
             queryset = Category.objects.all()
         return queryset.order_by('-created')
+
+
+class Buy(generics.CreateAPIView):
+    serializer_class = BuyDatasetSerializer
+    permission_classes = []
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        c = Category.objects.get(id=self.request.data['category'])
+        tx = self.request.data['tx']
+        return serializer.save(profile=self.request.user.profile, category=c, tx=tx)
