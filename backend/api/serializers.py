@@ -30,15 +30,16 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             total_image = c.images.count()
             total_classify = c.images.filter(image_profiles__profile=obj).count()
             if c.images.count() > 0 and total_classify > 0:
-                balance = CategoryProfile.objects.get(profile=obj, category=c).balance
-                res.append(
-                    {"total_image": total_image,
-                     "total_classify": total_classify,
-                     "contract": c.contract_address,
-                     "name": c.name,
-                     "category_id": c.id,
-                     "balance": balance
-                     })
+                bo = CategoryProfile.objects.filter(profile=obj, category=c)
+                if bo.exists():
+                    balance = bo.values_list('balance', flat=True)[0]
+                    res.append(
+                        {"total_image": total_image,
+                        "total_classify": total_classify,
+                        "name": c.name,
+                        "category_id": c.id,
+                        "balance": balance
+                        })
         return res
 
     class Meta:
