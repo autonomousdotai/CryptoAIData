@@ -169,6 +169,10 @@ class CategorySerializer(serializers.ModelSerializer):
 class CategoryDetailSerializer(serializers.ModelSerializer):
     total_followers = serializers.SerializerMethodField()
     total_images = serializers.SerializerMethodField()
+    followed = serializers.SerializerMethodField()
+
+    def get_followed(self, obj):
+        return FollowingCategory.objects.filter(profile=self.context['request'].user.profile, category=obj).exists()
 
     def get_total_images(self, obj):
         return Image.objects.filter(category=obj).count()
