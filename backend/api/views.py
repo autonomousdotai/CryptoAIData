@@ -362,7 +362,7 @@ class Feed(generics.ListAPIView):
         if len(fc) > 0 or len(fp) > 0:
             queryset = Image.objects.filter((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
         else:
-            queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile))
+            queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
         return queryset
 
 
@@ -424,4 +424,5 @@ class Buy(generics.CreateAPIView):
         profile = self.request.user.profile
         c = Category.objects.get(id=self.request.data['category'])
         tx = self.request.data['tx']
-        return serializer.save(profile=self.request.user.profile, category=c, tx=tx)
+        email = self.request.data['email']
+        return serializer.save(profile=self.request.user.profile, category=c, tx=tx, email=email)
