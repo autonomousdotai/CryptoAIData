@@ -360,7 +360,7 @@ class Feed(generics.ListAPIView):
         fc = profile.following_categories.all()
         fp = profile.following_profiles.all()
         if len(fc) > 0 or len(fp) > 0:
-            queryset = Image.objects.filter(Q(category__in=fc) | Q(profile__in=fp)).order_by('-created')
+            queryset = Image.objects.filter((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
         else:
             queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile))
         return queryset
