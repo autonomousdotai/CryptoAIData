@@ -290,8 +290,8 @@ class BuyDatasetSerializer(serializers.ModelSerializer):
         obj, _ = BuyDataset.objects.get_or_create(
             profile=validated_data['profile'],
             category=validated_data['category'],
-            tx=validated_data['tx'],
-            email=validated_data['email']
+            tx=validated_data['tx']
+            #  email=validated_data['email']
         )
         return obj
 

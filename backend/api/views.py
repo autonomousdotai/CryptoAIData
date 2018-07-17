@@ -424,5 +424,5 @@ class Buy(generics.CreateAPIView):
         profile = self.request.user.profile
         c = Category.objects.get(id=self.request.data['category'])
         tx = self.request.data['tx']
-        email = self.request.data['email']
-        return serializer.save(profile=self.request.user.profile, category=c, tx=tx, email=email)
+        #  email = self.request.data['email']
+        return serializer.save(profile=self.request.user.profile, category=c, tx=tx)
