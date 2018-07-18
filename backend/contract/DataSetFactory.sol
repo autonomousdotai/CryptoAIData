@@ -98,6 +98,7 @@ contract DatasetAI is Ownable {
   }
 
   mapping (uint32 => Dataset) datasets;
+  mapping (address => uint256) withdrawableBalances;
 
   event Transfer(address to, uint256 balance, uint256 total, uint256 amount, uint256 totalAmount);
   event Refund(address requester, uint256 amount);
@@ -135,8 +136,8 @@ contract DatasetAI is Ownable {
     ds.mappedProviders[provider] += amount;
 
     if (ds.createdBy == CreatedBy.Buyer && ds.currentQuantity == ds.requestGoal) {
-      reachGoal(dsId, ds.requesters[0]);
       ds.createdBy = CreatedBy.Provider;
+      reachGoal(dsId, ds.requesters[0]);
     }
 
     return ds.mappedProviders[provider];
@@ -184,9 +185,13 @@ contract DatasetAI is Ownable {
       address p = ds.providers[i];
       uint256 balance = ds.mappedProviders[p];
       uint256 amount = balance.mul(msg.value).div(total).sub(fee);
-      p.transfer(amount);
 
-      emit Transfer(p, balance, total, amount, msg.value);
+      withdrawableBalances[p] += amount;
+    }
+
+    uint256 buyerBalance = total.mul(5).div(100);
+    if (buyerBalance > fee) {
+      addProvider(dsId, msg.sender, buyerBalance);
     }
   }
 
@@ -224,12 +229,28 @@ contract DatasetAI is Ownable {
       address p = ds.providers[i];
       uint256 balance = ds.mappedProviders[p];
       uint256 amount = balance.mul(requestedAmount).div(total).sub(fee);
-      p.transfer(amount);
 
-      emit Transfer(p, balance, total, amount, requestedAmount);
+      withdrawableBalances[p] += amount;
     }
 
     ds.mappedRequesters[requester] = 0;
+
+    uint256 requesterBalance = total.mul(5).div(100);
+    if (requesterBalance > fee) {
+      addProvider(dsId, requester, requesterBalance);
+    }
+  }
+
+  function withdraw() external {
+    uint256 amount = withdrawableBalances[msg.sender];
+    require(amount > fee);
+
+    msg.sender.transfer(amount);
+    withdrawableBalances[msg.sender] = 0;
+  }
+
+  function balance() external view returns (uint256) {
+    return withdrawableBalances[msg.sender];
   }
 
   function refund(uint32 dsId, address requester) onlyOwner public {
