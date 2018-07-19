@@ -233,7 +233,7 @@ contract DatasetAI is Ownable {
     msg.sender.transfer(amount);
   }
 
-  function contractBalance() external view returns (uint256) {
+  function getContractBalance() external view returns (uint256) {
     return contractBalance;
   }
 
