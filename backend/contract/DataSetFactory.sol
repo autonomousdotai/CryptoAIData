@@ -112,7 +112,7 @@ contract DatasetAI is Ownable {
     symbol = tokenSymbol;
   }
 
-  function addDataset(uint32 dsId, uint8 createdBy, uint256 requestGoal) onlyOwner datasetExists(dsId) external {
+  function addDataset(uint32 dsId, uint8 createdBy, uint256 requestGoal) onlyOwner external {
     datasets[dsId] = Dataset(true, requestGoal, 0, CreatedBy(createdBy), new address[](0), new address[](0));
   }
 
@@ -170,10 +170,10 @@ contract DatasetAI is Ownable {
 
     for (i = 0; i < length; i++) {
       address p = ds.providers[i];
-      uint256 balance = ds.mappedProviders[p];
-      uint256 amount = balance.mul(remainAmount).div(total).sub(transferFee);
+      uint256 amount = ds.mappedProviders[p];
+      uint256 balance = amount.mul(remainAmount).div(total);
 
-      withdrawableBalances[p] += amount;
+      withdrawableBalances[p] += balance;
     }
 
     uint256 buyerBalance = total.mul(5).div(100);
@@ -183,9 +183,9 @@ contract DatasetAI is Ownable {
   }
 
   function request(uint32 dsId) datasetExists(dsId) external payable returns (uint256) {
+    Dataset storage ds = datasets[dsId];
     require(ds.currentQuantity < ds.requestGoal);
 
-    Dataset storage ds = datasets[dsId];
     if (ds.mappedRequesters[msg.sender] == 0) {
       ds.requesters.push(msg.sender);
     }
@@ -211,10 +211,10 @@ contract DatasetAI is Ownable {
 
     for (i = 0; i < length; i++) {
       address p = ds.providers[i];
-      uint256 balance = ds.mappedProviders[p];
-      uint256 amount = balance.mul(requestedAmount).div(total).sub(transferFee);
+      uint256 amount = ds.mappedProviders[p];
+      uint256 balance = amount.mul(requestedAmount).div(total);
 
-      withdrawableBalances[p] += amount;
+      withdrawableBalances[p] += balance;
     }
 
     ds.mappedRequesters[requester] = 0;
@@ -226,20 +226,23 @@ contract DatasetAI is Ownable {
   }
 
   function withdraw() external {
-    uint256 amount = withdrawableBalances[msg.sender];
-    require(amount > transferFee);
+    uint256 balance = withdrawableBalances[msg.sender];
+    require(balance > transferFee);
 
     withdrawableBalances[msg.sender] = 0;
-    msg.sender.transfer(amount);
+    msg.sender.transfer(balance.sub(transferFee));
   }
 
-  function getContractBalance() external view returns (uint256) {
+  function getContractBalance() onlyOwner external view returns (uint256) {
     return contractBalance;
   }
 
-  function withdrawContractBalance() external {
+  function withdrawContractBalance() onlyOwner external {
+    require(contractBalance > 0);
+
+    uint256 balance = contractBalance;
     contractBalance = 0;
-    msg.sender.transfer(contractBalance);
+    msg.sender.transfer(balance.sub(transferFee));
   }
 
   function balance() external view returns (uint256) {
