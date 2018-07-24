@@ -178,7 +178,7 @@ class BuyDataset(models.Model):
     created = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = (("profile", "category"),)
+        #  unique_together = (("profile", "category"),)
         ordering = ('-created',)
 
 
