@@ -77,7 +77,7 @@ contract DatasetAI is Ownable {
   string public symbol;
   uint256 public decimals = 18;
 
-  uint256 contractBalance;
+  uint256 totalFee;
 
   uint256 public constant transferFee = 0.005 ether;
 
@@ -100,6 +100,7 @@ contract DatasetAI is Ownable {
   }
 
   mapping (uint32 => Dataset) datasets;
+
   mapping (address => uint256) withdrawableBalances;
 
   modifier datasetExists(uint32 dsId) {
@@ -164,7 +165,7 @@ contract DatasetAI is Ownable {
     }
 
     uint256 fee = msg.value.mul(10).div(100);
-    contractBalance += fee;
+    totalFee += fee;
 
     uint256 remainAmount = msg.value.sub(fee);
 
@@ -233,15 +234,15 @@ contract DatasetAI is Ownable {
     msg.sender.transfer(balance.sub(transferFee));
   }
 
-  function getContractBalance() onlyOwner external view returns (uint256) {
-    return contractBalance;
+  function getTotalFee() onlyOwner external view returns (uint256) {
+    return totalFee;
   }
 
-  function withdrawContractBalance() onlyOwner external {
-    require(contractBalance > 0);
+  function withdrawFee() onlyOwner external {
+    require(totalFee > 0);
 
-    uint256 balance = contractBalance;
-    contractBalance = 0;
+    uint256 balance = totalFee;
+    totalFee = 0;
     msg.sender.transfer(balance.sub(transferFee));
   }
 

@@ -12,6 +12,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+tx_count = 0
 
 def compile_source_file(file_path):
     with open(file_path, 'r') as f:
@@ -21,7 +22,6 @@ def compile_source_file(file_path):
 
 
 class DatasetFactory(object):
-    #  w3 = Web3(HTTPProvider('https://rinkeby.infura.io/RdeatTLhBhkxE5KaA0v7'))
     w3 = Web3(HTTPProvider(os.environ['WEB3_HTTP_PROVIDER']))
 
     def contract(self):
@@ -34,33 +34,41 @@ class DatasetFactory(object):
         return Account.privateKeyToAccount(os.environ['PRIVATE_KEY'])
 
     def add_dataset(self, id, created_by, goal):
+        global tx_count
         contract = self.contract()
 
         unicorn_txn = contract.functions.addDataset(self.w3.toInt(id), created_by, goal).buildTransaction({
             'gas': self.w3.toHex(100000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('1000', 'gwei'),
-            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']),
+            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
             'from': os.environ['ADDRESS']
         })
         acct = self.account()
         signed = acct.signTransaction(unicorn_txn)
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
+
+        tx_count += 1
+
         return self.w3.toHex(tx)
 
     def add_provider(self, id, addr, amount):
+        global tx_count
         contract = self.contract()
 
         unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
             'gas': self.w3.toHex(1000000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('1000', 'gwei'),
-            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']),
+            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
             'from': os.environ['ADDRESS']
         })
         acct = self.account()
         signed = acct.signTransaction(unicorn_txn)
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
+
+        tx_count += 1
+
         return self.w3.toHex(tx)
 
 

@@ -105,7 +105,7 @@ class CategoryProfile(models.Model):
 
 
 @receiver(post_save, sender=ImageProfile)
-def inc_balance(sender, instance, created, **kwargs):
+def inc_balance_when_classify(sender, instance, created, **kwargs):
     if created:
         cp, _ = CategoryProfile.objects.get_or_create(category=instance.image.category, profile=instance.profile)
         cp.balance += 1
@@ -115,13 +115,6 @@ def inc_balance(sender, instance, created, **kwargs):
         instance.tx = tx
         instance.save()
 
-
-#  @receiver(post_save, sender=Category)
-#  def create_contract_category(sender, instance, created, **kwargs):
-#      if created:
-#          tx = OwnerTokenFactory(instance.name, instance.name.upper()[:6]).create_contract_tx_hash()
-#          instance.tx = tx
-#          instance.save()
 
 
 @receiver(post_save, sender=Category)
