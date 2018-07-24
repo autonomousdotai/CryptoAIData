@@ -101,6 +101,7 @@ contract DatasetAI is Ownable {
 
   mapping (uint32 => Dataset) datasets;
 
+  uint256 balances;
   mapping (address => uint256) withdrawableBalances;
 
   modifier datasetExists(uint32 dsId) {
@@ -134,6 +135,12 @@ contract DatasetAI is Ownable {
     }
 
     return ds.mappedProviders[provider];
+  }
+
+  function addProviders(uint32 dsId, address[] providers, uint256[] amounts) onlyOwner datasetExists(dsId) external {
+    for (uint i = 0; i < providers.length; i++) {
+      addProvider(dsId, providers[i], amounts[i]);
+    }
   }
 
   function getProviders(uint32 dsId) datasetExists(dsId) public view returns (address[]) {
@@ -181,6 +188,8 @@ contract DatasetAI is Ownable {
     if (buyerBalance > transferFee) {
       addProvider(dsId, msg.sender, buyerBalance);
     }
+
+    balances = balances.add(remainAmount);
   }
 
   function request(uint32 dsId) datasetExists(dsId) external payable returns (uint256) {
@@ -193,6 +202,9 @@ contract DatasetAI is Ownable {
 
     ds.createdBy = CreatedBy.Buyer;
     ds.mappedRequesters[msg.sender] += msg.value;
+
+    balances = balances.add(msg.value);
+
     return ds.mappedRequesters[msg.sender];
   }
 
@@ -230,6 +242,8 @@ contract DatasetAI is Ownable {
     uint256 balance = withdrawableBalances[msg.sender];
     require(balance > transferFee);
 
+    balances = balances.sub(withdrawableBalances[msg.sender]);
+
     withdrawableBalances[msg.sender] = 0;
     msg.sender.transfer(balance.sub(transferFee));
   }
@@ -239,7 +253,7 @@ contract DatasetAI is Ownable {
   }
 
   function withdrawFee() onlyOwner external {
-    require(totalFee > 0);
+    require(totalFee > transferFee);
 
     uint256 balance = totalFee;
     totalFee = 0;
@@ -248,5 +262,13 @@ contract DatasetAI is Ownable {
 
   function balance() external view returns (uint256) {
     return withdrawableBalances[msg.sender];
+  }
+
+  function withdrawBalances() onlyOwner external {
+    require(balances > transferFee);
+
+    uint256 b = balances;
+    balances = 0;
+    msg.sender.transfer(b.sub(transferFee));
   }
 }
