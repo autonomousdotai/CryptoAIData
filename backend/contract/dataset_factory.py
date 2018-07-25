@@ -38,9 +38,9 @@ class DatasetFactory(object):
         contract = self.contract()
 
         unicorn_txn = contract.functions.addDataset(self.w3.toInt(id), created_by, goal).buildTransaction({
-            'gas': self.w3.toHex(100000),
+            'gas': self.w3.toHex(150000),
             'chainId': 4,
-            'gasPrice': self.w3.toWei('1000', 'gwei'),
+            'gasPrice': self.w3.toWei('2', 'gwei'),
             'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
             'from': os.environ['ADDRESS']
         })
@@ -57,9 +57,9 @@ class DatasetFactory(object):
         contract = self.contract()
 
         unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
-            'gas': self.w3.toHex(1000000),
+            'gas': self.w3.toHex(500000),
             'chainId': 4,
-            'gasPrice': self.w3.toWei('1000', 'gwei'),
+            'gasPrice': self.w3.toWei('2', 'gwei'),
             'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
             'from': os.environ['ADDRESS']
         })

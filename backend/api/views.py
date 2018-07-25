@@ -76,14 +76,15 @@ def user_signin(request):
         return Response({"message": response.json().get('message')}, status=status.HTTP_400_BAD_REQUEST)
 
     # Auto create investor
-    user = User.objects.filter(username=response.json()['customer']['email']).first()
+    user = User.objects.filter(username=data['email'])
     if not user:
-        user = User.objects.create_user(username=response.json()['customer']['email'])
-    profile, _ = Profile.objects.get_or_create(user=user, ref_id=response.json()['customer']['id'])
-    profile.ether_address = response.json()['customer']['ether_address']
+        user = User.objects.create_user(username=data['email'])
+    profile, _ = Profile.objects.get_or_create(user=user)
+    profile.ether_address = data['email']
     profile.save()
     res = response.json()['customer']
     res['id'] = profile.id
+    res['ether_address'] = data['email']
     return Response(res, status=status.HTTP_201_CREATED)
 
 

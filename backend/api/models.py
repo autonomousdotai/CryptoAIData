@@ -17,7 +17,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     ether_address = models.CharField(max_length=255, null=False)
-    ref_id = models.IntegerField()
+    ref_id = models.IntegerField(null=True)
     fullname = models.CharField(max_length=255, null=True, default=None)
     phone = models.CharField(max_length=255, null=True, default=None)
     following_categories = models.ManyToManyField('Category', through='FollowingCategory')
