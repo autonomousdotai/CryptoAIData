@@ -87,6 +87,7 @@ class Category(models.Model):
     created_by_id = models.IntegerField(null=True)
     request_goal = models.IntegerField(null=False, default=0)
     request_eth_amount = models.BigIntegerField(null=True, default=0)
+    init_free = models.IntegerField(null=False, default=0)
 
 
 class Classify(models.Model):
