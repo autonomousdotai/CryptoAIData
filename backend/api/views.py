@@ -79,7 +79,7 @@ def user_signin(request):
     user = User.objects.filter(username=data['email'])
     if not user:
         user = User.objects.create_user(username=data['email'])
-    profile, _ = Profile.objects.get_or_create(user=user)
+    profile, _ = Profile.objects.get_or_create(user=user[0])
     profile.ether_address = data['email']
     profile.save()
     res = response.json()['customer']
