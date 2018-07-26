@@ -13,6 +13,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 tx_count = 0
+last_nonce = 0
 
 def compile_source_file(file_path):
     with open(file_path, 'r') as f:
@@ -33,41 +34,59 @@ class DatasetFactory(object):
     def account(self):
         return Account.privateKeyToAccount(os.environ['PRIVATE_KEY'])
 
+    def get_nonce(self):
+        global tx_count
+        global last_nonce
+
+        curr_nonce = self.w3.eth.getTransactionCount(os.environ['ADDRESS'])
+        if last_nonce != curr_nonce:
+            tx_count = 0
+            last_nonce = curr_nonce
+        else:
+            curr_nonce = curr_nonce + tx_count
+        return curr_nonce
+
     def add_dataset(self, id, created_by, goal):
         global tx_count
-        contract = self.contract()
 
+        contract = self.contract()
+        nonce = self.get_nonce()
         unicorn_txn = contract.functions.addDataset(self.w3.toInt(id), created_by, goal).buildTransaction({
             'gas': self.w3.toHex(150000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('2', 'gwei'),
-            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
+            'nonce': nonce,
             'from': os.environ['ADDRESS']
         })
+        print(unicorn_txn)
         acct = self.account()
         signed = acct.signTransaction(unicorn_txn)
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
 
         tx_count += 1
+        print(tx_count)
 
         return self.w3.toHex(tx)
 
     def add_provider(self, id, addr, amount):
         global tx_count
-        contract = self.contract()
 
+        contract = self.contract()
+        nonce = self.get_nonce()
         unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
             'gas': self.w3.toHex(500000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('2', 'gwei'),
-            'nonce': self.w3.eth.getTransactionCount(os.environ['ADDRESS']) + tx_count,
+            'nonce': nonce,
             'from': os.environ['ADDRESS']
         })
+        print(unicorn_txn)
         acct = self.account()
         signed = acct.signTransaction(unicorn_txn)
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
 
         tx_count += 1
+        print(tx_count)
 
         return self.w3.toHex(tx)
 
