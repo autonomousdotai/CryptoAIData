@@ -174,7 +174,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 
     def get_classifies(self, obj):
         classifies = []
-        for c in Classify.objects.filter(category=obj.category).all():
+        for c in Classify.objects.filter(category=obj).all():
             classifies.append({
                 'id': c.id,
                 'name': c.name
