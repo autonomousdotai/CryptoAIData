@@ -39,12 +39,17 @@ class DatasetFactory(object):
         global last_nonce
 
         curr_nonce = self.w3.eth.getTransactionCount(os.environ['ADDRESS'])
-        if last_nonce != curr_nonce:
+        if last_nonce == curr_nonce:
+            return curr_nonce + tx_count
+
+        tx_since_last_nonce = last_nonce + tx_count
+        if curr_nonce >= tx_since_last_nonce:
             tx_count = 0
             last_nonce = curr_nonce
+            return curr_nonce
         else:
-            curr_nonce = curr_nonce + tx_count
-        return curr_nonce
+            return tx_since_last_nonce
+
 
     def add_dataset(self, id, created_by, goal):
         global tx_count

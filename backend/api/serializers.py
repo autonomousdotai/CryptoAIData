@@ -263,6 +263,16 @@ class ImageSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     classify = ClassifySerializer(read_only=True)
     liked = LikedImageField()
+    classifies = serializers.SerializerMethodField()
+
+    def get_classifies(self, obj):
+        classifies = []
+        for c in Classify.objects.filter(category=obj.category).all():
+            classifies.append({
+                'id': c.id,
+                'name': c.name
+            })
+        return classifies
 
     def create(self, validated_data):
         if 'classify' not in validated_data:
