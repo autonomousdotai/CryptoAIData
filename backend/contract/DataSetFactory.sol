@@ -81,6 +81,11 @@ contract DatasetAI is Ownable {
 
   uint256 public constant transferFee = 0.005 ether;
 
+  // should use event so offchain backend can easily get data every event is triggered.
+  event ProviderAdded(uint32 indexed dsId, address indexed provider, uint256 amount);
+  event Buy(address indexed buyer, uint32 indexed dsId, uint256 price);
+  event Request(address indexed requester, uint32 indexed dsId, uint256 price);
+
   enum CreatedBy{
     Buyer,
     Provider
@@ -134,6 +139,7 @@ contract DatasetAI is Ownable {
       reachGoal(dsId, ds.requesters[0]);
     }
 
+    emit ProviderAdded(dsId, provider, amount);
     return ds.mappedProviders[provider];
   }
 
@@ -164,6 +170,8 @@ contract DatasetAI is Ownable {
   }
 
   function buy(uint32 dsId) datasetExists(dsId) external payable {
+    require(msg.value > 0);
+
     Dataset storage ds = datasets[dsId];
     uint length = ds.providers.length;
     uint256 total;
@@ -190,9 +198,13 @@ contract DatasetAI is Ownable {
     }
 
     balances = balances.add(remainAmount);
+
+    emit Buy(msg.sender, dsId, msg.value);
   }
 
   function request(uint32 dsId) datasetExists(dsId) external payable returns (uint256) {
+    require(msg.value > 0);
+
     Dataset storage ds = datasets[dsId];
     require(ds.currentQuantity < ds.requestGoal);
 
@@ -205,6 +217,7 @@ contract DatasetAI is Ownable {
 
     balances = balances.add(msg.value);
 
+    emit Request(msg.sender, dsId, msg.value);
     return ds.mappedRequesters[msg.sender];
   }
 
