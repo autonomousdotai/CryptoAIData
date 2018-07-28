@@ -209,9 +209,9 @@ class ImageList(generics.ListCreateAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('category',)
 
-    def get_queryset(self):
-        user = self.request.user
-        return Image.objects.filter(~Q(image_profiles__profile=user.profile))
+    #  def get_queryset(self):
+    #      user = self.request.user
+    #      return Image.objects.filter(~Q(image_profiles__profile=user.profile))
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
