@@ -26,11 +26,6 @@ SECRET_KEY = '38@j*5ch2#jyb0=_yk$6v=15u4fqw@%it-qe(q%i6=7nw+m%c8'
 DEBUG = os.environ.get('DEBUG', True)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '35.198.228.87', '35.240.183.111', '35.240.158.83', '10.39.244.233', '10.39.247.173', 'dad.ninja.org']
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-BASE_URL = "https://dad.ninja.org"
 
 
 # Application definition
@@ -169,8 +164,6 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:8080',
     '127.0.0.1:8080',
     '35.197.74.148',
-    'dad.ninja.org',
-    'https://dad.ninja.org',
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     'localhost:8080',
