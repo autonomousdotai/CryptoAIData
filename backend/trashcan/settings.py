@@ -169,6 +169,8 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:8080',
     '127.0.0.1:8080',
     '35.197.74.148',
+    'dad.ninja.org',
+    'https://dad.ninja.org',
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     'localhost:8080',
