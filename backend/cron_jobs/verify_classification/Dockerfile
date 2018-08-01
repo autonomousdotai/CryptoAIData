@@ -1,7 +1,5 @@
 FROM python:3.6
 
-# TODO: env vars
-
 RUN apt-get update \
     && apt-get install -y cron \
     && apt-get autoremove -y \
@@ -27,3 +25,6 @@ RUN chmod a+x /code/run.sh
 RUN crontab /etc/cron.d/verify_classification_cron
 
 CMD cron && tail -f /var/log/cron.log
+
+# docker build  --rm -t verify_classification .
+# docker run -it verify_classification
