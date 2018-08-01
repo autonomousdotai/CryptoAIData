@@ -27,6 +27,7 @@ from django.db.models import Q
 import threading
 from api.utils.image import stream_to_ai_server, perform_create
 from django_filters import rest_framework as filters
+from contract.dataset_factory import DatasetFactory
 
 
 @api_view(['POST'])
@@ -89,6 +90,29 @@ def user_signin(request):
     res['id'] = profile.id
     res['ether_address'] = data['email']
     return Response(res, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
+def inc_balance_contract(request):
+    if 'category_id' not in request.data or 'ether_address' not in request.data:
+        return Response(
+            {
+                "message": "Missing required fields (category_id, ether_address) from payload."
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    category_id = int(request.data['category_id'])
+    ether_address = request.data['ether_address']
+    tx = DatasetFactory().add_provider(category_id, ether_address, 1)
+    return Response(
+        {
+            "tx": tx
+        },
+        status=status.HTTP_200_OK
+    )
 
 
 class WithdrawList(generics.CreateAPIView):

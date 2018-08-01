@@ -1,8 +1,8 @@
 import os
-# from contract.dataset_factory import DatasetFactory
 import itertools
 import MySQLdb
 import MySQLdb.cursors
+import requests
 
 
 def get_db_connection():
@@ -91,6 +91,9 @@ def insert_category_profile(db, category_id, profile_id):
 
 
 def inc_balance(db, items_with_true_label):
+	api_host = os.getenv('API_HOST', 'http://localhost')
+	api_port = os.getenv('API_PORT', 8000)
+
 	for item in items_with_true_label:
 		category_id = item['category_id']
 		ether_address = item['ether_address']
@@ -99,17 +102,30 @@ def inc_balance(db, items_with_true_label):
 		current_balance = item['balance']
 		profile_id = item['profile_id']
 
-		# tx = DatasetFactory().add_provider(category_id, ether_address, 1)
-		tx = 'fake_tx'
+		res = requests.post(
+			'{api_host}:{api_port}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
+			data = {
+				"category_id": category_id,
+				"ether_address": ether_address
+			}
+		)
+		if res.status_code != 200:
+			raise Exception("""Failed to call to smart contract for increasing balance
+				with (category_id: {category_id}, ether_address: {ether_address})""" \
+				.format(category_id=category_id, ether_address=ether_address))
+
+		res_content = res.json()
+		tx = res_content['tx']
 		update_tx(db, image_profile_id, tx)
-		if category_profile_id is None: # need to insert new one
-			insert_category_profile(db, category_id, profile_id)
-		else:
-			update_balance(db, category_profile_id, current_balance)
+
+		# if category_profile_id is None: # need to insert new one
+		# 	insert_category_profile(db, category_id, profile_id)
+		# else:
+		# 	update_balance(db, category_profile_id, current_balance)
 
 
 def process(db):
-	label_num = int(os.getenv('LABEL_NUM', 2))
+	label_num = int(os.getenv('LABEL_NUM', 10))
 	cursor = db.cursor()
 	cursor.execute(
 		"""
@@ -137,16 +153,11 @@ def process(db):
 
 
 def main():
-	try:
-		print('Start verifying classification...')
-		db = get_db_connection()
-		process(db)
-		db.close()
-		print('Finished verifying classification...')
-
-	except Exception as e:
-		raise e
-
+	print('Start verifying classification...')
+	db = get_db_connection()
+	process(db)
+	db.close()
+	print('Finished verifying classification...')
 
 
 if __name__ == '__main__':
