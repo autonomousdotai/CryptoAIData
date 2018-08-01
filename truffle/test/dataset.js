@@ -118,6 +118,15 @@ contract('Dataset', async (accounts) => {
       providerBalance = await web3.eth.getBalance(provider3);
       providerBalance.should.be.bignumber.equal(expected);
     });
+
+    it('withdraw owner balance', async () => {
+      const beforeWithdrawBalance = await web3.eth.getBalance(owner);
+      // withdraw
+      await this.dataset.withdrawOwnerBalance();
+      // verify
+      const afterWithdrawBalance = await web3.eth.getBalance(owner);
+      afterWithdrawBalance.should.be.bignumber.above(beforeWithdrawBalance);
+    });
   });
 
   // describe('Dataset created by buyer', async () => {

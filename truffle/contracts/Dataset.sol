@@ -36,6 +36,7 @@ contract Dataset {
 
   event ProviderAdded(address indexed provider, uint256 tokens);
   event ProviderPaid(address indexed provider, uint256 amount);
+  event OwnerBalanceWithdrawn(uint256 amount);
   event Buy(address indexed buyer, uint256 amount);
   event Request(address indexed requester, uint256 amount);
 
@@ -127,9 +128,10 @@ contract Dataset {
     emit ProviderPaid(provider, amount);
   }
 
-  function withdrawOwnBalance() external {
+  function withdrawOwnerBalance() external {
     uint256 b = ownerBalance;
     ownerBalance = 0;
     owner.transfer(b);
+    emit OwnerBalanceWithdrawn(b);
   }
 }
