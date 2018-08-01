@@ -1,7 +1,5 @@
 FROM python:3.6
 
-# TODO: env vars
-
 RUN apt-get update \
     && apt-get install -y cron \
     && apt-get autoremove -y \

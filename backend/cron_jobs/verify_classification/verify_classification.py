@@ -42,8 +42,10 @@ def reward(db, image_labels):
 			labels_num_max = group_len
 			chose_classify_id = key
 
-	items_with_true_label = filter(lambda i: i['classify_id'] == chose_classify_id, image_labels)
-	inc_balance(db, list(items_with_true_label))
+	is_majority = labels_num_max >= (int(len(image_labels) / 2) + 1)
+	if is_majority:
+		items_with_true_label = filter(lambda i: i['classify_id'] == chose_classify_id, image_labels)
+		inc_balance(db, list(items_with_true_label))
 
 
 
@@ -107,7 +109,7 @@ def inc_balance(db, items_with_true_label):
 
 
 def process(db):
-	label_num = int(os.getenv('LABEL_NUM', 6))
+	label_num = int(os.getenv('LABEL_NUM', 2))
 	cursor = db.cursor()
 	cursor.execute(
 		"""
