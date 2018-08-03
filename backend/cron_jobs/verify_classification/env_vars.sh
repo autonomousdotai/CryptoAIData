@@ -1,5 +1,7 @@
-export MYSQL_HOST=127.0.0.1
+export MYSQL_HOST=35.198.219.109
 export MYSQL_USER=root
-export MYSQL_PASSWORD=minhduc0812112
+export MYSQL_PASSWORD=nygumZw4aRam
 export MYSQL_DB=trashcan_dev
-export LABEL_NUM=6
+export LABEL_NUM=2
+export API_HOST=http://192.168.0.235
+export API_PORT=8000
