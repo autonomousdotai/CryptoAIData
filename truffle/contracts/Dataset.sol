@@ -1,9 +1,9 @@
 pragma solidity ^0.4.23;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
+import './DatasetToken.sol';
 
-contract Dataset is MintableToken {
+contract Dataset {
   using SafeMath for uint256;
 
   address public owner;
@@ -11,6 +11,8 @@ contract Dataset is MintableToken {
   string public name;
   string public symbol;
   uint8 public decimals;
+
+  DatasetToken public token;
 
   uint256 public requestGoal;
   uint256 public currentQuantity;
@@ -54,6 +56,8 @@ contract Dataset is MintableToken {
     } else {
       createdBy = CreatedBy.Buyer;
     }
+
+    token = new DatasetToken(owner, name, symbol, decimals);
   }
 
   function setFee(uint fee) onlyOwner public {
@@ -68,8 +72,7 @@ contract Dataset is MintableToken {
       mappedProviders[provider] = true;
     }
 
-    super.mint(provider, tokens);
-    emit ProviderAdded(provider, tokens);
+    token.mint(provider, tokens);
   }
 
   function getProviders() public view returns (address[]) {

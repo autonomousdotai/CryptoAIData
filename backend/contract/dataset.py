@@ -26,7 +26,7 @@ class Dataset(object):
     w3 = Web3(HTTPProvider(os.environ['WEB3_HTTP_PROVIDER']))
 
     def __init__(self, addr):
-        with open('%s/contract/DatasetFactory.json' % BASE_DIR, 'r') as abi_definition:
+        with open('%s/contract/dataset.json' % BASE_DIR, 'r') as abi_definition:
             abi = json.load(abi_definition)
 
         self.contract = self.w3.eth.contract(address=self.w3.toChecksumAddress(addr), abi=abi)
@@ -51,13 +51,12 @@ class Dataset(object):
             return tx_since_last_nonce
 
 
-    def add_provider(self, id, addr, amount):
+    def add_provider(self, addr, amount):
         global tx_count
 
-        contract = self.contract()
         nonce = self.get_nonce()
-        unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
-            'gas': self.w3.toHex(500000),
+        unicorn_txn = self.contract.functions.addProvider(self.w3.toChecksumAddress(addr), amount).buildTransaction({
+            'gas': self.w3.toHex(3500000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('2', 'gwei'),
             'nonce': nonce,
