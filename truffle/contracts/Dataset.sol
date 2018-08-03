@@ -1,8 +1,9 @@
 pragma solidity ^0.4.23;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
 
-contract Dataset {
+contract Dataset is MintableToken {
   using SafeMath for uint256;
 
   address public owner;
@@ -20,7 +21,7 @@ contract Dataset {
   CreatedBy public createdBy;
 
   address[] public providers;
-  mapping (address => uint256) public tokensOf;
+  mapping (address => bool) public mappedProviders;
   uint256 public balance;
 
   address public requester;
@@ -62,19 +63,17 @@ contract Dataset {
   function addProvider(address provider, uint256 tokens) onlyOwner public {
     currentQuantity = currentQuantity.add(tokens);
 
-    if (tokensOf[provider] == 0) {
+    if (!mappedProviders[provider]) {
       providers.push(provider);
+      mappedProviders[provider] = true;
     }
-    tokensOf[provider] = tokensOf[provider].add(tokens);
+
+    super.mint(provider, tokens);
     emit ProviderAdded(provider, tokens);
   }
 
   function getProviders() public view returns (address[]) {
     return providers;
-  }
-
-  function tokenOf(address provider) public view returns (uint256) {
-    return tokensOf[provider];
   }
 
   function buy() external payable {
@@ -104,26 +103,24 @@ contract Dataset {
     balance = 0;
   }
 
-  function paid(address provider) onlyOwner external {
+  function paid(address provider, uint256 providerTokens) onlyOwner external {
     require(provider != address(0));
-
-    if (tokensOf[provider] == 0) {
-      return;
-    }
+    require(providerTokens > 0);
 
     if (createdBy == CreatedBy.Buyer) {
       if (currentQuantity < requestGoal) {
         return;
       }
+      if (requestAmount > 0) {
+        uint256 fee = requestAmount.mul(FEE).div(100);
+        ownerBalance = ownerBalance.add(fee);
 
-      uint256 fee = requestAmount.mul(FEE).div(100);
-      ownerBalance = ownerBalance.add(fee);
-
-      balance = balance.add(requestAmount.sub(fee));
-      requestAmount = 0;
+        balance = balance.add(requestAmount.sub(fee));
+        requestAmount = 0;
+      }
     }
 
-    uint256 amount = tokensOf[provider].mul(balance).div(currentQuantity);
+    uint256 amount = providerTokens.mul(balance).div(currentQuantity);
     provider.transfer(amount);
     emit ProviderPaid(provider, amount);
   }

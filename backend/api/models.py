@@ -83,6 +83,7 @@ class Category(models.Model):
     desc = models.CharField(max_length=255, null=True, default=None)
     #  contract_address = models.CharField(max_length=255, null=True, blank=True)
     tx = models.CharField(max_length=255, null=True, default=None)
+    contract_addr = models.CharField(max_length=255, null=True, default=None)
     created = models.DateTimeField(auto_now=True)
     created_by_id = models.IntegerField(null=True)
     request_goal = models.IntegerField(null=False, default=0)
@@ -119,11 +120,12 @@ def inc_balance_when_classify(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Category)
-def add_category_dataset(sender, instance, created, **kwargs):
+def create_dataset(sender, instance, created, **kwargs):
     if created:
-        created_by_type = 1 # by provider
-        tx = DatasetFactory().add_dataset(instance.id, created_by_type, instance.request_goal)
-        instance.tx = tx
+        ret = DatasetFactory().create_dataset(instance.name, 'xxx', instance.request_goal)
+
+        instance.tx = ret[0]
+        instance.contract_addr = ret[1]
         instance.save()
 
 

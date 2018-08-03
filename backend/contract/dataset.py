@@ -9,7 +9,6 @@ import os
 import json
 from solc import compile_source
 import os
-import time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,20 +22,14 @@ def compile_source_file(file_path):
     return compile_source(source)
 
 
-class DatasetFactory(object):
+class Dataset(object):
     w3 = Web3(HTTPProvider(os.environ['WEB3_HTTP_PROVIDER']))
 
-    def __init__(self):
-        with open('%s/contract/dataset_factory.json' % BASE_DIR, 'r') as abi_definition:
+    def __init__(self, addr):
+        with open('%s/contract/DatasetFactory.json' % BASE_DIR, 'r') as abi_definition:
             abi = json.load(abi_definition)
 
-        self.contract = self.w3.eth.contract(address=self.w3.toChecksumAddress(os.environ['DATASET_FACTORY_ADDRESS']), abi=abi)
-
-    #  def contract(self):
-    #      with open('%s/../../truffle/build/contracts/DatasetFactory.json' % BASE_DIR, 'r') as abi_definition:
-    #          abi = json.load(abi_definition)
-    #
-    #      return self.w3.eth.contract(address=self.w3.toChecksumAddress(os.environ['DATASET_FACTORY_ADDRESS']), abi=abi)
+        self.contract = self.w3.eth.contract(address=self.w3.toChecksumAddress(addr), abi=abi)
 
     def account(self):
         return Account.privateKeyToAccount(os.environ['PRIVATE_KEY'])
@@ -58,24 +51,15 @@ class DatasetFactory(object):
             return tx_since_last_nonce
 
 
-    def get_tx_receipt(self, tx):
-        receipt = self.w3.eth.getTransactionReceipt(tx)
-        while receipt is None:
-            receipt = self.w3.eth.getTransactionReceipt(tx)
-            time.sleep(5)
-        log = self.contract.events.DatasetCreated().processReceipt(receipt)
-        contract_addr = log[0]['args']['ds']
-        return contract_addr
-
-
-    def create_dataset(self, name, symbol, request_goal):
+    def add_provider(self, id, addr, amount):
         global tx_count
 
+        contract = self.contract()
         nonce = self.get_nonce()
-        unicorn_txn = self.contract.functions.createDataset(os.environ['ADDRESS'], name, symbol, 18, request_goal).buildTransaction({
-            'gas': self.w3.toHex(2500000),
+        unicorn_txn = contract.functions.addProvider(self.w3.toInt(id), self.w3.toChecksumAddress(addr), amount).buildTransaction({
+            'gas': self.w3.toHex(500000),
             'chainId': 4,
-            'gasPrice': self.w3.toWei('1', 'gwei'),
+            'gasPrice': self.w3.toWei('2', 'gwei'),
             'nonce': nonce,
             'from': os.environ['ADDRESS']
         })
@@ -83,17 +67,17 @@ class DatasetFactory(object):
         acct = self.account()
         signed = acct.signTransaction(unicorn_txn)
         tx = self.w3.eth.sendRawTransaction(signed.rawTransaction)
-        tx = self.w3.toHex(tx)
-        contract_addr = self.get_tx_receipt(tx)
 
         tx_count += 1
+        print(tx_count)
 
-        return tx, contract_addr
+        return self.w3.toHex(tx)
 
 
 
-#  compiled_sol = compile_source_file('/Users/apple/Projects/CryptoAIData/truffle/contracts/DatasetFactory.sol')
-#  contract_interface = compiled_sol['<stdin>:DatasetFactory']
+
+#  compiled_sol = compile_source_file('%s/contract/DatasetFactory.sol' % BASE_DIR)
+#  contract_interface = compiled_sol['<stdin>:DatasetAI']
 #
 #  # web3.py instance
 #  w3 = Web3(HTTPProvider('https://rinkeby.infura.io/RdeatTLhBhkxE5KaA0v7'))
@@ -101,7 +85,7 @@ class DatasetFactory(object):
 #  # Instantiate and deploy contract
 #  contract = w3.eth.contract(abi=contract_interface['abi'], bytecode=contract_interface['bin'])
 #
-#  with open('%s/contract/dataset_factory.json' % BASE_DIR, 'w') as outfile:
+#  with open('%s/contract/dataset_contract_abi.json' % BASE_DIR, 'w') as outfile:
 #      json.dump(contract_interface['abi'], outfile)
 #
 #  data = contract._encode_constructor_data(args=('name', 'token'))

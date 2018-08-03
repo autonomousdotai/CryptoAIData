@@ -7,11 +7,13 @@ contract DatasetFactory is Ownable {
 
   address[] public datasets;
 
-  function createDataset(address owner, string name, string symbol, uint8 decimals, uint256 requestGoal) onlyOwner public returns (address) {
+  event DatasetCreated(address indexed ds);
+
+  function createDataset(address owner, string name, string symbol, uint8 decimals, uint256 requestGoal) onlyOwner external {
     address ds = new Dataset(owner, name, symbol, decimals, requestGoal);
     datasets.push(ds);
 
-    return ds;
+    emit DatasetCreated(ds);
   }
 
   function getDatasets() public view returns (address[]) {
