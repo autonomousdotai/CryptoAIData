@@ -7,11 +7,6 @@ contract Dataset {
   using SafeMath for uint256;
 
   address public owner;
-
-  string public name;
-  string public symbol;
-  uint8 public decimals;
-
   DatasetToken public token;
 
   uint256 public requestGoal;
@@ -43,12 +38,9 @@ contract Dataset {
   event Buy(address indexed buyer, uint256 amount);
   event Request(address indexed requester, uint256 amount);
 
-  constructor(address _owner, string _name, string _symbol, uint8 _decimals, uint256 _requestGoal) public {
+  constructor(address _owner, DatasetToken _token, uint256 _requestGoal) public {
     owner = _owner;
-
-    name = _name;
-    symbol = _symbol;
-    decimals = _decimals;
+    token = _token;
 
     requestGoal = _requestGoal;
     if (_requestGoal == 0) {
@@ -56,8 +48,6 @@ contract Dataset {
     } else {
       createdBy = CreatedBy.Buyer;
     }
-
-    token = new DatasetToken(owner, name, symbol, decimals);
   }
 
   function setFee(uint fee) onlyOwner public {

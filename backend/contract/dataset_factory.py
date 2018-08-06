@@ -32,12 +32,6 @@ class DatasetFactory(object):
 
         self.contract = self.w3.eth.contract(address=self.w3.toChecksumAddress(os.environ['DATASET_FACTORY_ADDRESS']), abi=abi)
 
-    #  def contract(self):
-    #      with open('%s/../../truffle/build/contracts/DatasetFactory.json' % BASE_DIR, 'r') as abi_definition:
-    #          abi = json.load(abi_definition)
-    #
-    #      return self.w3.eth.contract(address=self.w3.toChecksumAddress(os.environ['DATASET_FACTORY_ADDRESS']), abi=abi)
-
     def account(self):
         return Account.privateKeyToAccount(os.environ['PRIVATE_KEY'])
 
@@ -73,7 +67,7 @@ class DatasetFactory(object):
 
         nonce = self.get_nonce()
         unicorn_txn = self.contract.functions.createDataset(os.environ['ADDRESS'], name, symbol, 18, request_goal).buildTransaction({
-            'gas': self.w3.toHex(2500000),
+            'gas': self.w3.toHex(3000000),
             'chainId': 4,
             'gasPrice': self.w3.toWei('1', 'gwei'),
             'nonce': nonce,
