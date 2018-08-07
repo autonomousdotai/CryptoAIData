@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from contract.owner_factory import OwnerTokenFactory
+from contract.dataset import Dataset
 from contract.dataset_factory import DatasetFactory
 from django.template.defaultfilters import slugify
 import base64
@@ -113,7 +114,8 @@ def inc_balance_when_classify(sender, instance, created, **kwargs):
         cp.balance += 1
         cp.save()
 
-        #  tx = DatasetFactory().add_provider(instance.image.category.id, instance.profile.ether_address, 1)
+        #  contract_addr = instance.image.category.contract_addr
+        #  tx = Dataset(contract_addr).add_provider(instance.profile.ether_address, 10 ** 18)
         #  instance.tx = tx
         #  instance.save()
 
@@ -122,7 +124,7 @@ def inc_balance_when_classify(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Category)
 def create_dataset(sender, instance, created, **kwargs):
     if created:
-        ret = DatasetFactory().create_dataset(instance.name, 'xxx', instance.request_goal)
+        ret = DatasetFactory().create_dataset(instance.name, 'EEE', instance.request_goal)
 
         instance.tx = ret[0]
         instance.contract_addr = ret[1]
@@ -130,13 +132,13 @@ def create_dataset(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Image)
-def inc_balance(sender, instance, created, **kwargs):
+def inc_balance_when_upload_image(sender, instance, created, **kwargs):
     if created:
         cp, _ = CategoryProfile.objects.get_or_create(category=instance.category, profile=instance.profile)
         cp.balance += 1
         cp.save()
 
-        tx = DatasetFactory().add_provider(instance.category.id, instance.profile.ether_address, 1)
+        tx = Dataset(instance.category.contract_addr).add_provider(instance.profile.ether_address, 10 ** 18)
         instance.tx = tx
         instance.save()
 
