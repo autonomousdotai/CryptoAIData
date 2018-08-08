@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import copy
+import random
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework import status
@@ -401,24 +402,28 @@ class Feed(generics.ListAPIView):
     permission_classes = []
 
     def get_queryset(self):
-        if self.request.user.is_authenticated is False:
-            return Image.objects.all().order_by('-created')
+        #  if self.request.user.is_authenticated is False:
+        #      return Image.objects.all().order_by('-created')
 
-        profile = self.request.user.profile
-        fc = profile.following_categories.all()
-        fp = profile.following_profiles.all()
-        #  if len(fc) > 0 or len(fp) > 0:
-        #      queryset = Image.objects.filter((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
-        #  else:
-        #      queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
-        #  return queryset
+        count = Image.objects.all().count()
+        ids = random.sample(range(1, count), 5)
+        return Image.objects.filter(Q(id__in=ids))
 
-        #  queryset = (~Q(image_profiles__profile=self.request.user.profile))
-        #  if len(fc) > 0 or len(fp) > 0:
-        #      queryset |= ((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile))
-        #  return Image.objects.filter(queryset).order_by('-created')
-
-        return Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
+        #  profile = self.request.user.profile
+        #  fc = profile.following_categories.all()
+        #  fp = profile.following_profiles.all()
+        #  #  if len(fc) > 0 or len(fp) > 0:
+        #  #      queryset = Image.objects.filter((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
+        #  #  else:
+        #  #      queryset = Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
+        #  #  return queryset
+        #
+        #  #  queryset = (~Q(image_profiles__profile=self.request.user.profile))
+        #  #  if len(fc) > 0 or len(fp) > 0:
+        #  #      queryset |= ((Q(category__in=fc) | Q(profile__in=fp)) & ~Q(image_profiles__profile=self.request.user.profile))
+        #  #  return Image.objects.filter(queryset).order_by('-created')
+        #
+        #  return Image.objects.filter(~Q(image_profiles__profile=self.request.user.profile)).order_by('-created')
 
 
 class Search(generics.ListAPIView):
