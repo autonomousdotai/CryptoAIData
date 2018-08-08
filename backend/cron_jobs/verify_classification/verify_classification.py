@@ -1,8 +1,9 @@
 import os
-import itertools
 import MySQLdb
 import MySQLdb.cursors
 import requests
+from itertools import groupby
+from operator import itemgetter
 
 
 def get_db_connection():
@@ -33,10 +34,10 @@ def get_image_labels(db, image_id):
 	return list(image_labels)
 
 
-def reward(db, image_labels):
+def collect(image_labels, eligible_items):
 	labels_num_max = 0
 	chose_classify_id = -1
-	for key, group in itertools.groupby(image_labels, key=lambda x: x['classify_id']):
+	for key, group in groupby(image_labels, key=lambda x: x['classify_id']):
 		group_len = len(list(group))
 		if group_len > labels_num_max:
 			labels_num_max = group_len
@@ -45,7 +46,80 @@ def reward(db, image_labels):
 	is_majority = labels_num_max >= (int(len(image_labels) / 2) + 1)
 	if is_majority:
 		items_with_true_label = filter(lambda i: i['classify_id'] == chose_classify_id, image_labels)
-		inc_balance(db, list(items_with_true_label))
+		eligible_items = eligible_items + list(items_with_true_label)
+		# inc_balance(db, list(items_with_true_label))
+	return eligible_items
+
+
+
+def inc_balance(db, category_id, ether_address, balance, image_ids, profile_id):
+	api_host = os.getenv('API_HOST', 'http://localhost')
+	api_port = os.getenv('API_PORT', 8000)
+
+	res = requests.post(
+		'{api_host}:{api_port}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
+		data = {
+			"category_id": category_id,
+			"ether_address": ether_address,
+			"balance": balance
+		}
+	)
+	if res.status_code != 200:
+		raise Exception("""Failed to call to smart contract for increasing balance
+			with (category_id: {category_id}, ether_address: {ether_address})""" \
+			.format(category_id=category_id, ether_address=ether_address))
+
+	res_content = res.json()
+	tx = res_content['tx']
+	update_tx(db, profile_id, image_ids, tx)
+
+
+
+def update_tx(db, profile_id, image_ids, tx):
+	cursor = db.cursor()
+	image_ids_tuple = tuple(image_ids)
+	query = """
+		UPDATE api_imageprofile
+		SET tx = '{tx}'
+		WHERE image_id in {image_ids_tuple}
+		AND profile_id = {profile_id}
+	""" \
+	.format(tx=tx, image_ids_tuple=image_ids_tuple, profile_id=profile_id)
+
+	print('query: ', query)
+	cursor.execute(query)
+	db.commit()
+	cursor.close()
+
+
+def reward(db, eligible_items):
+	grouper = itemgetter('category_id', 'profile_id', 'ether_address')
+	for key, grp in groupby(sorted(eligible_items, key = grouper), grouper):
+		print('key: ', key)
+		print('grp: ', list(grp))
+
+		group_detail = list(grp)
+		category_id = key[0]
+		profile_id = key[1]
+		ether_address = key[2]
+		num = len(group_detail)
+		image_ids = [o.image_id for o in group_detail] # pluck from group
+		inc_balance(db, category_id, ether_address, num, image_ids, profile_id)
+
+
+# def reward(db, image_labels):
+# 	labels_num_max = 0
+# 	chose_classify_id = -1
+# 	for key, group in itertools.groupby(image_labels, key=lambda x: x['classify_id']):
+# 		group_len = len(list(group))
+# 		if group_len > labels_num_max:
+# 			labels_num_max = group_len
+# 			chose_classify_id = key
+
+# 	is_majority = labels_num_max >= (int(len(image_labels) / 2) + 1)
+# 	if is_majority:
+# 		items_with_true_label = filter(lambda i: i['classify_id'] == chose_classify_id, image_labels)
+# 		inc_balance(db, list(items_with_true_label))
 
 
 
@@ -90,33 +164,33 @@ def insert_category_profile(db, category_id, profile_id):
 	cursor.close()
 
 
-def inc_balance(db, items_with_true_label):
-	api_host = os.getenv('API_HOST', 'http://localhost')
-	api_port = os.getenv('API_PORT', 8000)
+# def inc_balance(db, items_with_true_label):
+# 	api_host = os.getenv('API_HOST', 'http://localhost')
+# 	api_port = os.getenv('API_PORT', 8000)
 
-	for item in items_with_true_label:
-		category_id = item['category_id']
-		ether_address = item['ether_address']
-		image_profile_id = item['image_profile_id']
-		category_profile_id = item['category_profile_id']
-		current_balance = item['balance']
-		profile_id = item['profile_id']
+# 	for item in items_with_true_label:
+# 		category_id = item['category_id']
+# 		ether_address = item['ether_address']
+# 		image_profile_id = item['image_profile_id']
+# 		category_profile_id = item['category_profile_id']
+# 		current_balance = item['balance']
+# 		profile_id = item['profile_id']
 
-		res = requests.post(
-			'{api_host}:{api_port}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
-			data = {
-				"category_id": category_id,
-				"ether_address": ether_address
-			}
-		)
-		if res.status_code != 200:
-			raise Exception("""Failed to call to smart contract for increasing balance
-				with (category_id: {category_id}, ether_address: {ether_address})""" \
-				.format(category_id=category_id, ether_address=ether_address))
+# 		res = requests.post(
+# 			'{api_host}:{api_port}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
+# 			data = {
+# 				"category_id": category_id,
+# 				"ether_address": ether_address
+# 			}
+# 		)
+# 		if res.status_code != 200:
+# 			raise Exception("""Failed to call to smart contract for increasing balance
+# 				with (category_id: {category_id}, ether_address: {ether_address})""" \
+# 				.format(category_id=category_id, ether_address=ether_address))
 
-		res_content = res.json()
-		tx = res_content['tx']
-		update_tx(db, image_profile_id, tx)
+# 		res_content = res.json()
+# 		tx = res_content['tx']
+# 		update_tx(db, image_profile_id, tx)
 
 		# if category_profile_id is None: # need to insert new one
 		# 	insert_category_profile(db, category_id, profile_id)
@@ -140,6 +214,8 @@ def process(db):
 		""" \
 		.format(label_num=label_num)
 	)
+
+	eligible_items = []
 	while True:
 		row = cursor.fetchone()
 		if row is None:
@@ -147,7 +223,11 @@ def process(db):
 
 		image_id = row['image_id']
 		image_labels = get_image_labels(db, image_id)
-		reward(db, image_labels)
+		# reward(db, image_labels)
+		eligible_items = collect(image_labels, eligible_items)
+
+	print('eligible_items: ', eligible_items)
+	reward(db, eligible_items)
 
 	cursor.close()
 
