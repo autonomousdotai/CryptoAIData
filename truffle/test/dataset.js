@@ -1,4 +1,6 @@
 const Dataset = artifacts.require('Dataset');
+const DatasetFactory = artifacts.require('DatasetFactory');
+const DatasetToken = artifacts.require('DatasetToken');
 
 const BigNumber = web3.BigNumber;
 const utils = web3._extend.utils;
@@ -28,7 +30,9 @@ contract('Dataset', async (accounts) => {
     const requestGoal = 0;
 
     before(async () => {
-      this.dataset = await Dataset.new(owner, name, symbol, decimals, requestGoal);
+      this.token = await DatasetToken.new(name, symbol, decimals);
+      this.dataset = await Dataset.new(owner, this.token.address, requestGoal);
+      await this.token.transferOwnership(this.dataset.address);
     });
 
     it('verify dataset properties', async () => {
@@ -41,12 +45,12 @@ contract('Dataset', async (accounts) => {
 
     it('add provider', async () => {
       await this.dataset.addProvider(provider, 1);
-      let tokens = await this.dataset.balanceOf.call(provider);
+      let tokens = await this.token.balanceOf.call(provider);
       tokens.should.be.bignumber.equal(1);
 
       // add more tokens
       await this.dataset.addProvider(provider, 2);
-      tokens = await this.dataset.balanceOf.call(provider);
+      tokens = await this.token.balanceOf.call(provider);
       tokens.should.be.bignumber.equal(3);
 
       const providers = await this.dataset.getProviders.call();
@@ -88,7 +92,7 @@ contract('Dataset', async (accounts) => {
       let tokens, beforePaid, afterPaid, expected;
 
       // calculate first provider tokens
-      tokens = await this.dataset.balanceOf.call(provider);
+      tokens = await this.token.balanceOf.call(provider);
       beforePaid = await web3.eth.getBalance(provider);
       expected = beforePaid.add(tokens.mul(dsBalance).div(currentQuantity));
       // paid for first provider
@@ -98,7 +102,7 @@ contract('Dataset', async (accounts) => {
       afterPaid.should.be.bignumber.equal(expected);
 
       // calculate second provider tokens
-      tokens = await this.dataset.balanceOf.call(provider2);
+      tokens = await this.token.balanceOf.call(provider2);
       beforePaid = await web3.eth.getBalance(provider2);
       expected = beforePaid.add(tokens.mul(dsBalance).div(currentQuantity));
       // paid for second provider
@@ -108,7 +112,7 @@ contract('Dataset', async (accounts) => {
       afterPaid.should.be.bignumber.equal(expected);
 
       // calculate third provider tokens
-      tokens = await this.dataset.balanceOf.call(provider3);
+      tokens = await this.token.balanceOf.call(provider3);
       beforePaid = await web3.eth.getBalance(provider3);
       expected = beforePaid.add(tokens.mul(dsBalance).div(currentQuantity));
       // paid for third provider
@@ -132,7 +136,9 @@ contract('Dataset', async (accounts) => {
     const requestGoal = 5;
 
     before(async () => {
-      this.dataset = await Dataset.new(accounts[0], name, symbol, decimals, requestGoal);
+      this.token = await DatasetToken.new(name, symbol, decimals);
+      this.dataset = await Dataset.new(accounts[0], this.token.address, requestGoal);
+      await this.token.transferOwnership(this.dataset.address);
     });
 
     it('verify dataset properties', async () => {
@@ -181,7 +187,7 @@ contract('Dataset', async (accounts) => {
       const currentQuantity = await this.dataset.currentQuantity.call();
 
       // paid for first provider
-      let tokens = await this.dataset.balanceOf.call(provider);
+      let tokens = await this.token.balanceOf.call(provider);
       beforePaid = await web3.eth.getBalance(provider);
       await this.dataset.paid(provider, tokens);
 
@@ -202,7 +208,7 @@ contract('Dataset', async (accounts) => {
       afterPaid.should.be.bignumber.equal(expected);
 
       // paid for second provider
-      tokens = await this.dataset.balanceOf.call(provider2);
+      tokens = await this.token.balanceOf.call(provider2);
       beforePaid = await web3.eth.getBalance(provider2);
       expected = beforePaid.add(tokens.mul(dsBalance).div(currentQuantity));
       await this.dataset.paid(provider2, tokens);
@@ -210,7 +216,7 @@ contract('Dataset', async (accounts) => {
       afterPaid.should.be.bignumber.equal(expected);
 
       // paid for third provider
-      tokens = await this.dataset.balanceOf.call(provider3);
+      tokens = await this.token.balanceOf.call(provider3);
       beforePaid = await web3.eth.getBalance(provider3);
       expected = beforePaid.add(tokens.mul(dsBalance).div(currentQuantity));
       await this.dataset.paid(provider3, tokens);
