@@ -96,10 +96,12 @@ def user_signin(request):
 @authentication_classes([])
 @permission_classes([])
 def inc_balance_contract(request):
-    if 'category_id' not in request.data or 'ether_address' not in request.data:
-        return response(
+    if 'category_id' not in request.data or \
+        'ether_address' not in request.data or \
+        'balance' not in request.data:
+        return Response(
             {
-                "message": "missing required fields (category_id, ether_address) from payload."
+                "message": "missing required fields (category_id, ether_address, balance) from payload."
             },
             status=status.http_400_bad_request
         )
@@ -107,7 +109,7 @@ def inc_balance_contract(request):
     category_id = int(request.data['category_id'])
     cat = Category.objects.get(pk=category_id)
     if cat is None:
-        return response(
+        return Response(
             {
                 "message": "category_id %d is invalid" % category_id
             },
@@ -115,15 +117,16 @@ def inc_balance_contract(request):
         )
 
     contract_addr = cat.contract_addr
+    print('contract_addr: ', contract_addr)
     if contract_addr is None:
-        return response(
+        return Response(
             {
                 "message": "could not find contract address in category_id %" % category_id
             },
             status=status.http_400_bad_request
         )
 
-    tx = Dataset(contract_addr).add_provider(ether_address, 1)
+    tx = Dataset(contract_addr).add_provider(ether_address, int(request.data['balance']))
     return Response(
         {
             "tx": tx
