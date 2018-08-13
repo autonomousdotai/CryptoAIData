@@ -47,6 +47,7 @@ urlpatterns = [
     path(r'api/search/', views.Search.as_view()),
     path(r'api/buy/', views.Buy.as_view()),
     path(r'api/contract/inc-balance/', views.inc_balance_contract),
+    path(r'api/contract/pay/', views.Pay.as_view()),
     path(r'docs/', include_docs_urls(title='Trashcan API docs', public=True))
 
 ]

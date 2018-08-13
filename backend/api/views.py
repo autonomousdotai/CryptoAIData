@@ -10,11 +10,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset
+from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset, PayHistory
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
     ProductSerializer, ProductDetailSerializer, FirmwareSerializer, FirmwareDetailSerializer, ImageProfileSerializer, \
     ImageProfileDetailSerializer, CategorySerializer, CategoryDetailSerializer, ClassifySerializer, \
-    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer, LikeImageSerializer, BuyDatasetSerializer
+    ClassifyDetailSerializer, WithdrawCreateSerializer, OscarUploadSerializer, FollowCategorySerializer, FollowProfileSerializer, LikeImageSerializer, BuyDatasetSerializer, PayHistorySerializer
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -500,3 +500,15 @@ class Buy(generics.CreateAPIView):
         tx = self.request.data['tx']
         #  email = self.request.data['email']
         return serializer.save(profile=self.request.user.profile, category=c, tx=tx)
+
+
+class Pay(generics.CreateAPIView):
+    serializer_class = PayHistorySerializer
+    permission_classes = []
+
+    def perform_create(self, serializer):
+        profile = Profile.objects.get(id=self.request.data['profile'])
+        c = Category.objects.get(id=self.request.data['category'])
+        tx = self.request.data['tx']
+        tokens = self.request.data['tokens']
+        return serializer.save(profile=self.request.user.profile, category=c, tx=tx, tokens=tokens)

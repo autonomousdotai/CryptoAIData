@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset
+from .models import Profile, Image, Product, Firmware, ImageProfile, Category, Classify, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset, PayHistory
 import requests
 
 DEFAULT_IMAGE_URL = 'https://lh3.googleusercontent.com/-7AQtXjvEm48/U7pPOjP28XI/AAAAAAAADqs/gssorSrOl1wxxraa0BmQhhAWzjTu4qVMQCJkCGAYYCw/s1000-fcrop64=1,17ce2bc4fc98ffff/451660716.jpg'
@@ -319,3 +319,9 @@ class BuyDatasetSerializer(serializers.ModelSerializer):
         model = BuyDataset
         fields = '__all__'
         read_only_fields = ('profile', 'image')
+
+
+class PayHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PayHistory
+        fields = '__all__'

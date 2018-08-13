@@ -186,6 +186,18 @@ class BuyDataset(models.Model):
         ordering = ('-created',)
 
 
+class PayHistory(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    tokens = models.IntegerField()
+    tx = models.CharField(max_length=255, null=True, default=None)
+    created = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        #  unique_together = (("profile", "category"),)
+        ordering = ('-created',)
+
+
 #  @receiver(post_save, sender=BuyDataset)
 #  def inc_balance(sender, instance, created, **kwargs):
 #      if created:
