@@ -85,7 +85,6 @@ def update_tx(db, profile_id, image_ids, tx):
 	""" \
 	.format(tx=tx, image_ids_tuple=image_ids_tuple, profile_id=profile_id)
 
-	print('query: ', query)
 	cursor.execute(query)
 	db.commit()
 	cursor.close()
@@ -94,7 +93,6 @@ def update_tx(db, profile_id, image_ids, tx):
 def reward(db, eligible_items):
 	grouper = itemgetter('category_id', 'profile_id', 'ether_address')
 	for key, grp in groupby(sorted(eligible_items, key = grouper), grouper):
-		print('key: ', key)
 		group_detail = list(grp)
 
 		category_id = key[0]
@@ -103,21 +101,6 @@ def reward(db, eligible_items):
 		num = len(group_detail)
 		image_ids = [o['image_id'] for o in group_detail]
 		inc_balance(db, category_id, ether_address, num, image_ids, profile_id)
-
-
-
-def update_tx(db, image_profile_id, tx):
-	cursor = db.cursor()
-	cursor.execute(
-		"""
-			UPDATE api_imageprofile
-			SET tx = '{tx}'
-			WHERE id = {image_profile_id}
-		""" \
-		.format(tx=tx, image_profile_id=image_profile_id)
-	)
-	db.commit()
-	cursor.close()
 
 
 def update_balance(db, category_profile_id, current_balance):
@@ -176,7 +159,6 @@ def process(db):
 		# reward(db, image_labels)
 		eligible_items = collect(image_labels, eligible_items)
 
-	print('eligible_items: ', eligible_items)
 	reward(db, eligible_items)
 
 	cursor.close()

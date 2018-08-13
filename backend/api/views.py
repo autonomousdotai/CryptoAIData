@@ -29,6 +29,7 @@ import threading
 from api.utils.image import stream_to_ai_server, perform_create
 from django_filters import rest_framework as filters
 from contract.dataset_factory import DatasetFactory
+from contract.dataset import Dataset
 
 
 @api_view(['POST'])
@@ -127,7 +128,7 @@ def inc_balance_contract(request):
             status=status.http_400_bad_request
         )
 
-    tx = Dataset(contract_addr).add_provider(ether_address, int(request.data['balance']))
+    tx = Dataset(contract_addr).add_provider(request.data['ether_address'], int(request.data['balance']))
     return Response(
         {
             "tx": tx
