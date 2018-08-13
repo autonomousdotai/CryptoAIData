@@ -397,17 +397,30 @@ class UnfollowProfile(generics.DestroyAPIView):
         return instance.delete()
 
 
+def get_feed(profile, count):
+    ids = random.sample(range(1, count), 10)
+    r = Image.objects.filter(Q(id__in=ids) & ~Q(image_profiles__profile=profile))
+    if r.count() == 0:
+        return get_feed(profile, count)
+    return r
+
+
 class Feed(generics.ListAPIView):
     serializer_class = ImageSerializer
     permission_classes = []
 
     def get_queryset(self):
-        #  if self.request.user.is_authenticated is False:
-        #      return Image.objects.all().order_by('-created')
+        if self.request.user.is_authenticated is False:
+            return Image.objects.all().order_by('-created')
 
         count = Image.objects.all().count()
-        ids = random.sample(range(1, count), 5)
-        return Image.objects.filter(Q(id__in=ids))
+        return get_feed(self.request.user.profile, count)
+        #  ids = random.sample(range(1, count), 10)
+        #  r = Image.objects.filter(Q(id__in=ids) & ~Q(image_profiles__profile=self.request.user.profile))
+        #  if r.count() == 0:
+        #      ids = random.sample(range(1, count), 10)
+        #      r = Image.objects.filter(Q(id__in=ids) & ~Q(image_profiles__profile=self.request.user.profile))
+        #  return r
 
         #  profile = self.request.user.profile
         #  fc = profile.following_categories.all()

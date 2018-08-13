@@ -124,7 +124,8 @@ def inc_balance_when_classify(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Category)
 def create_dataset(sender, instance, created, **kwargs):
     if created:
-        ret = DatasetFactory().create_dataset(instance.name, 'EEE', instance.request_goal)
+        symbol = ''.join(word[0] for word in instance.name.split()).upper()
+        ret = DatasetFactory().create_dataset(instance.name, symbol, instance.request_goal)
 
         instance.tx = ret[0]
         instance.contract_addr = ret[1]
@@ -138,9 +139,9 @@ def inc_balance_when_upload_image(sender, instance, created, **kwargs):
         cp.balance += 1
         cp.save()
 
-        tx = Dataset(instance.category.contract_addr).add_provider(instance.profile.ether_address, 10 ** 18)
-        instance.tx = tx
-        instance.save()
+        #  tx = Dataset(instance.category.contract_addr).add_provider(instance.profile.ether_address, 10 ** 18)
+        #  instance.tx = tx
+        #  instance.save()
 
 
 class FollowingCategory(models.Model):
