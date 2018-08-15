@@ -24,7 +24,7 @@ RUN chmod a+x /code/run.sh
 
 RUN crontab /etc/cron.d/verify_classification_cron
 
-CMD cron && tail -f /var/log/cron.log
+CMD ["./start.sh"]
 
 # docker build  --rm -t verify_classification .
 # docker run -it verify_classification

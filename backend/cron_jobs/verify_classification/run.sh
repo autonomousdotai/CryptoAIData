@@ -1,4 +1,5 @@
 #!/bin/bash
-source /code/env_vars.sh 
-printenv
+
+. /code/.env.sh
+
 python /code/verify_classification.py

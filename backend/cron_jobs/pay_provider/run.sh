@@ -1,7 +1,6 @@
  #!/bin/bash
 
-scriptPath=$(dirname "$(readlink -f "$0")")
-. "${scriptPath}/.env.sh"
-printenv
+. /code/.env.sh
 
-/usr/local/bin/python3.6 /code/pay_provider.py
+cd /code
+/usr/local/bin/python3.6 pay_provider.py

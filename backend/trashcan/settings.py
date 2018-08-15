@@ -25,7 +25,7 @@ SECRET_KEY = '38@j*5ch2#jyb0=_yk$6v=15u4fqw@%it-qe(q%i6=7nw+m%c8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', True)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '35.198.228.87', '35.240.183.111', '35.240.158.83', '10.39.244.233', '10.39.247.173', 'dad.ninja.org']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '35.198.228.87', '35.240.183.111', '35.240.158.83', '10.39.244.233', '10.39.247.173', 'dad.ninja.org', 'host.docker.internal']
 
 
 # Application definition
