@@ -9,8 +9,8 @@ from dataset import Dataset
 
 def get_db_connection():
     mysql_host = os.getenv('MYSQL_HOST', '127.0.0.1')
-    mysql_user = os.getenv('MYSQL_USER', 'root')
-    mysql_password = os.getenv('MYSQL_PASSWORD', '123456')
+    mysql_user = os.getenv('MYSQL_USER', '')
+    mysql_password = os.getenv('MYSQL_PASSWORD', '')
     mysql_db = os.getenv('MYSQL_DB', 'trashcan_dev')
     db = MySQLdb.connect(host=mysql_host, user=mysql_user, passwd=mysql_password, db=mysql_db, cursorclass=MySQLdb.cursors.DictCursor)
     return db
@@ -65,11 +65,11 @@ def process(db):
 
 
 def main():
-	print('Start verifying classification...')
+	print('Start paying for providers...')
 	db = get_db_connection()
 	process(db)
 	db.close()
-	print('Finished verifying classification...')
+	print('Finished paying for providers...')
 
 
 if __name__ == '__main__':

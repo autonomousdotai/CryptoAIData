@@ -8,8 +8,8 @@ from operator import itemgetter
 
 def get_db_connection():
 	mysql_host = os.getenv('MYSQL_HOST', 'localhost')
-	mysql_user = os.getenv('MYSQL_USER', 'root')
-	mysql_password = os.getenv('MYSQL_PASSWORD', 'minhduc0812112')
+	mysql_user = os.getenv('MYSQL_USER', '')
+	mysql_password = os.getenv('MYSQL_PASSWORD', '')
 	mysql_db = os.getenv('MYSQL_DB', 'trashcan_dev')
 	db = MySQLdb.connect(host=mysql_host, user=mysql_user, passwd=mysql_password, db=mysql_db, cursorclass=MySQLdb.cursors.DictCursor)
 	return db
