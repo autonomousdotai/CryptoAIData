@@ -325,3 +325,4 @@ class PayHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PayHistory
         fields = '__all__'
+        read_only_fields = ('tokens', 'tx')

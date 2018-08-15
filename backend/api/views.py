@@ -9,6 +9,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework import serializers
 
 from .models import Profile, Image, Product, Firmware, ImageProfile, Classify, Category, CategoryProfile, FollowingCategory, FollowingProfile, LikedImage, BuyDataset, PayHistory
 from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetailSerializer, ImageSerializer, \
@@ -18,6 +19,7 @@ from .serializers import ProfileSerializer, ProfileDetailSerializer, ImageDetail
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from web3 import Web3, TestRPCProvider, HTTPProvider
 from web3 import Account
 import django_filters.rest_framework
@@ -28,8 +30,8 @@ from django.db.models import Q
 import threading
 from api.utils.image import stream_to_ai_server, perform_create
 from django_filters import rest_framework as filters
-from contract.dataset_factory import DatasetFactory
 from contract.dataset import Dataset
+from contract.dataset_token import DatasetToken
 
 
 @api_view(['POST'])
@@ -507,8 +509,21 @@ class Pay(generics.CreateAPIView):
     permission_classes = []
 
     def perform_create(self, serializer):
-        profile = Profile.objects.get(id=self.request.data['profile'])
-        c = Category.objects.get(id=self.request.data['category'])
-        tx = self.request.data['tx']
-        tokens = self.request.data['tokens']
-        return serializer.save(profile=self.request.user.profile, category=c, tx=tx, tokens=tokens)
+        provider = self.request.data['provider']
+        cat_id = self.request.data['category']
+        c = Category.objects.get(id=cat_id)
+        if c.contract_addr is None:
+            raise serializers.ValidationError("Category %d doesn't have contract address" % cat_id)
+
+        ds = Dataset(c.contract_addr)
+        token_addr = ds.get_token()
+        if token_addr is None:
+            raise serializers.ValidationError("Category %d with contract address %s doesn't have token" % cat_id, c.contract_address)
+
+        token = DatasetToken(token_addr)
+        tokens = token.balance_of(provider)
+        if tokens == 0:
+            raise serializers.ValidationError("Provider %s has 0 token" % provider)
+
+        tx = ds.pay(provider, tokens)
+        return serializer.save(provider=provider, category=c, tx=tx, tokens=tokens)

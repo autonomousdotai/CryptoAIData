@@ -187,9 +187,9 @@ class BuyDataset(models.Model):
 
 
 class PayHistory(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    provider = models.CharField(max_length=255, null=True, default=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    tokens = models.IntegerField()
+    tokens = models.CharField(max_length=255, null=False)
     tx = models.CharField(max_length=255, null=True, default=None)
     created = models.DateTimeField(auto_now=True)
 
