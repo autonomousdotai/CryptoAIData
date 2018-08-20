@@ -7,10 +7,10 @@ from operator import itemgetter
 
 
 def get_db_connection():
-	mysql_host = os.getenv('MYSQL_HOST', 'localhost')
-	mysql_user = os.getenv('MYSQL_USER', '')
-	mysql_password = os.getenv('MYSQL_PASSWORD', '')
-	mysql_db = os.getenv('MYSQL_DB', 'trashcan_dev')
+	mysql_host = os.getenv('DB_HOST', 'localhost')
+	mysql_user = os.getenv('DB_USER', '')
+	mysql_password = os.getenv('DB_PASSWORD', '')
+	mysql_db = os.getenv('DB_NAME', 'trashcan_dev')
 	db = MySQLdb.connect(host=mysql_host, user=mysql_user, passwd=mysql_password, db=mysql_db, cursorclass=MySQLdb.cursors.DictCursor)
 	return db
 
@@ -52,25 +52,24 @@ def collect(image_labels, eligible_items):
 
 
 def inc_balance(db, category_id, ether_address, balance, image_ids, profile_id):
-	api_host = os.getenv('API_HOST', 'http://localhost')
-	api_port = os.getenv('API_PORT', 8000)
+    api_host = os.getenv('API_HOST', 'http://localhost:8000')
 
-	res = requests.post(
-		'{api_host}:{api_port}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
-		data = {
-			"category_id": category_id,
-			"ether_address": ether_address,
-			"balance": balance
-		}
-	)
-	if res.status_code != 200:
-		raise Exception("""Failed to call to smart contract for increasing balance
-			with (category_id: {category_id}, ether_address: {ether_address}, balance: {balance})""" \
-			.format(category_id=category_id, ether_address=ether_address, balance=balance))
+    res = requests.post(
+            '{api_host}/api/contract/inc-balance/'.format(api_host=api_host, api_port=api_port),
+            data = {
+                    "category_id": category_id,
+                    "ether_address": ether_address,
+                    "balance": balance
+            }
+    )
+    if res.status_code != 200:
+            raise Exception("""Failed to call to smart contract for increasing balance
+                    with (category_id: {category_id}, ether_address: {ether_address}, balance: {balance})""" \
+                    .format(category_id=category_id, ether_address=ether_address, balance=balance))
 
-	res_content = res.json()
-	tx = res_content['tx']
-	update_tx(db, profile_id, image_ids, tx)
+    res_content = res.json()
+    tx = res_content['tx']
+    update_tx(db, profile_id, image_ids, tx)
 
 
 

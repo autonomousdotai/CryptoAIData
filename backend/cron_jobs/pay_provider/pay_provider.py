@@ -8,20 +8,19 @@ from dataset import Dataset
 
 
 def get_db_connection():
-    mysql_host = os.getenv('MYSQL_HOST', '127.0.0.1')
-    mysql_user = os.getenv('MYSQL_USER', '')
-    mysql_password = os.getenv('MYSQL_PASSWORD', '')
-    mysql_db = os.getenv('MYSQL_DB', 'trashcan_dev')
+    mysql_host = os.getenv('DB_HOST', '127.0.0.1')
+    mysql_user = os.getenv('DB_USER', '')
+    mysql_password = os.getenv('DB_PASSWORD', '')
+    mysql_db = os.getenv('DB_NAME', 'trashcan_dev')
     db = MySQLdb.connect(host=mysql_host, user=mysql_user, passwd=mysql_password, db=mysql_db, cursorclass=MySQLdb.cursors.DictCursor)
     return db
 
 
 def pay_provider(cat_id, provider):
-    api_host = os.getenv('API_HOST', 'http://localhost')
-    api_port = os.getenv('API_PORT', 8000)
+    api_host = os.getenv('API_HOST', 'http://localhost:8000')
 
     res = requests.post(
-            '{api_host}:{api_port}/api/contract/pay/'.format(api_host=api_host, api_port=api_port),
+            '{api_host}/api/contract/pay/'.format(api_host=api_host, api_port=api_port),
             data = {
                     "category": cat_id,
                     "provider": provider
