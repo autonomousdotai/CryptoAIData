@@ -75,7 +75,7 @@ numpy==1.14.5
 oauth2client==3.0.0
 parse==1.8.4
 parsimonious==0.8.0
-Pillow==5.2.0
+Pillow==8.2.0
 ply==3.8
 proto-google-cloud-datastore-v1==0.90.4
 proto-google-cloud-error-reporting-v1beta1==0.15.3
